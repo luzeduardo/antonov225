@@ -1,6 +1,6 @@
 # Created by https://www.gitignore.io
 *.DS_Store
-flyer/flyer/settings.py
+#flyer/flyer/settings.py
 
 ### Django ###
 *.log
