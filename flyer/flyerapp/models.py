@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class Place(models.Model):
 	name = models.CharField(max_length=70)
-	iata_code = models.CharField(max_length=5)
+	iata_code = models.CharField(max_length=3)
 
 class Flight(models.Model):
 	departure = models.ForeignKey(Place, related_name="departure_flight")
