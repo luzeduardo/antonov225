@@ -231,8 +231,8 @@ for destino in config_destinos.items():
                 continue            
             config_dia_inicio = str(stringtotimestamp(datas[0]))
             config_dia_fim = str(stringtotimestamp(datas[1]))
-            print config_dia_fim
-            continue
+            #print config_dia_fim
+            #continue
 
             #driver = webdriver.Firefox()
             driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any'])
