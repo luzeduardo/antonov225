@@ -281,7 +281,7 @@ for destino in config_destinos.items():
                         print valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
 
                 if not encontrado_milha_range:
-                    print menor_milha + "\t" + menor_milha + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M") + "\t" + ' menor milha encontrada'
+                    print menor_milha + "\t" + menor_milha + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
                 driver.quit()
             # except NoSuchElementException, e:
             #     notfound_class = '.' + class_splited[0] + '-Pb-e'
