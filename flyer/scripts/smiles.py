@@ -7,7 +7,6 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from datetime import datetime, date, timedelta
-from dateutil import tz
 from collections import OrderedDict, deque
 from selenium.webdriver.support import expected_conditions as EC
 import time
@@ -217,6 +216,9 @@ problemas = deque()
 nao_existe = deque()
 ida_durante_semana = True
 volta_durante_semana = True
+milha_buscada = 8000
+percentual_acima = 1.2
+percentual_abaixo = 1.2
 url = ''
 print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
 for destino in config_destinos.items():
@@ -245,17 +247,18 @@ for destino in config_destinos.items():
             driver.implicitly_wait(2)
 
             reduzida_ida = 'td.tdSurpriseDestination'
+            milhas = 'div.legData[data-legid="0"] td.resulttable.rtB'
             
             #Testa se elemento de processamento sumiu e processegue com o script
-            element_existe = True
-            teste_processando = 0
+            # element_existe = True
+            # teste_processando = 0
             # while element_existe:
             #     try:
             #         teste_processando += 1
-            #         resultado = driver.find_element_by_css_selector(reduzida_ida)
-            #         print resultado.text
-            #         time.sleep(1)
-            #         driver.implicitly_wait(1)
+            #         resultado = driver.find_elements_by_css_selector('div.legData[data-legid="0"] td.resulttable.rtB .hide')
+            #         for sml in resultado:
+            #             print json.dumps(sml.text, sort_keys=True, ensure_ascii=False)
+            #         #print resultado.text
             #         if teste_processando == 3:
             #             element_existe = False
             #     except NoSuchElementException, e:
@@ -264,14 +267,21 @@ for destino in config_destinos.items():
             try:
                 time.sleep(2)
                 driver.implicitly_wait(2)
-                resultado = driver.find_element_by_css_selector(reduzida_ida)
-                #data hora consulta, origem, valor, data pesquisada ida, data pesquisada volta, destino, url acesso
-                valor_processado = resultado.text
-                #print valor_exibicao
-                #valor_processado = valor_exibicao.split("R$")
-                #valor_processado = valor_processado[1]
-                valor_processado = re.sub('[^0-9]+', '', valor_processado)
-                print valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
+                milhas = driver.find_elements_by_css_selector(milhas)
+                menor_milha = 0
+                encontrado_milha_range = False
+                for resultado in milhas:
+                    valor_processado = resultado.text
+                    valor_processado = re.sub('[^0-9]+', '', valor_processado)
+                    if menor_milha == 0 or menor_milha > valor_processado:
+                        menor_milha = valor_processado
+
+                    if int(valor_processado) <= milha_buscada * 1.2 <= int(valor_processado) * 1.2:
+                        encontrado_milha_range = True
+                        print valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
+
+                if not encontrado_milha_range:
+                    print menor_milha + "\t" + menor_milha + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M") + "\t" + ' menor milha encontrada'
                 driver.quit()
             # except NoSuchElementException, e:
             #     notfound_class = '.' + class_splited[0] + '-Pb-e'
