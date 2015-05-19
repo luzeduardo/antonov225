@@ -7,6 +7,7 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from datetime import datetime, date, timedelta
+from dateutil import tz
 from collections import OrderedDict, deque
 from selenium.webdriver.support import expected_conditions as EC
 import time
@@ -188,7 +189,7 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
     return datas
 
 def stringtotimestamp(dt, epoch=datetime(1970,1,1), dt_format="%Y-%m-%d"):
-    dt = datetime.strptime(dt, dt_format)
+    dt = datetime.strptime(dt.replace('Z', 'GMT'), dt_format)
     td = dt - epoch
     return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6 
 
@@ -230,8 +231,8 @@ for destino in config_destinos.items():
                 continue            
             config_dia_inicio = str(stringtotimestamp(datas[0]))
             config_dia_fim = str(stringtotimestamp(datas[1]))
-            #print config_dia_fim
-            #continue
+            print config_dia_fim
+            continue
 
             #driver = webdriver.Firefox()
             driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any'])
