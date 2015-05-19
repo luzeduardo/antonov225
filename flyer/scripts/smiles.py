@@ -91,6 +91,9 @@ config_destinos = {
 }
 
 # config_destinos = {
+#   'JFK':'New York',
+#   'MIA':'Miami',
+#   'MCO':'Orlando',
 #   'EZE':'Buenos Aires',
 #   'CUZ':'Chile',
 #   'CDG':'Paris',
@@ -111,7 +114,12 @@ config_destinos = {
 #config_origem = 'CGH'
 
 config_destinos = {
-    'NVT':'Navegantes'
+    #'NVT':'Navegantes',
+    #'EZE':'Buenos Aires'
+    'JFK':'New York',
+    'MIA':'Miami',
+    'MCO':'Orlando',
+    'CUZ':'Chile',
 }
 config_origem = 'GIG'
 
@@ -216,7 +224,7 @@ problemas = deque()
 nao_existe = deque()
 ida_durante_semana = True
 volta_durante_semana = True
-milha_buscada = 8000
+milha_buscada = 10000
 percentual_acima = 1.2
 percentual_abaixo = 1.2
 url = ''

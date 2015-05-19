@@ -91,6 +91,9 @@ config_destinos = {
 }
 
 # config_destinos = {
+#   'JFK':'New York',
+#   'MIA':'Miami',
+#   'MCO':'Orlando',
 #   'EZE':'Buenos Aires',
 #   'CUZ':'Chile',
 #   'CDG':'Paris',
@@ -111,7 +114,10 @@ config_destinos = {
 #config_origem = 'CGH'
 
 config_destinos = {
-    'IOS':'Ilheus'
+    'JFK':'New York',
+    'MIA':'Miami',
+    'MCO':'Orlando',
+    'CUZ':'Chile',
 }
 config_origem = 'GIG,SDU'
 
