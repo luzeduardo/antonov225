@@ -119,7 +119,11 @@ config_destinos = {
     'MCO':'Orlando',
     'CUZ':'Chile',
 }
-config_origem = 'GIG,SDU'
+config_origem = {
+    'GIG',
+    'SDU',
+    'CGH'
+}
 
 def perdelta_start_to_end(start, end, delta):
     curr = start    
@@ -205,13 +209,11 @@ e_day = 16
 c_year = 2015
 c_month = 5
 c_day = 15
-min_days_in_place = 2
+min_days_in_place = 7
 
 datas = date_interval(s_year,s_month, s_day, e_year,e_month, e_day)
-# datas = {
-# '2015-06-14':'2015-06-22',
-# '2015-06-13':'2015-06-22'
-# }
+# ou setando na mao
+#datas = [['2015-11-09','2015-11-15'],['2015-11-10','2015-11-15']]
 
 config_datas = datas
 problemas = deque()
@@ -220,72 +222,73 @@ ida_durante_semana = True
 volta_durante_semana = True
 
 print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
-for destino in config_destinos.items():
-    for datas in config_datas:
-        try:
-            if is_weekend_day(datas[0]) and not ida_durante_semana: #ida apenas fds
-                continue
-            if is_weekend_day(datas[1]) and not volta_durante_semana: #volta apenas fds
-                continue    
-            if not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
-                continue            
-            config_dia_inicio = datas[0]
-            config_dia_fim = datas[1]
-            #driver = webdriver.Firefox()
-            driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any'])
-            driver.set_window_size( 2048, 2048)  # set browser size.
-            
-            url = 'https://www.google.com.br/flights/#search;f=' + config_origem + ';t='+ str(destino[0]) +';d='+config_dia_inicio + ';r=' + config_dia_fim
-            
-            driver.get( url )
-            time.sleep(2)
-            driver.implicitly_wait(2)
-
-            core = driver.find_element_by_css_selector('#root')
-            class_name = core.get_attribute("class")            
-            class_splited = class_name.split('-',1)
-            final_class = '.' + class_splited[0] + '-c-nb'
-            wait_class = '.' + class_splited[0] + '-j-n'
-
-            #Testa se elemento de processamento sumiu e processegue com o script
-            element_existe = True
-            teste_processando = 0
-            while element_existe:
-                try:
-                    teste_processando += 1
-                    resultado = driver.find_element_by_css_selector(wait_class)
-                    time.sleep(1)
-                    driver.implicitly_wait(1)
-                    if teste_processando == 3:
-                        element_existe = False
-                except NoSuchElementException, e:
-                    element_existe = False
-            
+for config_origem in config_origem:
+    for destino in config_destinos.items():
+        for datas in config_datas:
             try:
+                if is_weekend_day(datas[0]) and not ida_durante_semana: #ida apenas fds
+                    continue
+                if is_weekend_day(datas[1]) and not volta_durante_semana: #volta apenas fds
+                    continue    
+                if not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
+                    continue            
+                config_dia_inicio = datas[0]
+                config_dia_fim = datas[1]
+                #driver = webdriver.Firefox()
+                driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any'])
+                driver.set_window_size( 2048, 2048)  # set browser size.
+                
+                url = 'https://www.google.com.br/flights/#search;f=' + config_origem + ';t='+ str(destino[0]) +';d='+config_dia_inicio + ';r=' + config_dia_fim
+                
+                driver.get( url )
                 time.sleep(2)
                 driver.implicitly_wait(2)
-                resultado = driver.find_element_by_css_selector(final_class)
-                # data hora consulta, origem, valor, data pesquisada ida, data pesquisada volta, destino, url acesso
-                valor_exibicao = resultado.text
-                valor_processado = valor_exibicao.split("R$")
-                valor_processado = valor_processado[1]
-                valor_processado = re.sub('[^0-9]+', '', valor_processado)
-                print valor_exibicao + "\t" + valor_processado + "\t" + config_dia_inicio + "\t" + config_dia_fim + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
-                driver.quit()
-            except NoSuchElementException, e:
-                notfound_class = '.' + class_splited[0] + '-Pb-e'
-                resultado = driver.find_element_by_css_selector(notfound_class)
-                for ne in nao_existe:
-                    if str(ne) == str(destino[1]):
-                        problemas.append('Ignorar destino: ' + str(destino[1])+ ' motivo: ' +"\t" + valor)
-                nao_existe.append(str(destino[1]))
-                driver.quit()
+
+                core = driver.find_element_by_css_selector('#root')
+                class_name = core.get_attribute("class")            
+                class_splited = class_name.split('-',1)
+                final_class = '.' + class_splited[0] + '-c-nb'
+                wait_class = '.' + class_splited[0] + '-j-n'
+
+                #Testa se elemento de processamento sumiu e processegue com o script
+                element_existe = True
+                teste_processando = 0
+                while element_existe:
+                    try:
+                        teste_processando += 1
+                        resultado = driver.find_element_by_css_selector(wait_class)
+                        time.sleep(1)
+                        driver.implicitly_wait(1)
+                        if teste_processando == 3:
+                            element_existe = False
+                    except NoSuchElementException, e:
+                        element_existe = False
+                
+                try:
+                    time.sleep(2)
+                    driver.implicitly_wait(2)
+                    resultado = driver.find_element_by_css_selector(final_class)
+                    # data hora consulta, origem, valor, data pesquisada ida, data pesquisada volta, destino, url acesso
+                    valor_exibicao = resultado.text
+                    valor_processado = valor_exibicao.split("R$")
+                    valor_processado = valor_processado[1]
+                    valor_processado = re.sub('[^0-9]+', '', valor_processado)
+                    print valor_exibicao + "\t" + valor_processado + "\t" + config_dia_inicio + "\t" + config_dia_fim + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
+                    driver.quit()
+                except NoSuchElementException, e:
+                    notfound_class = '.' + class_splited[0] + '-Pb-e'
+                    resultado = driver.find_element_by_css_selector(notfound_class)
+                    for ne in nao_existe:
+                        if str(ne) == str(destino[1]):
+                            problemas.append('Ignorar destino: ' + str(destino[1])+ ' motivo: ' +"\t" + valor)
+                    nao_existe.append(str(destino[1]))
+                    driver.quit()
+                except Exception, e:
+                    problemas.append('Problema ao retornar valor de: ' + str(destino[1]) +"\t" + url)
+                    driver.quit()
             except Exception, e:
-                problemas.append('Problema ao retornar valor de: ' + str(destino[1]) +"\t" + url)
+                problemas.append('Problema ao retornar elemento principal: ' + str(destino[1]) +"\t" + url)
                 driver.quit()
-        except Exception, e:
-            problemas.append('Problema ao retornar elemento principal: ' + str(destino[1]) +"\t" + url)
-            driver.quit()
 print 'Hora Fim: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
 # @TODO verificar o que fazer com os erros
 for erros in problemas:
