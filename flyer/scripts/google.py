@@ -121,6 +121,7 @@ config_destinos = {
     'BCN':'Barcelona',  
     'FRA':'Frankfurt',
     'CUZ':'Chile',
+    'NVT':'Navegantes'
 }
 config_origem = {
     'GIG',
@@ -213,10 +214,15 @@ c_year = 2015
 c_month = 5
 c_day = 15
 min_days_in_place = 3
+check_min_days = False
 
 datas = date_interval(s_year,s_month, s_day, e_year,e_month, e_day)
 # ou setando na mao
-#datas = [['2015-11-09','2015-11-15'],['2015-11-10','2015-11-15']]
+datas = [
+    ['2015-11-05','2015-11-09'],
+    ['2015-11-09','2015-11-15'],
+    ['2015-11-10','2015-11-15']
+]
 
 config_datas = datas
 problemas = deque()
@@ -235,7 +241,7 @@ for config_origem in config_origem:
                     continue
                 if is_weekend_day(datas[1]) and not volta_durante_semana: #volta apenas fds
                     continue    
-                if not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
+                if check_min_days and not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
                     continue            
                 config_dia_inicio = datas[0]
                 config_dia_fim = datas[1]
