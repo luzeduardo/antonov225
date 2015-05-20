@@ -221,7 +221,7 @@ nao_existe = deque()
 ida_durante_semana = True
 volta_durante_semana = True
 
-print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
+# print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
 for config_origem in config_origem:
     for destino in config_destinos.items():
         for datas in config_datas:
@@ -289,9 +289,9 @@ for config_origem in config_origem:
             except Exception, e:
                 problemas.append('Problema ao retornar elemento principal: ' + str(destino[1]) +"\t" + url)
                 driver.quit()
-print 'Hora Fim: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
+#print 'Hora Fim: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
 # @TODO verificar o que fazer com os erros
-for erros in problemas:
-    print erros
+# for erros in problemas:
+#     print erros
 #link smiles
 #'https://www.smiles.com.br/passagens-com-milhas?tripType=1&originAirport='+ config_origem +'&destinationAirport=' + destino[0] + '&departureDay=1433386800&returnDay=1433732400&adults=01&children=0&infants=0'

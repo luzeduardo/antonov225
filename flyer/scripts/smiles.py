@@ -231,7 +231,7 @@ milha_buscada = 10000
 percentual_acima = 1.2
 percentual_abaixo = 1.2
 url = ''
-print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
+# print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
 for config_origem in config_origem:
     for destino in config_destinos.items():
         for datas in config_datas:
@@ -312,8 +312,8 @@ for config_origem in config_origem:
             except Exception, e:
                 problemas.append('Problema ao retornar elemento principal: ' + str(destino[1]) +"\t" + url)
                 driver.quit()
-print 'Hora Fim: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
+# print 'Hora Fim: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
 # @TODO verificar o que fazer com os erros
-for erros in problemas:
-    print erros
+# for erros in problemas:
+#     print erros
 #link smiles
