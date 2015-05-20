@@ -117,6 +117,9 @@ config_destinos = {
     'JFK':'New York',
     'MIA':'Miami',
     'MCO':'Orlando',
+    'LIS':'Lisboa',
+    'BCN':'Barcelona',  
+    'FRA':'Frankfurt',
     'CUZ':'Chile',
 }
 config_origem = {
@@ -200,7 +203,7 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
 
 s_year = 2015
 s_month = 11
-s_day = 10
+s_day = 9
 
 e_year = 2015
 e_month = 11
@@ -209,7 +212,7 @@ e_day = 16
 c_year = 2015
 c_month = 5
 c_day = 15
-min_days_in_place = 7
+min_days_in_place = 3
 
 datas = date_interval(s_year,s_month, s_day, e_year,e_month, e_day)
 # ou setando na mao
@@ -222,10 +225,12 @@ ida_durante_semana = True
 volta_durante_semana = True
 
 # print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
+#start_time = time.time()
 for config_origem in config_origem:
     for destino in config_destinos.items():
         for datas in config_datas:
             try:
+                #start_time_loop = time.time()
                 if is_weekend_day(datas[0]) and not ida_durante_semana: #ida apenas fds
                     continue
                 if is_weekend_day(datas[1]) and not volta_durante_semana: #volta apenas fds
@@ -286,10 +291,12 @@ for config_origem in config_origem:
                 except Exception, e:
                     problemas.append('Problema ao retornar valor de: ' + str(destino[1]) +"\t" + url)
                     driver.quit()
+                #print("--- %s seconds ---" % (time.time() - start_time_loop))
             except Exception, e:
                 problemas.append('Problema ao retornar elemento principal: ' + str(destino[1]) +"\t" + url)
                 driver.quit()
 #print 'Hora Fim: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
+#print("--- %s seconds ---" % (time.time() - start_time))
 # @TODO verificar o que fazer com os erros
 # for erros in problemas:
 #     print erros

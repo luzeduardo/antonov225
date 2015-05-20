@@ -126,6 +126,18 @@ config_origem = {
     'GIG',
     'CGH'
 }
+def calc_proc_load():
+    processor_load =  os.getloadavg()
+    proc_len = len(processor_load)
+    max_load = 1.5 * float(proc_len)
+    pprc_max_loaded = 0
+    for prc in processor_load:
+        pprc_max_loaded += float(prc)
+    print pprc_max_loaded
+    if pprc_max_loaded > max_load:
+        return pprc_max_loaded - max_load
+    else:
+        return 0
 
 def perdelta_start_to_end(start, end, delta):
     curr = start    
@@ -317,3 +329,14 @@ for config_origem in config_origem:
 # for erros in problemas:
 #     print erros
 #link smiles
+
+
+#def process_or_sleep_task():
+#processamento de task simples com time sleep
+# i = 0
+# while i < 9999999999999999999:
+#     i += 1
+#     sleep_time = calc_proc_load()
+#     if sleep_time > 0:
+#         print '------------------'
+#         time.sleep(sleep_time)
