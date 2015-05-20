@@ -293,10 +293,10 @@ for config_origem in config_origem:
 
                         if int(valor_processado) <= milha_buscada * 1.2 <= int(valor_processado) * 1.2:
                             encontrado_milha_range = True
-                            print valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
+                            print "Milha" + "\t" + valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
 
                     if not encontrado_milha_range and not int( valor_processado ) > 100000:
-                        print menor_milha + "\t" + menor_milha + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
+                        print "Milha" + "\t" + menor_milha + "\t" + menor_milha + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
                     driver.quit()
                 # except NoSuchElementException, e:
                 #     notfound_class = '.' + class_splited[0] + '-Pb-e'

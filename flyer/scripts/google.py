@@ -273,7 +273,7 @@ for config_origem in config_origem:
                     valor_processado = valor_exibicao.split("R$")
                     valor_processado = valor_processado[1]
                     valor_processado = re.sub('[^0-9]+', '', valor_processado)
-                    print valor_exibicao + "\t" + valor_processado + "\t" + config_dia_inicio + "\t" + config_dia_fim + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
+                    print "Valor" + "\t"+ valor_exibicao + "\t" + valor_processado + "\t" + config_dia_inicio + "\t" + config_dia_fim + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
                     driver.quit()
                 except NoSuchElementException, e:
                     notfound_class = '.' + class_splited[0] + '-Pb-e'
