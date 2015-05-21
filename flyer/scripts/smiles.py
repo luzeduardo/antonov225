@@ -124,7 +124,7 @@ config_destinos = {
 }
 config_origem = {
     'GIG',
-    'CGH'
+    #'CGH'
 }
 def calc_proc_load():
     processor_load =  os.getloadavg()
@@ -230,9 +230,9 @@ c_day = 15
 min_days_in_place = 5
 check_min_days = False
 
-datas = date_interval(s_year,s_month, s_day, e_year,e_month, e_day)
+#datas = date_interval(s_year,s_month, s_day, e_year,e_month, e_day)
 #ou setando na mao
-#datas = [['2015-11-09','2015-11-15'],['2015-11-10','2015-11-15']]
+datas = [['2015-11-09','2015-11-15'],['2015-11-10','2015-11-15']]
 
 
 config_datas = datas
@@ -241,8 +241,8 @@ nao_existe = deque()
 ida_durante_semana = True
 volta_durante_semana = True
 milha_buscada = 10000
-percentual_acima = 1.2
-percentual_abaixo = 1.2
+percentual_acima = 1.5
+percentual_abaixo = 1.5
 url = ''
 # print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
 for config_origem in config_origem:
