@@ -266,7 +266,7 @@ for config_origem in config_origem:
                 driver.set_window_size( 2048, 2048)  # set browser size.
                 
                 url = 'https://www.smiles.com.br/passagens-com-milhas?tripType=1&originAirport='+ config_origem +'&destinationAirport=' + str(destino[0]) + '&departureDay=' + config_dia_inicio + '&returnDay=' + config_dia_fim + '&adults=01&children=0&infants=0'
-                # print url
+                #print url
                 driver.get( url )
                 time.sleep(2)
                 driver.implicitly_wait(2)

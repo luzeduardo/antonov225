@@ -250,7 +250,7 @@ for config_origem in config_origem:
                 driver.set_window_size( 2048, 2048)  # set browser size.
                 
                 url = 'https://www.google.com.br/flights/#search;f=' + config_origem + ';t='+ str(destino[0]) +';d='+config_dia_inicio + ';r=' + config_dia_fim
-                
+                #print url
                 driver.get( url )
                 time.sleep(2)
                 driver.implicitly_wait(2)
@@ -258,7 +258,7 @@ for config_origem in config_origem:
                 core = driver.find_element_by_css_selector('#root')
                 class_name = core.get_attribute("class")            
                 class_splited = class_name.split('-',1)
-                final_class = '.' + class_splited[0] + '-c-nb'
+                final_class = '.' + class_splited[0] + '-c-pb'
                 wait_class = '.' + class_splited[0] + '-j-n'
 
                 #Testa se elemento de processamento sumiu e processegue com o script
