@@ -113,22 +113,6 @@ config_destinos = {
 # }
 #config_origem = 'CGH'
 
-config_destinos = {
-    'JFK':'New York',
-    'MIA':'Miami',
-    'MCO':'Orlando',
-    'LIS':'Lisboa',
-    'BCN':'Barcelona',  
-    'FRA':'Frankfurt',
-    'CUZ':'Chile',
-    'NVT':'Navegantes'
-}
-config_origem = {
-    'GIG',
-    'SDU',
-    'CGH'
-}
-
 def perdelta_start_to_end(start, end, delta):
     curr = start    
     while curr < end:
@@ -202,6 +186,23 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
     return datas
 
 
+
+config_destinos = {
+    'JFK':'New York',
+    'MIA':'Miami',
+    'MCO':'Orlando',
+    'LIS':'Lisboa',
+    'BCN':'Barcelona',
+    'FRA':'Frankfurt',
+    'CUZ':'Chile',
+    'NVT':'Navegantes'
+}
+config_origem = {
+    'GIG',
+    'SDU',
+    'CGH'
+}
+
 s_year = 2015
 s_month = 11
 s_day = 9
@@ -229,6 +230,9 @@ problemas = deque()
 nao_existe = deque()
 ida_durante_semana = True
 volta_durante_semana = True
+
+google_cheap_price_class = '-c-pb'
+google_processing_price_class = '-j-n'
 
 # print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
 #start_time = time.time()
@@ -258,8 +262,8 @@ for config_origem in config_origem:
                 core = driver.find_element_by_css_selector('#root')
                 class_name = core.get_attribute("class")            
                 class_splited = class_name.split('-',1)
-                final_class = '.' + class_splited[0] + '-c-pb'
-                wait_class = '.' + class_splited[0] + '-j-n'
+                final_class = '.' + class_splited[0] + google_cheap_price_class
+                wait_class = '.' + class_splited[0] + google_processing_price_class
 
                 #Testa se elemento de processamento sumiu e processegue com o script
                 element_existe = True
@@ -291,7 +295,7 @@ for config_origem in config_origem:
                     resultado = driver.find_element_by_css_selector(notfound_class)
                     for ne in nao_existe:
                         if str(ne) == str(destino[1]):
-                            problemas.append('Ignorar destino: ' + str(destino[1])+ ' motivo: ' +"\t" + valor)
+                            problemas.append('Ignorar destino: ' + str(destino[1]))
                     nao_existe.append(str(destino[1]))
                     driver.quit()
                 except Exception, e:
