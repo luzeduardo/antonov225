@@ -14,7 +14,7 @@ class Flight(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, null=False)
     departure_date = models.DateField(default=None, null=False) 
     landing_date = models.DateField(default=None, null=False)
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateTimeField('date published', null=True)
     link = models.TextField()
 
 class Schedule(models.Model):
@@ -29,10 +29,10 @@ class Schedule(models.Model):
     departure_in_weekend_only = models.BooleanField(default=False, null=False)
     landing_in_weekend_only = models.BooleanField(default=False, null=False)
     exactly_days_check = models.BooleanField(default=False, null=False)
-    url_access = models.TextField(default=None)
-    email = models.CharField(max_length=80,default=None)
-    pub_date = models.DateTimeField('date published')
+    url_access = models.TextField(default=None, null=True)
+    email = models.CharField(max_length=80,default=None, null=True)
+    pub_date = models.DateTimeField('date published', null=True)
 
 class PossibleFlights(models.Model):
     schedule = models.ForeignKey(Schedule, related_name="schedule_schedule")
-    pub_date = models.DateTimeField('date published')    
+    pub_date = models.DateTimeField('date published')
