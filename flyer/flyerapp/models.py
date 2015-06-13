@@ -1,5 +1,5 @@
 from django.db import models
-
+from datetime import datetime
 # Create your models here.
 class Place(models.Model):
     name = models.CharField(max_length=70, null=False)
@@ -31,7 +31,7 @@ class Schedule(models.Model):
     exactly_days_check = models.BooleanField(default=False, null=False)
     url_access = models.TextField(default=None, null=True)
     email = models.CharField(max_length=80,default=None, null=True)
-    pub_date = models.DateTimeField('date published', null=True)
+    pub_date = models.DateTimeField('date published', null=True, default=datetime.now() )
 
 class PossibleFlights(models.Model):
     schedule = models.ForeignKey(Schedule, related_name="schedule_schedule")
