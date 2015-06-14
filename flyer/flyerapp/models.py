@@ -29,8 +29,8 @@ class Schedule(models.Model):
     departure_in_weekend_only = models.BooleanField(default=False, null=False)
     landing_in_weekend_only = models.BooleanField(default=False, null=False)
     exactly_days_check = models.BooleanField(default=False, null=False)
-    url_access = models.TextField(default=None, null=True)
-    email = models.CharField(max_length=80,default=None, null=True)
+    url_access = models.TextField(default=None, null=True, blank=True)
+    email = models.CharField(max_length=80,default=None, null=True, blank=True)
     pub_date = models.DateTimeField('date published', null=True, default=datetime.now() )
 
 class PossibleFlights(models.Model):
