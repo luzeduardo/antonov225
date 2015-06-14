@@ -33,6 +33,9 @@ class Schedule(models.Model):
     email = models.CharField(max_length=80,default=None, null=True, blank=True)
     pub_date = models.DateTimeField('date published', null=True, default=datetime.now() )
 
+    def __unicode__(self):
+      return u'%s | %s: %s - %s >> %s' % (self.departure, self.landing, self.departure_date, self.landing_date, self.price)
+
 class PossibleFlights(models.Model):
     schedule = models.ForeignKey(Schedule, related_name="schedule_schedule")
     pub_date = models.DateTimeField('date published')
