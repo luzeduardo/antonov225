@@ -185,7 +185,87 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
 
     return datas
 
+# print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
+#start_time = time.time()
+def search(config_origem, config_destinos, config_datas, ida_durante_semana, volta_durante_semana, exactly_days_check, min_days_in_place):
+    google_cheap_price_class = '-c-pb'
+    google_processing_price_class = '-j-n'
+    for config_origem in config_origem:
+        for destino in config_destinos.items():
+            for datas in config_datas:
+                try:
+                    #start_time_loop = time.time()
+                    if is_weekend_day(datas[0]) and not ida_durante_semana: #ida apenas fds
+                        continue
+                    if is_weekend_day(datas[1]) and not volta_durante_semana: #volta apenas fds
+                        continue
+                    if exactly_days_check and not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
+                        continue
+                    config_dia_inicio = datas[0]
+                    config_dia_fim = datas[1]
+                    #driver = webdriver.Firefox()
+                    driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any'])
+                    driver.set_window_size( 2048, 2048)  # set browser size.
 
+                    url = 'https://www.google.com.br/flights/#search;f=' + config_origem + ';t='+ str(destino[0]) +';d='+config_dia_inicio + ';r=' + config_dia_fim
+                    #print url
+                    driver.get( url )
+                    time.sleep(2)
+                    driver.implicitly_wait(2)
+
+                    core = driver.find_element_by_css_selector('#root')
+                    class_name = core.get_attribute("class")
+                    class_splited = class_name.split('-',1)
+                    final_class = '.' + class_splited[0] + google_cheap_price_class
+                    wait_class = '.' + class_splited[0] + google_processing_price_class
+
+                    #Testa se elemento de processamento sumiu e processegue com o script
+                    element_existe = True
+                    teste_processando = 0
+                    while element_existe:
+                        try:
+                            teste_processando += 1
+                            resultado = driver.find_element_by_css_selector(wait_class)
+                            time.sleep(1)
+                            driver.implicitly_wait(1)
+                            if teste_processando == 1:
+                                element_existe = False
+                        except NoSuchElementException, e:
+                            element_existe = False
+
+                    try:
+                        time.sleep(2)
+                        driver.implicitly_wait(2)
+                        resultado = driver.find_element_by_css_selector(final_class)
+                        # data hora consulta, origem, valor, data pesquisada ida, data pesquisada volta, destino, url acesso
+                        valor_exibicao = resultado.text
+                        valor_processado = valor_exibicao.split("R$")
+                        valor_processado = valor_processado[1]
+                        valor_processado = re.sub('[^0-9]+', '', valor_processado)
+                        print "Valor" + "\t"+ valor_exibicao + "\t" + valor_processado + "\t" + config_dia_inicio + "\t" + config_dia_fim + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
+                        driver.quit()
+                    except NoSuchElementException, e:
+                        notfound_class = '.' + class_splited[0] + '-Pb-e'
+                        resultado = driver.find_element_by_css_selector(notfound_class)
+                        for ne in nao_existe:
+                            if str(ne) == str(destino[1]):
+                                problemas.append('Ignorar destino: ' + str(destino[1]))
+                        nao_existe.append(str(destino[1]))
+                        driver.quit()
+                    except Exception, e:
+                        problemas.append('Problema ao retornar valor de: ' + str(destino[1]) +"\t" + url)
+                        driver.quit()
+                    #print("--- %s seconds ---" % (time.time() - start_time_loop))
+                except Exception, e:
+                    problemas.append('Problema ao retornar elemento principal: ' + str(destino[1]) +"\t" + url)
+                    driver.quit()
+#print 'Hora Fim: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
+#print("--- %s seconds ---" % (time.time() - start_time))
+# @TODO verificar o que fazer com os erros
+# for erros in problemas:
+#     print erros
+#link smiles
+#'https://www.smiles.com.br/passagens-com-milhas?tripType=1&originAirport='+ config_origem +'&destinationAirport=' + destino[0] + '&departureDay=1433386800&returnDay=1433732400&adults=01&children=0&infants=0'
 
 config_destinos = {
     'JFK':'New York',
@@ -231,84 +311,4 @@ nao_existe = deque()
 ida_durante_semana = True
 volta_durante_semana = True
 
-google_cheap_price_class = '-c-pb'
-google_processing_price_class = '-j-n'
-
-# print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
-#start_time = time.time()
-for config_origem in config_origem:
-    for destino in config_destinos.items():
-        for datas in config_datas:
-            try:
-                #start_time_loop = time.time()
-                if is_weekend_day(datas[0]) and not ida_durante_semana: #ida apenas fds
-                    continue
-                if is_weekend_day(datas[1]) and not volta_durante_semana: #volta apenas fds
-                    continue    
-                if exactly_days_check and not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
-                    continue            
-                config_dia_inicio = datas[0]
-                config_dia_fim = datas[1]
-                #driver = webdriver.Firefox()
-                driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any'])
-                driver.set_window_size( 2048, 2048)  # set browser size.
-                
-                url = 'https://www.google.com.br/flights/#search;f=' + config_origem + ';t='+ str(destino[0]) +';d='+config_dia_inicio + ';r=' + config_dia_fim
-                #print url
-                driver.get( url )
-                time.sleep(2)
-                driver.implicitly_wait(2)
-
-                core = driver.find_element_by_css_selector('#root')
-                class_name = core.get_attribute("class")            
-                class_splited = class_name.split('-',1)
-                final_class = '.' + class_splited[0] + google_cheap_price_class
-                wait_class = '.' + class_splited[0] + google_processing_price_class
-
-                #Testa se elemento de processamento sumiu e processegue com o script
-                element_existe = True
-                teste_processando = 0
-                while element_existe:
-                    try:
-                        teste_processando += 1
-                        resultado = driver.find_element_by_css_selector(wait_class)
-                        time.sleep(1)
-                        driver.implicitly_wait(1)
-                        if teste_processando == 3:
-                            element_existe = False
-                    except NoSuchElementException, e:
-                        element_existe = False
-                
-                try:
-                    time.sleep(2)
-                    driver.implicitly_wait(2)
-                    resultado = driver.find_element_by_css_selector(final_class)
-                    # data hora consulta, origem, valor, data pesquisada ida, data pesquisada volta, destino, url acesso
-                    valor_exibicao = resultado.text
-                    valor_processado = valor_exibicao.split("R$")
-                    valor_processado = valor_processado[1]
-                    valor_processado = re.sub('[^0-9]+', '', valor_processado)
-                    print "Valor" + "\t"+ valor_exibicao + "\t" + valor_processado + "\t" + config_dia_inicio + "\t" + config_dia_fim + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
-                    driver.quit()
-                except NoSuchElementException, e:
-                    notfound_class = '.' + class_splited[0] + '-Pb-e'
-                    resultado = driver.find_element_by_css_selector(notfound_class)
-                    for ne in nao_existe:
-                        if str(ne) == str(destino[1]):
-                            problemas.append('Ignorar destino: ' + str(destino[1]))
-                    nao_existe.append(str(destino[1]))
-                    driver.quit()
-                except Exception, e:
-                    problemas.append('Problema ao retornar valor de: ' + str(destino[1]) +"\t" + url)
-                    driver.quit()
-                #print("--- %s seconds ---" % (time.time() - start_time_loop))
-            except Exception, e:
-                problemas.append('Problema ao retornar elemento principal: ' + str(destino[1]) +"\t" + url)
-                driver.quit()
-#print 'Hora Fim: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
-#print("--- %s seconds ---" % (time.time() - start_time))
-# @TODO verificar o que fazer com os erros
-# for erros in problemas:
-#     print erros
-#link smiles
-#'https://www.smiles.com.br/passagens-com-milhas?tripType=1&originAirport='+ config_origem +'&destinationAirport=' + destino[0] + '&departureDay=1433386800&returnDay=1433732400&adults=01&children=0&infants=0'
+search(config_origem, config_destinos, config_datas, ida_durante_semana, volta_durante_semana, exactly_days_check, min_days_in_place)
