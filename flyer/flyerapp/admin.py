@@ -8,7 +8,7 @@ def search_flights(modeladmin, request, queryset):
     for id in ids:
         schedule = Schedule.objects.filter(id=id).get()
         departure = Place.objects.filter(id=schedule.departure_id).get()
-        landing = Place.objects.filter(id=schedule.get('landing_id')).get()
+        landing = Place.objects.filter(id=schedule.landing_id).get()
 
     search_flights.short_description = "Search Flights"
 
