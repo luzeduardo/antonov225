@@ -39,7 +39,7 @@ class Schedule(models.Model):
     pub_date = models.DateTimeField('date published', null=True, default=datetime.now() )
 
     def __unicode__(self):
-      return u'%s | %s: %s - %s >> %s' % (self.departure, self.landing, self.departure_date, self.landing_date, self.price)
+      return u'%s | %s: %s - %s >> %s' % (self.departure, ", ".join(l.name for l in self.landing.all()[:5]), self.departure_date, self.landing_date, self.price)
 
 class PossibleFlights(models.Model):
     schedule = models.ForeignKey(Schedule, related_name="schedule_schedule")
