@@ -33,6 +33,8 @@ def autoexec_search_flights(modeladmin, request, queryset):
         interval=300,
         repeat=None
     )
+autoexec_search_flights.short_description = "Auto schedule search flight"
+
 
 """
 This code will create manual jobs in queue to do a flight search
@@ -46,7 +48,7 @@ def search_flights(modeladmin, request, queryset):
             departure = Place.objects.filter(id=schedule.departure_id).get()
             schedule_data_search(schedule, departure)
 
-    search_flights.short_description = "Search Flights Manually"
+search_flights.short_description = "Search flights manually"
 
 """
 """
