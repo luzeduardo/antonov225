@@ -23,6 +23,7 @@ class Flight(models.Model):
       return u'%s | %s: %s - %s >> %s - %s' % (self.departure, self.landing, self.departure_date, self.landing_date, self.price, self.link)
 
 class Schedule(models.Model):
+    active = models.BooleanField(default=True, null=False)
     departure = models.ForeignKey(Place, related_name="departure_schedule", null=False)
     landing = models.ManyToManyField(Place, related_name="landing_schedule", null=False)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=False)

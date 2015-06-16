@@ -24,7 +24,7 @@ Code for cronjob execution.
 This code will create automatically jobs in queue to do a flight search
 """
 def autoexec_search_flights():
-    ids = Schedule.objects.values()
+    ids = Schedule.objects.filter(active=True).values()
     for scd in ids:
         schedule = Schedule.objects.filter(id=scd.get('id')).get()
         departure = Place.objects.filter(id=schedule.departure_id).get()
@@ -36,7 +36,7 @@ This code will create manual jobs in queue to do a flight search
 def search_flights(modeladmin, request, queryset):
     ids = request.POST.getlist(helpers.ACTION_CHECKBOX_NAME)
     for id in ids:
-        schedule = Schedule.objects.filter(id=id).get()
+        schedule = Schedule.objects.filter(id=id,active=True).get()
         departure = Place.objects.filter(id=schedule.departure_id).get()
 
         search_exec(schedule, departure)
