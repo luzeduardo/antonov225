@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib import messages
 from django.contrib.admin import helpers
 
-from flyerapp.models import Place, Schedule, Flight
+from models import Place, Schedule, Flight
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException

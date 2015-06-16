@@ -1,5 +1,7 @@
 from django.db import models
 from datetime import datetime
+import requests
+from rq import get_current_job
 # Create your models here.
 class Place(models.Model):
     name = models.CharField(max_length=70, null=False)
