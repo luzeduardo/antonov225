@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import helpers
 
-from flyerapp.models import Place, Schedule
+from flyerapp.models import Place, Schedule, Flight
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from datetime import datetime, date, timedelta
@@ -20,7 +20,7 @@ def search_flights(modeladmin, request, queryset):
         landing = Place.objects.filter(id=schedule.landing_id).get()
 
         config_datas = [ [schedule.departure_date,schedule.landing_date] ]
-        search(departure.iata_code, landing.iata_code, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
+        search(departure, landing, departure.iata_code, landing.iata_code, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
 
     search_flights.short_description = "Search Flights"
 
@@ -103,7 +103,7 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
 
     return datas
 
-def search(origem, destinos, config_datas, ida_durante_semana, volta_durante_semana, exactly_days_check, min_days_in_place):
+def search(departure, landing, origem, destinos, config_datas, ida_durante_semana, volta_durante_semana, exactly_days_check, min_days_in_place):
     problemas = deque()
     nao_existe = deque()
     google_cheap_price_class = '-c-pb'
@@ -166,7 +166,18 @@ def search(origem, destinos, config_datas, ida_durante_semana, volta_durante_sem
                         valor_processado = valor_exibicao.split("R$")
                         valor_processado = valor_processado[1]
                         valor_processado = re.sub('[^0-9]+', '', valor_processado)
-                        print "Valor" + "\t"+ valor_exibicao + "\t" + valor_processado + "\t" + config_dia_inicio + "\t" + config_dia_fim + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
+
+                        fly = Flight()
+                        fly.departure = departure
+                        fly.landing = landing
+                        fly.price = valor_processado
+                        fly.departure_date = config_dia_inicio
+                        fly.landing_date = config_dia_fim
+                        fly.link = url
+                        fly.save()
+
+                        #print "Valor" + "\t"+ valor_exibicao + "\t" + valor_processado + "\t" + config_dia_inicio + "\t" + config_dia_fim + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
+
                         driver.quit()
                     except NoSuchElementException, e:
                         notfound_class = '.' + class_splited[0] + '-Pb-e'
