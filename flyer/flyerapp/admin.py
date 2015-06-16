@@ -1,7 +1,9 @@
 from django.contrib import admin
+from django.contrib import messages
 from django.contrib.admin import helpers
 
 from flyerapp.models import Place, Schedule, Flight
+
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from datetime import datetime, date, timedelta
@@ -26,7 +28,10 @@ def search_flights(modeladmin, request, queryset):
             landing_list[lnd.id] = landing
 
         config_datas = [ [schedule.departure_date,schedule.landing_date] ]
-        search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
+        try:
+            search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
+        except Exception, e:
+            messages.error(request,'Problema ao retornar valor de: ' + str(departure.iata_code))
 
     search_flights.short_description = "Search Flights"
 
@@ -188,18 +193,22 @@ def search(departure, config_origem, config_destinos, config_datas, ida_durante_
                             problemas.append('Ignorar destino: ' + str(destino[1]))
                     nao_existe.append(str(destino[1]))
                     driver.quit()
+                    return problemas
                 except Exception, e:
                     problemas.append('Problema ao retornar valor de: ' + str(destino[1]) +"\t" + url)
                     driver.quit()
+                    return problemas
                 #print("--- %s seconds ---" % (time.time() - start_time_loop))
             except Exception, e:
                 problemas.append('Problema ao retornar elemento principal: ' + str(destino[1]) +"\t" + url)
                 driver.quit()
+                return problemas
 
 
 class FlightAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        return False
     pass
-
 
 class ScheduleAdmin(admin.ModelAdmin):
     actions = [search_flights]
