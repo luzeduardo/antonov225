@@ -5,7 +5,7 @@ from rq import get_current_job
 # Create your models here.
 class Place(models.Model):
     name = models.CharField(max_length=70, null=False)
-    iata_code = models.CharField(max_length=3, null=False)
+    iata_code = models.CharField(max_length=3, null=False, unique=True)
     
     def __unicode__(self):
         return self.name
