@@ -14,7 +14,7 @@ class Flight(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, null=False)
     departure_date = models.DateField(default=None, null=False) 
     landing_date = models.DateField(default=None, null=False)
-    pub_date = models.DateTimeField('date published', null=True)
+    pub_date = models.DateTimeField('date published', null=True,default=datetime.now())
     link = models.TextField()
 
 class Schedule(models.Model):
