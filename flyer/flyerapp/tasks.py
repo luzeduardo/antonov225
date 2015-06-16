@@ -14,6 +14,16 @@ import json
 import re
 
 
+@job
+def auto_schedule_search():
+    ids = Schedule.objects.filter(active=1).values()
+    for scd in ids:
+        schedule = Schedule.objects.filter(id=id, active=1)
+        if schedule:
+            schedule = schedule.get()
+            departure = Place.objects.filter(id=schedule.departure_id).get()
+            schedule_data_search(schedule, departure)
+
 """
 This method is executed by the queue
 """

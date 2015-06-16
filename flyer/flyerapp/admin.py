@@ -24,13 +24,23 @@ Code for cronjob execution.
 This code will create automatically jobs in queue to do a flight search
 """
 def autoexec_search_flights():
+    scheduler = django_rq.get_scheduler('default')
+    scheduler.schedule(
+        scheduled_time=datetime.now(), # Time for first execution, in UTC timezone
+        func=tasks.auto_schedule_search,                     # Function to be queued
+        args=[None],                   # Arguments passed into function when executed
+        kwargs={},                     # Keyword arguments passed into function when executed
+        interval=3600,                   # Time before the function is called again, in seconds
+        repeat=None                      # Repeat this number of times (None means repeat forever)
+    )
+
     ids = Schedule.objects.filter(active=1).values()
     for scd in ids:
-        schedule = Schedule.objects.filter(id=id,active=1)
+        schedule = Schedule.objects.filter(id=id, active=1)
         if schedule:
             schedule = schedule.get()
             departure = Place.objects.filter(id=schedule.departure_id).get()
-            search_exec(schedule, departure)
+            schedule_data_search(schedule, departure)
 
 """
 This code will create manual jobs in queue to do a flight search
@@ -38,17 +48,17 @@ This code will create manual jobs in queue to do a flight search
 def search_flights(modeladmin, request, queryset):
     ids = request.POST.getlist(helpers.ACTION_CHECKBOX_NAME)
     for id in ids:
-        schedule = Schedule.objects.filter(id=id,active=1)
+        schedule = Schedule.objects.filter(id=id, active=1)
         if schedule:
             schedule = schedule.get()
             departure = Place.objects.filter(id=schedule.departure_id).get()
-            search_exec(schedule, departure)
+            schedule_data_search(schedule, departure)
 
-    search_flights.short_description = "Search Flights"
+    search_flights.short_description = "Search Flights Manually"
 
 """
 """
-def search_exec(schedule, departure):
+def schedule_data_search(schedule, departure):
     landing_list = {}
     for lnd in schedule.landing.all():
         landing = {}
@@ -57,7 +67,7 @@ def search_exec(schedule, departure):
 
     config_datas = [ [schedule.departure_date,schedule.landing_date] ]
     try:
-        search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
+        enqueue_search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
     except Exception, e:
         messages.error('Problema ao retornar valor de: ' + str(departure.iata_code))
 
@@ -137,7 +147,7 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
 """
 This method create the jobs in queue
 """
-def search(departure, config_origem, config_destinos, config_datas, ida_durante_semana, volta_durante_semana, exactly_days_check, min_days_in_place):
+def enqueue_search(departure, config_origem, config_destinos, config_datas, ida_durante_semana, volta_durante_semana, exactly_days_check, min_days_in_place):
     problemas = deque()
     nao_existe = deque()
 
