@@ -26,9 +26,11 @@ This code will create automatically jobs in queue to do a flight search
 def autoexec_search_flights():
     ids = Schedule.objects.filter(active=1).values()
     for scd in ids:
-        schedule = Schedule.objects.filter(id=scd.get('id')).get()
-        departure = Place.objects.filter(id=schedule.departure_id).get()
-        search_exec(schedule, departure)
+        schedule = Schedule.objects.filter(id=id,active=1)
+        if schedule:
+            schedule = schedule.get()
+            departure = Place.objects.filter(id=schedule.departure_id).get()
+            search_exec(schedule, departure)
 
 """
 This code will create manual jobs in queue to do a flight search
