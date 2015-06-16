@@ -18,12 +18,15 @@ def search_flights(modeladmin, request, queryset):
         schedule = Schedule.objects.filter(id=id).get()
         departure = Place.objects.filter(id=schedule.departure_id).get()
         #landing = Place.objects.filter(id=schedule.landing_id).get()
-        landing = {}
+
+        landing_list = {}
         for lnd in schedule.landing.all():
+            landing = {}
             landing[lnd.iata_code] = lnd.name
+            landing_list[lnd.id] = landing
 
         config_datas = [ [schedule.departure_date,schedule.landing_date] ]
-        search(departure, landing, departure.iata_code, landing.iata_code, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
+        search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
 
     search_flights.short_description = "Search Flights"
 
@@ -106,7 +109,7 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
 
     return datas
 
-def search(departure, landing, config_origem, config_destinos, config_datas, ida_durante_semana, volta_durante_semana, exactly_days_check, min_days_in_place):
+def search(departure, config_origem, config_destinos, config_datas, ida_durante_semana, volta_durante_semana, exactly_days_check, min_days_in_place):
     problemas = deque()
     nao_existe = deque()
     google_cheap_price_class = '-c-pb'
@@ -128,7 +131,7 @@ def search(departure, landing, config_origem, config_destinos, config_datas, ida
                 driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any'])
                 driver.set_window_size( 2048, 2048)  # set browser size.
 
-                url = 'https://www.google.com.br/flights/#search;f=' + config_origem + ';t='+ str(destino[0]) +';d='+config_dia_inicio + ';r=' + config_dia_fim
+                url = 'https://www.google.com.br/flights/#search;f=' + config_origem + ';t='+ str(destino[1].keys()) +';d='+config_dia_inicio + ';r=' + config_dia_fim
                 #print url
                 driver.get( url )
                 time.sleep(2)
@@ -164,6 +167,7 @@ def search(departure, landing, config_origem, config_destinos, config_datas, ida
                     valor_processado = valor_processado[1]
                     valor_processado = re.sub('[^0-9]+', '', valor_processado)
 
+                    landing = Place.objects.filter(id=destino[0]).get()
                     fly = Flight()
                     fly.departure = departure
                     fly.landing = landing
