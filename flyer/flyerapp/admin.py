@@ -19,12 +19,30 @@ import django_rq
 from rq import get_current_job
 from django_rq import job
 
+def autoexec_search_flights(modeladmin, request, queryset):
+    ids = Schedule.objects.values()
+    for scd in ids:
+        schedule = Schedule.objects.filter(id=scd.get('id')).get()
+        departure = Place.objects.filter(id=schedule.departure_id).get()
+
+        landing_list = {}
+        for lnd in schedule.landing.all():
+            landing = {}
+            landing[lnd.iata_code] = lnd.name
+            landing_list[lnd.id] = landing
+
+        config_datas = [ [schedule.departure_date,schedule.landing_date] ]
+        try:
+            search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
+        except Exception, e:
+            messages.error('Problema ao retornar valor de: ' + str(departure.iata_code))
+    search_flights.short_description = "Autoexec Search Flights"
+
 def search_flights(modeladmin, request, queryset):
     ids = request.POST.getlist(helpers.ACTION_CHECKBOX_NAME)
     for id in ids:
         schedule = Schedule.objects.filter(id=id).get()
         departure = Place.objects.filter(id=schedule.departure_id).get()
-        #landing = Place.objects.filter(id=schedule.landing_id).get()
 
         landing_list = {}
         for lnd in schedule.landing.all():
@@ -222,7 +240,7 @@ class FlightAdmin(admin.ModelAdmin):
     pass
 
 class ScheduleAdmin(admin.ModelAdmin):
-    actions = [search_flights]
+    actions = [search_flights,autoexec_search_flights]
 
 admin.site.register(Place)
 admin.site.register(Flight, FlightAdmin)
