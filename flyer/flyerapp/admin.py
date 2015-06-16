@@ -131,7 +131,7 @@ def search(departure, config_origem, config_destinos, config_datas, ida_durante_
                 driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any'])
                 driver.set_window_size( 2048, 2048)  # set browser size.
 
-                url = 'https://www.google.com.br/flights/#search;f=' + config_origem + ';t='+ str(destino[1].keys()) +';d='+config_dia_inicio + ';r=' + config_dia_fim
+                url = 'https://www.google.com.br/flights/#search;f=' + config_origem + ';t='+ str(destino[1].keys()[0]) +';d='+config_dia_inicio + ';r=' + config_dia_fim
                 #print url
                 driver.get( url )
                 time.sleep(2)
