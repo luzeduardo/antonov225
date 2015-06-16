@@ -19,50 +19,44 @@ import django_rq
 from rq import get_current_job
 from django_rq import job
 
-def autoexec_search_flights(modeladmin, request, queryset):
+"""
+Code for cronjob execution.
+This code will create automatically jobs in queue to do a flight search
+"""
+def autoexec_search_flights():
     ids = Schedule.objects.values()
     for scd in ids:
         schedule = Schedule.objects.filter(id=scd.get('id')).get()
         departure = Place.objects.filter(id=schedule.departure_id).get()
+        search_exec(schedule, departure)
 
-        landing_list = {}
-        for lnd in schedule.landing.all():
-            landing = {}
-            landing[lnd.iata_code] = lnd.name
-            landing_list[lnd.id] = landing
-
-        config_datas = [ [schedule.departure_date,schedule.landing_date] ]
-        try:
-            search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
-        except Exception, e:
-            messages.error('Problema ao retornar valor de: ' + str(departure.iata_code))
-    search_flights.short_description = "Autoexec Search Flights"
-
+"""
+This code will create manual jobs in queue to do a flight search
+"""
 def search_flights(modeladmin, request, queryset):
     ids = request.POST.getlist(helpers.ACTION_CHECKBOX_NAME)
     for id in ids:
         schedule = Schedule.objects.filter(id=id).get()
         departure = Place.objects.filter(id=schedule.departure_id).get()
 
-        landing_list = {}
-        for lnd in schedule.landing.all():
-            landing = {}
-            landing[lnd.iata_code] = lnd.name
-            landing_list[lnd.id] = landing
-
-        config_datas = [ [schedule.departure_date,schedule.landing_date] ]
-        try:
-            search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
-        except Exception, e:
-            messages.error(request,'Problema ao retornar valor de: ' + str(departure.iata_code))
+        search_exec(schedule, departure)
 
     search_flights.short_description = "Search Flights"
 
+"""
+"""
+def search_exec(schedule, departure):
+    landing_list = {}
+    for lnd in schedule.landing.all():
+        landing = {}
+        landing[lnd.iata_code] = lnd.name
+        landing_list[lnd.id] = landing
 
-
-
-
-
+    config_datas = [ [schedule.departure_date,schedule.landing_date] ]
+    try:
+        search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
+    except Exception, e:
+        messages.error('Problema ao retornar valor de: ' + str(departure.iata_code))
 
 
 def perdelta_start_to_end(start, end, delta):
@@ -137,6 +131,9 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
 
     return datas
 
+"""
+This method create the jobs in queue
+"""
 def search(departure, config_origem, config_destinos, config_datas, ida_durante_semana, volta_durante_semana, exactly_days_check, min_days_in_place):
     problemas = deque()
     nao_existe = deque()

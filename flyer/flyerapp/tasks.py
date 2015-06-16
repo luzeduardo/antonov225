@@ -14,6 +14,9 @@ import json
 import re
 
 
+"""
+This method is executed by the queue
+"""
 @job
 def fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim ):
     problemas = deque()
