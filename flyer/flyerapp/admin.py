@@ -14,6 +14,11 @@ import json
 import re
 import os, sys
 
+import tasks
+import django_rq
+from rq import get_current_job
+from django_rq import job
+
 def search_flights(modeladmin, request, queryset):
     ids = request.POST.getlist(helpers.ACTION_CHECKBOX_NAME)
     for id in ids:
@@ -131,12 +136,15 @@ def search(departure, config_origem, config_destinos, config_datas, ida_durante_
                 config_dia_inicio = str(datas[0])
                 config_dia_fim = str(datas[1])
 
-                fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim )
+                #fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim )
+                queue = django_rq.get_queue('default')
+                queue.enqueue(tasks.fligth_value_search, departure, config_origem, destino, config_dia_inicio, config_dia_fim)
                 #print("--- %s seconds ---" % (time.time() - start_time_loop))
             except Exception, e:
                 problemas.append('Problema ao retornar elemento principal: ' + str(destino[1]) +"\t")
                 return problemas
 
+@job
 def fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim ):
     problemas = deque()
     nao_existe = deque()
@@ -207,7 +215,6 @@ def fligth_value_search(departure, config_origem, destino, config_dia_inicio, co
         problemas.append('Problema ao retornar valor de: ' + str(destino[1]) +"\t" + url)
         driver.quit()
         return problemas
-    x = 1 + 1
 
 class FlightAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
