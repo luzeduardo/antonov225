@@ -36,10 +36,11 @@ This code will create manual jobs in queue to do a flight search
 def search_flights(modeladmin, request, queryset):
     ids = request.POST.getlist(helpers.ACTION_CHECKBOX_NAME)
     for id in ids:
-        schedule = Schedule.objects.filter(id=id,active=1).get()
-        departure = Place.objects.filter(id=schedule.departure_id).get()
-
-        search_exec(schedule, departure)
+        schedule = Schedule.objects.filter(id=id,active=1)
+        if schedule:
+            schedule = schedule.get()
+            departure = Place.objects.filter(id=schedule.departure_id).get()
+            search_exec(schedule, departure)
 
     search_flights.short_description = "Search Flights"
 
