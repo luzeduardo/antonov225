@@ -203,4 +203,5 @@ class ScheduleAdmin(admin.ModelAdmin):
     actions = [search_flights]
 
 admin.site.register(Place)
+admin.site.register(Flight)
 admin.site.register(Schedule, ScheduleAdmin)

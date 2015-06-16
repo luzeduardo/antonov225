@@ -17,9 +17,12 @@ class Flight(models.Model):
     pub_date = models.DateTimeField('date published', null=True,default=datetime.now())
     link = models.TextField()
 
+    def __unicode__(self):
+      return u'%s | %s: %s - %s >> %s - %s' % (self.departure, self.landing, self.departure_date, self.landing_date, self.price, self.link)
+
 class Schedule(models.Model):
     departure = models.ForeignKey(Place, related_name="departure_schedule", null=False)
-    landing = models.ForeignKey(Place, related_name="landing_schedule", null=False)
+    landing = models.ManyToManyField(Place, related_name="landing_schedule", null=False)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=False)
     price_percent_lower = models.DecimalField(max_digits=2, decimal_places=1, null=False, default=1.3)
     price_percent_highter = models.DecimalField(max_digits=2, decimal_places=1, null=False, default=1.3)
