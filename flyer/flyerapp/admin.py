@@ -196,12 +196,13 @@ def search(departure, landing, origem, destinos, config_datas, ida_durante_seman
                     driver.quit()
 
 
-
+class FlightAdmin(admin.ModelAdmin):
+    pass
 
 
 class ScheduleAdmin(admin.ModelAdmin):
     actions = [search_flights]
 
 admin.site.register(Place)
-admin.site.register(Flight)
+admin.site.register(Flight, FlightAdmin)
 admin.site.register(Schedule, ScheduleAdmin)
