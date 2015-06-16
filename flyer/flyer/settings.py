@@ -183,3 +183,4 @@ LOGGING = {
 #https://github.com/ui/django-rq
 #running workers to process searchs
 #python manage.py rqworker high default low
+#rqscheduler
