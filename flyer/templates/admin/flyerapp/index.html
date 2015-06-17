@@ -17,6 +17,10 @@
                 <th scope="row">{{ model.name }}</th>
             {% endif %}
 
+            {% if model.object_name == 'Schedule' %}
+                <td><a href="{{ model.autoexec_search_flights }}" class="custom-class">{% trans 'Autoexecute search flight' %}</a></td>
+            {% endif %}
+
             {% if model.add_url %}
                 <td><a href="{{ model.add_url }}" class="addlink">{% trans 'Add' %}</a></td>
             {% else %}

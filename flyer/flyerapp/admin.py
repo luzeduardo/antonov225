@@ -23,6 +23,7 @@ from django_rq import job
 Code for cronjob execution.
 This code will create automatically jobs in queue to do a flight search
 """
+@classmethod
 def autoexec_search_flights(modeladmin, request, queryset):
     scheduler = django_rq.get_scheduler('default')
     scheduler.schedule(
@@ -33,7 +34,7 @@ def autoexec_search_flights(modeladmin, request, queryset):
         interval=3600,
         repeat=None
     )
-autoexec_search_flights.short_description = "Auto schedule search flight"
+    autoexec_search_flights.short_description = "Auto schedule search flight"
 
 
 """

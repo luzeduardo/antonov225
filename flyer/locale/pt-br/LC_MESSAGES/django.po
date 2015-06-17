@@ -1830,3 +1830,9 @@ msgstr ""
 
 msgid "Schedule"
 msgstr "Agendamento"
+
+msgid "Autoexecute search flight"
+msgstr "Agendar pesquisa de vôos automaticamente"
+
+
+
