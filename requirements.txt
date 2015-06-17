@@ -10,3 +10,4 @@ django-rq-dashboard
 django-redis==3.8.2
 rq==0.4.6
 rq-scheduler==0.5.0
+django-admin-bootstrapped==2.5.1

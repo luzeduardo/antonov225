@@ -30,7 +30,7 @@ def autoexec_search_flights(modeladmin, request, queryset):
         func=auto_schedule_search,
         # args=[],
         kwargs={},
-        interval=300,
+        interval=3600,
         repeat=None
     )
 autoexec_search_flights.short_description = "Auto schedule search flight"
