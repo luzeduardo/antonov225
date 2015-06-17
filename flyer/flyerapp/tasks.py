@@ -1,6 +1,4 @@
 __author__ = 'eduardoluz'
-import requests
-
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from models import Place, Schedule, Flight
