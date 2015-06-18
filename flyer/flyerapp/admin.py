@@ -30,7 +30,7 @@ def autoexec_search_flights(modeladmin, request, queryset):
         func=auto_schedule_search,
         # args=[],
         kwargs={},
-        interval=3600,
+        interval=30,
         repeat=None
     )
     autoexec_search_flights.short_description = "Auto schedule search flight"
@@ -61,7 +61,7 @@ def schedule_data_search(schedule, departure):
 
     config_datas = [ [schedule.departure_date,schedule.landing_date] ]
     try:
-        enqueue_search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place)
+        enqueue_search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place, schedule)
     except Exception, e:
         messages.error('Problema ao retornar valor de: ' + str(departure.iata_code))
 
@@ -141,14 +141,13 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
 """
 This method create the jobs in queue
 """
-def enqueue_search(departure, config_origem, config_destinos, config_datas, ida_durante_semana, volta_durante_semana, exactly_days_check, min_days_in_place):
+def enqueue_search(departure, config_origem, config_destinos, config_datas, ida_durante_semana, volta_durante_semana, exactly_days_check, min_days_in_place, schedule):
     problemas = deque()
     nao_existe = deque()
 
     for destino in config_destinos.items():
         for datas in config_datas:
             try:
-                #start_time_loop = time.time()
                 if is_weekend_day(str(datas[0])) and not ida_durante_semana: #ida apenas fds
                     continue
                 if is_weekend_day(str(datas[1])) and not volta_durante_semana: #volta apenas fds
@@ -159,18 +158,30 @@ def enqueue_search(departure, config_origem, config_destinos, config_datas, ida_
                 config_dia_fim = str(datas[1])
 
                 queue = django_rq.get_queue('default')
-                queue.enqueue(fligth_value_search, departure, config_origem, destino, config_dia_inicio, config_dia_fim)
-                #print("--- %s seconds ---" % (time.time() - start_time_loop))
+                queue.enqueue(fligth_value_search, departure, config_origem, destino, config_dia_inicio, config_dia_fim, schedule.id)
+                #fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim, schedule.id)
             except Exception, e:
                 problemas.append('Problema ao retornar elemento principal: ' + str(destino[1]) +"\t")
                 return problemas
+
+def notify_price_range_to_user(price, schedule):
+    tprice = float(price)
+    hpct = float(schedule.price_percent_highter)
+    lpct = float(schedule.price_percent_lower)
+    sprice = float(schedule.price)
+    hprice = sprice * hpct
+    lprice = sprice * lpct - sprice
+    if lprice <= tprice <= hprice:
+        return True
+    else:
+        return False
 
 
 """
 This method is executed by the queue
 """
 @job
-def fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim ):
+def fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim, scheduleid):
     problemas = deque()
     nao_existe = deque()
     google_cheap_price_class = '-c-pb'
@@ -180,7 +191,6 @@ def fligth_value_search(departure, config_origem, destino, config_dia_inicio, co
     driver.set_window_size( 2048, 2048)  # set browser size.
 
     url = 'https://www.google.com.br/flights/#search;f=' + config_origem + ';t='+ str(destino[1].keys()[0]) +';d='+config_dia_inicio + ';r=' + config_dia_fim
-    #print url
     driver.get( url )
     time.sleep(2)
     driver.implicitly_wait(2)
@@ -209,13 +219,18 @@ def fligth_value_search(departure, config_origem, destino, config_dia_inicio, co
         time.sleep(2)
         driver.implicitly_wait(2)
         resultado = driver.find_element_by_css_selector(final_class)
-        # data hora consulta, origem, valor, data pesquisada ida, data pesquisada volta, destino, url acesso
+
         valor_exibicao = resultado.text
         valor_processado = valor_exibicao.split("R$")
         valor_processado = valor_processado[1]
         valor_processado = re.sub('[^0-9]+', '', valor_processado)
 
-        landing = Place.objects.filter(id=destino[0]).get()
+        landing = Place.objects.filter(id=int(destino[0])).get()
+        schedule = Place.objects.filter(id=int(scheduleid)).get()
+
+        if schedule:
+            notify_price_range_to_user(valor_processado, schedule)
+
         fly = Flight()
         fly.departure = departure
         fly.landing = landing
@@ -225,7 +240,6 @@ def fligth_value_search(departure, config_origem, destino, config_dia_inicio, co
         fly.link = url
         fly.save()
 
-        #print "Valor" + "\t"+ valor_exibicao + "\t" + valor_processado + "\t" + config_dia_inicio + "\t" + config_dia_fim + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
         driver.quit()
     except NoSuchElementException, e:
         notfound_class = '.' + class_splited[0] + '-Pb-e'
