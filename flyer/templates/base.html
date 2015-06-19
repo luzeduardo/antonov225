@@ -1,16 +1,91 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+    <head>
+    {% load staticfiles %}
 
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.js"></script>
-    <script src="/angular-ui-router.min.js"></script>
-    <script type="text/javascript" src="http://cdn.jsdelivr.net/restangular/latest/restangular.js"></script>
+    <meta charset="UTF-8" />
 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>{% block title %}{% endblock %}</title>
+
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="content-language" content="pt-br" />
+		<meta http-equiv="cache-control" content="no-cache" />
+
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<meta name="copyright" content="Copyright &copy {% now 'Y' %}. Todos os direitos reservados." />
+		<!-- <meta name="robots" content="all" /> -->
+        <meta name="robots" content="noindex, nofollow">
+		<meta name="rating" content="general" />
+
+		<link type="image/x-icon" rel="shortcut icon" href="#" />
+
+    {% block stylesheets %}
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" type="text/css"/>
+        <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}" type="text/css"/>
+{#        <link href="{% static 'flyerapp/css/app.css' %}" type="text/css" rel="stylesheet" media="all"/>#}
+
+    {% endblock %}
+    {% block javascriptHead %}
+
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+        <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+{#        <script type="text/javascript" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js"></script>#}
+
+        <script type="text/javascript" src="{% static 'js/jquery.validate.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.mask.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.blockUI.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.validate-pt-BR.js' %}"></script>
+        <!--[if lt IE 9]>
+				<script type="text/javascript" src="js/html5shiv.min.js"></script>
+				<script type="text/javascript" src="js/respond.min.js"></script>
+        <![endif]-->
+{#        <script type="text/javascript" src="{% static 'flyerapp/js/atendimento.js' %}"></script>#}
+    {% endblock %}
 </head>
+
+
 <body>
-   {% block content %}{% endblock content %}
-   {% block extra_javascript %}{% endblock extra_javascript %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(document).ajaxStart(function () {
+		        $.blockUI({
+		          message: "<h3 style='color: #7d879b; margin-top: 5px;'><span>Aguarde</span></h3>"
+		        });
+	        }).ajaxStop(function () {
+	          $.unblockUI();
+	        });
+        });
+    </script>
+
+	<!-- VERTICAL CENTER - Begin -->
+	<div class="vertical-center">
+
+	    <!-- PAGE CONTAINER - Begin -->
+	    <div class="page-container">
+	        <!-- PAGE CONTENT - Begin -->
+	        <div class="page-content">
+
+              {% block header %}{% endblock %}
+              {% block content %}{% endblock %}
+
+	        </div>
+	        <!-- PAGE CONTENT - End -->
+
+	    </div>
+	    <!-- PAGE CONTAINER - End -->
+
+	</div>
+	<!-- VERTICAL CENTER - End -->
+
+	{% block dialogs %}{% endblock %}
+
+	{% block javascriptFooter %}{% endblock %}
 </body>
 </html>
