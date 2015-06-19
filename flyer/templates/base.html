@@ -33,8 +33,8 @@
     {% block javascriptHead %}
         <script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular-cookies.js"></script>
         <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-{#        <script type="text/javascript" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js"></script>#}
         <script type="text/javascript" src="{% static 'app/app.js' %}"></script>
 
         <script type="text/javascript" src="{% static 'js/jquery.validate.min.js' %}"></script>
@@ -45,13 +45,12 @@
 				<script type="text/javascript" src="js/html5shiv.min.js"></script>
 				<script type="text/javascript" src="js/respond.min.js"></script>
         <![endif]-->
-{#        <script type="text/javascript" src="{% static 'flyerapp/js/atendimento.js' %}"></script>#}
     {% endblock %}
+
     {% block javascriptExtra %}
     {% endblock %}
 
 </head>
-
 
 <body>
     <script type="text/javascript">
