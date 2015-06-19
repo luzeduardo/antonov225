@@ -1,10 +1,36 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load i18n %}
+{% block javascriptExtra %}
+    <script type="text/javascript" src="{% static 'controllers/schedule-controller.js' %}"></script>
+{% endblock %}
 {% block content %}
-<div class="container content" ng-app="JobApp">
-    <div ui-view >Loading...</div>
-</div>
-{% endblock content %}
-{% block extra_javascript %}
-<script src="{{ STATIC_URL }}/javascript/app.js"></script>
-{% endblock extra_javascript %}
+<body ng-app="app">
+	<div ng-controller="ScheduleController">
+        <table class="table">
+            <tr>
+                <th>Desc</th>
+                <th>Qtd</th>
+                <th>Custo</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="item in pedido.itens">
+                <td>{[{ item.descricao }]}</td>
+                <td><input type="number" ng-model="item.qtd" min="1" max="10"></td>
+                <td>{[{ item.preco }]}</td>
+                <td>{[{item.qtd * item.preco | currency}]}</td>
+                <td>
+                [<a href ng-click="excluirItem($index)">X</a>]
+                </td>
+            </tr>
+            <tr>
+                <td><a href ng-click="adicionarItem()" class="btn btn-small">Adicionar Item</a></td>
+                <td></td>
+                <td>Total:</td>
+                <td>{[{pedido.total() | currency}]}</td>
+            </tr>
+        </table>
+	</div>
+</body>
+{% endblock %}
