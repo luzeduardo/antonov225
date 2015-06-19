@@ -12,7 +12,7 @@
         }
 	}
 
-	$scope.adicionarItem = function() {
+	$scope.addSchedule = function() {
         var produto = {
             descricao: 'A guerra dos tronos - The Board Game',
             preco: 150.0,
@@ -24,7 +24,7 @@
         })
 	}
 
-	$scope.excluirItem = function(index) {
+	$scope.deleteSchedule = function(index) {
         $http.post('/delete/' + index).success(function(data) {
             $scope.pedido.itens = data;
         })

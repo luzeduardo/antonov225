@@ -21,11 +21,11 @@
                 <td>{[{ item.preco }]}</td>
                 <td>{[{item.qtd * item.preco | currency}]}</td>
                 <td>
-                [<a href ng-click="excluirItem($index)">X</a>]
+                [<a href ng-click="deleteSchedule($index)">X</a>]
                 </td>
             </tr>
             <tr>
-                <td><a href ng-click="adicionarItem()" class="btn btn-small">Adicionar Item</a></td>
+                <td><a href ng-click="addSchedule()" class="btn btn-small">Adicionar Item</a></td>
                 <td></td>
                 <td>Total:</td>
                 <td>{[{pedido.total() | currency}]}</td>
