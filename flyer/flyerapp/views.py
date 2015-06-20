@@ -1,7 +1,63 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+from models import Schedule
+from serializers import ScheduleSerializer
 import json
 
+class JSONResponse(HttpResponse):
+    """
+    Um HttpReponse  que renderiza seu conteudo em, json.
+    """
+    def __init__(self, data, **kwargs):
+        content = JSONRenderer().render(data)
+        kwargs['content_type'] = 'application/json'
+        super(JSONResponse, self).__init__(content, **kwargs)
+
+
+def schedule_list(request):
+    """
+    List all code snippets, or create a new snippet.
+    """
+    if request.method == 'GET':
+        snippets = Schedule.objects.all()
+        serializer = ScheduleSerializer(snippets, many=True)
+        return JSONResponse(serializer.data)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = ScheduleSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JSONResponse(serializer.data, status=201)
+        return JSONResponse(serializer.errors, status=400)
+
+
+def schedule_detail(request, pk):
+    """
+    Retrieve, update or delete a code snippet.
+    """
+    try:
+        schedule = Schedule.objects.get(pk=pk)
+    except Schedule.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = ScheduleSerializer(schedule)
+        return JSONResponse(serializer.data)
+
+    elif request.method == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = ScheduleSerializer(schedule, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JSONResponse(serializer.data)
+        return JSONResponse(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        schedule.delete()
+        return HttpResponse(status=204)
 
 def index(request):
 	return render(request, 'schedule/index.html', {})

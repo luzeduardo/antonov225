@@ -276,32 +276,3 @@ class ScheduleAdmin(admin.ModelAdmin):
 admin.site.register(Place)
 admin.site.register(Flight, FlightAdmin)
 admin.site.register(Schedule, ScheduleAdmin)
-
-def alteracao_contato(cpf, email, cartao, msisdn,login_username):
-    try:
-        params = {
-            'plataforma': 'callcenter',
-            'versaoSO': 'callcenter',
-            'versaoApp': 'callcenter',
-            'soRoteado': False,
-            'idRequisicao': str( cpf ) + str( datetime.datetime.now( ).time( ) ),
-            'idInstalacao': 'callcenter',
-            'cpf': str( cpf ),
-            'emailComprovante': email,
-            'ultimosDigitosCartao': str(cartao),
-            'msisdn':msisdn,
-            'loginAlteracao':login_username
-        }
-
-        action = '/notificacao/v1/alterar-email'
-        resp = m4ucore_command( action=action, method='POST', data=params )
-
-        if (resp.get( 'ok' ) == True and resp.get( 'data' ).get( 'codigo' ) == '00' ):
-            data = resp.get( 'data' )
-            return resp
-        else:
-            return resp
-
-    except Exception, e:
-        log.error( 'error: ' + str( e.message ) + ' - action: ' + action + ' - params: ' + str( params ) )
-        return None                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           

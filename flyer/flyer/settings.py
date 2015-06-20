@@ -52,7 +52,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_rq',
     'django_rq_dashboard',
-    'flyerapp'
+    'flyerapp',
+    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -166,7 +167,7 @@ LANGUAGES = (
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Add a logger for rq_scheduler in order to display when jobs are queueud
 LOGGING = {

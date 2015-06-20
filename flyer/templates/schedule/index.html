@@ -4,31 +4,61 @@
 {% block javascriptExtra %}
     <script type="text/javascript" src="{% static 'controllers/schedule-controller.js' %}"></script>
 {% endblock %}
+
 {% block content %}
 <body ng-app="app">
 	<div ng-controller="ScheduleController">
-        <table class="table">
-            <tr>
-                <th>Desc</th>
-                <th>Qtd</th>
-                <th>Custo</th>
-                <th>Total</th>
-                <th></th>
-            </tr>
-            <tr ng-repeat="item in pedido.itens">
-                <td>{[{ item.descricao }]}</td>
-                <td><input type="number" ng-model="item.qtd" min="1" max="10"></td>
-                <td>{[{ item.preco }]}</td>
-                <td>{[{item.qtd * item.preco | currency}]}</td>
-                <td>
-                [<a href ng-click="deleteSchedule($index)">X</a>]
-                </td>
-            </tr>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ativo</th>
+                    <th>Dias no local</th>
+                    <th>Decolagem</th>
+                    <th>Pouso</th>
+                    <th>Preço</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in schedule.itens">
+                    <td><input type="checkbox" ng-model="item.active"></td>
+                    <td><input type="number" ng-model="item.days_in_place" min="1" max="90"></td>
+                    <td>
+{#                        <datepicker class="form-control" datepicker-popup="d/MM/yyyy" ng-model="item.departure_date" is-open="opened" min="minDate" max="'2016-06-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"></datepicker>#}
+{#                        <datepicker ng-model='item.departure_date' class="form-control" is-open="opened" close-text="x"></datepicker>#}
+                        <p class="input-group">
+                          <input type="text" class="form-control" datepicker-popup="d/MM/yyyy"
+                                 ng-model="item.departure_date"
+{#                                 is-open="opened"#}
+                                 min-date="minDate"
+                                 max-date="2015-06-22"
+{#                                 datepicker-options="dateOptions"#}
+                                 date-disabled="disabled(date, mode)"
+                                 ng-required="true" close-text="x" />
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                          </span>
+                        </p>
+                    </td>
+{#                    <td>{[{ item.departure_date | date:'d/MM/yyyy' }]}</td>#}
+                    <td>{[{ item.landing_date | date:'d/MM/yyyy' }]}</td>
+                    <td>{[{item.price | currency : "R$ "}]}</td>
+                    <td>
+                    [<a href ng-click="deleteSchedule($index)">X</a>]
+                    </td>
+                </tr>
+            </tbody>
+
             <tr>
                 <td><a href ng-click="addSchedule()" class="btn btn-small">Adicionar Item</a></td>
                 <td></td>
-                <td>Total:</td>
-                <td>{[{pedido.total() | currency}]}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+{#                <td>Total:</td>#}
+{#                <td>{[{schedule.total() | currency}]}</td>#}
             </tr>
         </table>
 	</div>

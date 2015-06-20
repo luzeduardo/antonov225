@@ -1,7 +1,7 @@
 (function() {
  'use strict';
  angular.module('app',[
-	'ngCookies'
+	'ngCookies','ui.bootstrap'
  ], function($interpolateProvider){
 	// Contorna prroblema de interpolação da renderização de template do django
 	$interpolateProvider.startSymbol('{[{');
