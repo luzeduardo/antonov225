@@ -21,7 +21,7 @@ def schedule_list(request):
     List all code snippets, or create a new snippet.
     """
     if request.method == 'GET':
-        snippets = Schedule.objects.all()
+        snippets = Schedule.objects.select_related("departure").all()
         serializer = ScheduleSerializer(snippets, many=True)
         return JSONResponse(serializer.data)
 
