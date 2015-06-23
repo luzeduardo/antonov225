@@ -26,13 +26,11 @@
                     <td>
 
                         <multiselect class="input-xlarge" multiple="true"
-                            ng-model="schedule.places"
-                            options="c.name for c in item.landing"
+                            ng-model="item.landing"
+                            options="c.name for c in schedule.places"
                             change="selected()" >
                         </multiselect>
-                        <div class="well well-small">
-                            {{selectedCar}}
-                        </div>
+                        <div class="well well-small">{[{item.landing}]}</div>
 
                     </td>
 

@@ -2,7 +2,7 @@
 templateDir = '/static/directives/';
 
 angular.module('ui.multiselect', [],function(){
-    
+
 })
 
   //from bootstrap-ui typeahead parser
