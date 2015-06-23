@@ -3,7 +3,7 @@
  angular.module('app',[
 	'ngCookies',
      'ui.bootstrap',
-     'isteven-multi-select'
+     'ui.multiselect'
  ], function($interpolateProvider){
 	// Contorna prroblema de interpolação da renderização de template do django
 	$interpolateProvider.startSymbol('{[{');

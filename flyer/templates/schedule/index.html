@@ -24,15 +24,16 @@
                     <td><input type="checkbox" ng-model="item.active"></td>
 
                     <td>
-                        <div
-                            isteven-multi-select
-                            input-model="schedule.places"
-                            output-model="item.landing"
-                            button-label="name"
-                            item-label="name"
-                            tick-property="ticked"
-                        >
+
+                        <multiselect class="input-xlarge" multiple="true"
+                            ng-model="schedule.places"
+                            options="c.name for c in item.landing"
+                            change="selected()" >
+                        </multiselect>
+                        <div class="well well-small">
+                            {{selectedCar}}
                         </div>
+
                     </td>
 
                     <td><input type="number" ng-model="item.days_in_place" min="1" max="90"></td>
