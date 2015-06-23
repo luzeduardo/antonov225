@@ -53,6 +53,28 @@
                             </button>
                           </span>
                         </p>
+
+                        <div class="col-md-6">
+                            <p class="input-group">
+                              <input type="date" class="form-control"
+                                     datepicker-popup
+                                     ng-model="dt"
+                                     initDate="23.06.2015"
+                                     init-date="23.06.2015"
+                                     is-open="opened"
+                                     min-date="minDate"
+                                     max-date="'2015-06-22'"
+                                     datepicker-options="dateOptions"
+                                     date-disabled="disabled(date, mode)"
+                                     ng-required="true"
+                                     close-text="Close" />
+
+                                <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                              </span>
+                            </p>
+                        </div>
+
                     </td>
 {#                    <td>{[{ item.departure_date | date:'d/MM/yyyy' }]}</td>#}
                     <td>{[{ item.landing_date | date:'d/MM/yyyy' }]}</td>
