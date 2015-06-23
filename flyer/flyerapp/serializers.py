@@ -1,9 +1,26 @@
 __author__ = 'eduardo'
 from django.forms import widgets
 from rest_framework import serializers
-from models import Schedule
+from models import Schedule, Place
+
+class PlaceSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Place
+        fields = (
+            'id',
+            'name',
+            'iata_code'
+        )
+
+class PlaceListSerializer(serializers.ListSerializer):
+    child = PlaceSerializer()
+    allow_null = True
+    many = True
+
 
 class ScheduleSerializer(serializers.ModelSerializer):
+    landing = PlaceSerializer(many=True)
+
     class Meta:
         model = Schedule
         fields = (

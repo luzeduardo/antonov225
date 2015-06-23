@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from models import Schedule
-from serializers import ScheduleSerializer
+from models import Schedule, Place
+from serializers import ScheduleSerializer, PlaceSerializer, PlaceListSerializer
 import json
 
 class JSONResponse(HttpResponse):
@@ -21,9 +21,16 @@ def schedule_list(request):
     List all code snippets, or create a new snippet.
     """
     if request.method == 'GET':
-        snippets = Schedule.objects.select_related("departure").all()
-        serializer = ScheduleSerializer(snippets, many=True)
-        return JSONResponse(serializer.data)
+        schedules = Schedule.objects.select_related("departure").all()
+        scheduleserializer = ScheduleSerializer(schedules, many=True)
+
+        places = Place.objects.all()
+        placeserializer = PlaceListSerializer(places)
+
+        response = {}
+        response['schedules'] = scheduleserializer.data
+        response['places'] = placeserializer.data
+        return JSONResponse(response)
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)

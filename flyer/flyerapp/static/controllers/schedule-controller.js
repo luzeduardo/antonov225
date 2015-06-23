@@ -4,7 +4,8 @@
 
      $http.get('/schedules/').success(function(data) {
         console.log(data);
-        $scope.schedule.itens = data;
+        $scope.schedule.schedules = data.schedules;
+         $scope.schedule.places = data.places;
      })
 
      $scope.schedule = {

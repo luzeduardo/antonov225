@@ -12,6 +12,7 @@
             <thead>
                 <tr>
                     <th>Ativo</th>
+                    <th>Local Pouso</th>
                     <th>Dias no local</th>
                     <th>Decolagem</th>
                     <th>Pouso</th>
@@ -19,8 +20,17 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in schedule.itens">
+                <tr ng-repeat="item in schedule.schedules">
                     <td><input type="checkbox" ng-model="item.active"></td>
+
+                    <td>
+                        <div ng-dropdown-multiselect=""
+                             options="schedule.places"
+                             selected-model="item.landing"
+                             >
+                        </div>
+                    </td>
+
                     <td><input type="number" ng-model="item.days_in_place" min="1" max="90"></td>
                     <td>
 {#                        <datepicker class="form-control" datepicker-popup="d/MM/yyyy" ng-model="item.departure_date" is-open="opened" min="minDate" max="'2016-06-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"></datepicker>#}
