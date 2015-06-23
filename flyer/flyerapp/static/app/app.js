@@ -1,7 +1,9 @@
 (function() {
  'use strict';
  angular.module('app',[
-	'ngCookies','ui.bootstrap'
+	'ngCookies',
+     'ui.bootstrap',
+     'angularjs-dropdown-multiselect'
  ], function($interpolateProvider){
 	// Contorna prroblema de interpolação da renderização de template do django
 	$interpolateProvider.startSymbol('{[{');

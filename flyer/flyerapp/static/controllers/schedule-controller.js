@@ -3,8 +3,8 @@
  angular.module('app').controller('ScheduleController', function($scope, $http) {
 
      $http.get('/schedules/').success(function(data) {
-        console.log(data);
-        $scope.schedule.schedules = data.schedules;
+         console.log(data);
+         $scope.schedule.schedules = data.schedules;
          $scope.schedule.places = data.places;
      })
 

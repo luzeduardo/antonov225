@@ -24,6 +24,11 @@
                     <td><input type="checkbox" ng-model="item.active"></td>
 
                     <td>
+
+                        <div ng-dropdown-multiselect="" options="example1data" selected-model="example1model"></div>
+                        {[{item.landing}]}
+                        <div ng-dropdown-multiselect="" options="schedule.places"></div>
+
                         <div ng-dropdown-multiselect=""
                              options="schedule.places"
                              selected-model="item.landing"
