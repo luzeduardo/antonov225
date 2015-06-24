@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.shortcuts import render, render_to_response
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from models import Schedule, Place
@@ -66,8 +67,19 @@ def schedule_detail(request, pk):
         schedule.delete()
         return HttpResponse(status=204)
 
-def index(request):
-	return render(request, 'schedule/index.html', {})
+def index(request, *args, **kwargs):
+    schedules = Schedule.objects.select_related("departure").all()
+    scheduleserializer = ScheduleSerializer(schedules, many=True)
+
+    places = Place.objects.all()
+    placeserializer = PlaceListSerializer(places)
+
+    response = {}
+    response['schedules'] = scheduleserializer.data
+    response['places'] = placeserializer.data
+    return render_to_response("schedule/index.html", {
+        'data' : response
+    })
 
 def add_schedule(request):
 	itens_pedido = request.session.get('itens_pedido', [])

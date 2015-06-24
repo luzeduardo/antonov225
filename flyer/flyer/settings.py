@@ -18,7 +18,7 @@ SETTINGS_DIR = os.path.dirname(__file__)
 PROJECT_PATH = os.path.join(SETTINGS_DIR, os.pardir)
 PROJECT_ROOT = os.path.abspath(PROJECT_PATH)
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_ROOT, 'templates'),
+    os.path.join(BASE_DIR, 'templates'),
 )
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',

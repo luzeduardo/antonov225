@@ -2,12 +2,12 @@
 {% load staticfiles %}
 {% load i18n %}
 {% block javascriptExtra %}
-    <script type="text/javascript" src="{% static 'controllers/schedule-controller.js' %}"></script>
+{#    <script type="text/javascript" src="{% static 'controllers/schedule-controller.js' %}"></script>#}
 {% endblock %}
 
 {% block content %}
-<body ng-app="app">
-	<div ng-controller="ScheduleController">
+<body>
+	<div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -19,82 +19,29 @@
                     <th>Preço</th>
                 </tr>
             </thead>
+
             <tbody>
-                <tr ng-repeat="item in schedule.schedules">
-                    <td><input type="checkbox" ng-model="item.active"></td>
-
-                    <td>
-
-                        <multiselect class="input-xlarge" multiple="true"
-                            ng-model="item.landing"
-                            options="c.name for c in schedule.places"
-                            change="selected()" >
-                        </multiselect>
-{#                        <div class="well well-small">{[{item.landing}]}</div>#}
-
-                    </td>
-
-                    <td><input type="number" ng-model="item.days_in_place" min="1" max="90"></td>
-                    <td>
-{#                        <datepicker class="form-control" datepicker-popup="d/MM/yyyy" ng-model="item.departure_date" is-open="opened" min="minDate" max="'2016-06-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"></datepicker>#}
-{#                        <datepicker ng-model='item.departure_date' class="form-control" is-open="opened" close-text="x"></datepicker>#}
-                        <p class="input-group">
-                          <input type="text" class="form-control" datepicker-popup="d/MM/yyyy"
-                                 ng-model="item.departure_date"
-{#                                 is-open="opened"#}
-                                 min-date="minDate"
-                                 max-date="2015-06-22"
-{#                                 datepicker-options="dateOptions"#}
-                                 date-disabled="disabled(date, mode)"
-                                 ng-required="true" close-text="x" />
-                          <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="open($event)">
-                                <i class="glyphicon glyphicon-calendar"></i>
-                            </button>
-                          </span>
-                        </p>
-
-                        <div class="col-md-6">
-                            <p class="input-group">
-                              <input type="date" class="form-control"
-                                     datepicker-popup
-                                     ng-model="dt"
-                                     initDate="23.06.2015"
-                                     init-date="23.06.2015"
-                                     is-open="opened"
-                                     min-date="minDate"
-                                     max-date="'2015-06-22'"
-                                     datepicker-options="dateOptions"
-                                     date-disabled="disabled(date, mode)"
-                                     ng-required="true"
-                                     close-text="Close" />
-
-                                <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                              </span>
-                            </p>
-                        </div>
-
-                    </td>
-{#                    <td>{[{ item.departure_date | date:'d/MM/yyyy' }]}</td>#}
-                    <td>{[{ item.landing_date | date:'d/MM/yyyy' }]}</td>
-                    <td>{[{item.price | currency : "R$ "}]}</td>
-                    <td>
-                    [<a href ng-click="deleteSchedule($index)">X</a>]
-                    </td>
-                </tr>
+            {{ data }}
+                {% for item in data.schedules %}
+                    <tr>
+                        <td>{{ item.active }}</td>
+                        <td>
+                            {{ item.landing }}
+                        </td>
+                        <td>
+                            {{ item.days_in_place }}
+                        </td>
+                        <td>
+                            {{ item.departure_date }}
+                        </td>
+                        <td>{{ item.landing_date }}</td>
+                        <td>{{item.price }}</td>
+                        <td>
+                            [<a href="#">X</a>]
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
-
-            <tr>
-                <td><a href ng-click="addSchedule()" class="btn btn-small">Adicionar Item</a></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-{#                <td>Total:</td>#}
-{#                <td>{[{schedule.total() | currency}]}</td>#}
-            </tr>
         </table>
 	</div>
 </body>
