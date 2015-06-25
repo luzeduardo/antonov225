@@ -11,6 +11,10 @@ locale.setlocale(locale.LC_ALL, '')
 register = template.Library()
 
 @register.filter
+def hash(h, key):
+    return h[key]
+
+@register.filter
 def to_date(value, arg):
     try:
         dt = datetime.strptime(value, arg)

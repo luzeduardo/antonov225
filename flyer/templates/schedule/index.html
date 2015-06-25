@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load flyerapp_tags %}
 {% load staticfiles %}
 {% load i18n %}
 {% block javascriptExtra %}
@@ -25,7 +26,7 @@
                     <tr>
                         <td>{{ item.active }}</td>
                         <td>
-                            {{ item.landing }}
+                            {{ item.landing|return_item:places }}
                         </td>
                         <td>
                             {{ item.days_in_place }}
