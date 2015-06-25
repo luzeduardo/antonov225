@@ -1,0 +1,29 @@
+{% block dialogs %}
+      {% if error_message %}
+      <script type="text/javascript">
+          $(document).ready(function () {
+              displayErrorMessage('{{ error_message }}');
+          });
+      </script>
+  {% endif %}
+
+
+<!-- Modal -->
+  <div class="modal fade" role="dialog" id="modalMessage" tabindex="-1" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header alert-warning">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="myModalLabel">Informação</h4>
+              </div>
+              <div class="modal-body" role="alert">
+                  <strong><span id="modalMessageContent"></span></strong>
+              </div>
+          </div>
+          <!-- /.modal-content -->
+      </div>
+  </div><!-- /.modal-dialog -->
+  <!-- Modal -->
+
+{% endblock %}

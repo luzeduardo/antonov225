@@ -18,6 +18,7 @@
                     <th>Decolagem</th>
                     <th>Pouso</th>
                     <th>Preço</th>
+                    <th>Controle</th>
                 </tr>
             </thead>
 
@@ -40,6 +41,9 @@
                         <td>{{item.price }}</td>
                         <td>
                             [<a href="#">X</a>]
+                        </td>
+                        <td>
+                            {% include "schedule/dialogs.html" %}
                         </td>
                     </tr>
                 {% endfor %}

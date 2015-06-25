@@ -1,0 +1,31 @@
+<!-- MODAL EDICAO - Begin -->
+<div class="modal" id="modal-schedule-edit" tabindex="-1" role="dialog" aria-labelledby="schEdit"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Fechar</span></button>
+                <h4 class="modal-title">Editar Pesquisa</h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" role="form" id="frm_sch_edit">
+                    <fieldset>
+
+                        <div class="form-group">
+                            <label class="control-label" for="frm_editar_senha_nova">Habilitar o disparo de SMS de boas vindas para usuários sem email cadastrado (em transações que não sejam de cadastro)</label>
+                            <input type="checkbox" name="chk-notificacao-sms" id="chk-notificacao-sms">
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="bt-sch-edit-sim">Salvar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- MODAL EDICAO- End -->
