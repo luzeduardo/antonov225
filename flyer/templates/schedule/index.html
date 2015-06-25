@@ -26,7 +26,9 @@
                     <tr>
                         <td>{{ item.active }}</td>
                         <td>
-                            {{ item.landing|return_item:places }}
+                            {% for landing in item.landing %}
+                                {{ landing.name }}{% if forloop.last %}.{% else %}, {% endif %}
+                            {% endfor %}
                         </td>
                         <td>
                             {{ item.days_in_place }}

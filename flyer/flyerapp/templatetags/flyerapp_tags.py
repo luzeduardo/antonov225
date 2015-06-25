@@ -130,13 +130,6 @@ def get_at_index(list, index):
 def concatestr(value, arg):
     return str(value) + str(arg)
 
-@register.filter
-def return_item(l, i):
-    try:
-        return l[i]
-    except:
-        return None
-
 @register.filter(name='access')
 def access(value, arg):
     return value[arg]
