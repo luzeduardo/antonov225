@@ -13,7 +13,9 @@
             <thead>
                 <tr>
                     <th>Ativo</th>
-                    <th>Local Pouso</th>
+                    <th>Origem</th>
+                    <th class="visible-lg hidden-xs">Destino</th>
+                    <th class="hidden-lg visible-xs">Destino</th>
                     <th>Dias no local</th>
                     <th>Decolagem</th>
                     <th>Pouso</th>
@@ -34,9 +36,15 @@
                                 Inativo
                             {% endif %}
                         </td>
-                        <td class="col-md-4">
+                        <td>{{ item.departure }}</td>
+                        <td class="col-md-4 visible-lg hidden-xs">
                             {% for landing in item.landing %}
                                 {{ landing.name }}{% if forloop.last %}.{% else %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="hidden-lg visible-xs">
+                            {% for landing in item.landing|slice:":1" %}
+                                {{ landing.name }}{% if forloop.last %}...{% else %}, {% endif %}
                             {% endfor %}
                         </td>
                         <td>
