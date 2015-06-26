@@ -191,3 +191,15 @@ def currency(value, arg = '', symbol = True):
 
     finally:
         locale.setlocale(locale.LC_ALL, saved)
+
+@register.filter
+def multiply(value, arg):
+    return value*arg
+
+@register.filter
+def currency_formated_multiply_highter(value, arg):
+    return currency(float(value)*float(arg))
+
+@register.filter
+def currency_formated_multiply_lower(value, arg):
+    return currency(float(value)*float(arg) - float(arg))

@@ -17,15 +17,23 @@
                     <th>Dias no local</th>
                     <th>Decolagem</th>
                     <th>Pouso</th>
-                    <th>Preço</th>
-                    <th>Controle</th>
+                    <th>Preço mínimo</th>
+                    <th>Valor busca</th>
+                    <th>Valor máximo</th>
+                    <th></th>
                 </tr>
             </thead>
 
             <tbody>
                 {% for item in data.schedules %}
                     <tr>
-                        <td>{{ item.active }}</td>
+                        <td>
+                            {% if item.active  %}
+                            Ativo
+                            {% else %}
+                                Inativo
+                            {% endif %}
+                        </td>
                         <td class="col-md-4">
                             {% for landing in item.landing %}
                                 {{ landing.name }}{% if forloop.last %}.{% else %}, {% endif %}
@@ -38,9 +46,19 @@
                             {{ item.departure_date|convertdateformat:"%d/%m/%Y"}}
                         </td>
                         <td>{{ item.landing_date|convertdateformat:"%d/%m/%Y"}}</td>
+                        <td>{{item.price_percent_lower|currency_formated_multiply_lower:item.price }}</td>
                         <td>{{item.price|currency:"pt_BR"}}</td>
+                        <td>{{item.price_percent_highter|currency_formated_multiply_highter:item.price }}</td>
+
                         <td>
-                            [<a href="#">X</a>]
+                            <div role="toolbar" class="btn-toolbar">
+                              <button class="btn btn-default btn-xs" type="button">
+                                  <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
+                              </button>
+                              <button class="btn btn-danger btn-xs" type="button">
+                                  <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
+                              </button>
+                            </div>
                         </td>
                         <td>
                             {% include "schedule/dialogs.html" %}
