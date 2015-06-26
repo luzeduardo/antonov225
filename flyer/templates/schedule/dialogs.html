@@ -1,5 +1,5 @@
 <!-- MODAL EDICAO - Begin -->
-<div class="modal" id="modal-schedule-edit" tabindex="-1" role="dialog" aria-labelledby="schEdit"
+<div class="modal" id="modal-schedule-edit-{{ schedule.id }}" tabindex="-1" role="dialog" aria-labelledby="schEdit"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -11,10 +11,11 @@
             <div class="modal-body">
                 <form method="POST" role="form" id="frm_sch_edit">
                     <fieldset>
+                        <input type="hidden" value="{{ schedule.id }}">
 
                         <div class="form-group">
-                            <label class="control-label" for="frm_editar_senha_nova">Habilitar o disparo de SMS de boas vindas para usuários sem email cadastrado (em transações que não sejam de cadastro)</label>
-                            <input type="checkbox" name="chk-notificacao-sms" id="chk-notificacao-sms">
+                            <label class="control-label" for="sch_price"></label>
+                            <input type="text" name="sch_price" id=sch_price" value="{{ schedule.price }}">
                         </div>
 
                     </fieldset>

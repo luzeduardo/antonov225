@@ -3,7 +3,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% block javascriptExtra %}
-{#    <script type="text/javascript" src="{% static 'controllers/schedule-controller.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'flyerapp/js/schedule-index.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -60,16 +60,16 @@
 
                         <td>
                             <div role="toolbar" class="btn-toolbar">
-                              <button class="btn btn-default btn-xs" type="button">
+                              <button class="btn btn-default btn-xs" data-ctr-edit data-id="{{ item.id }}" type="button">
                                   <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
                               </button>
-                              <button class="btn btn-danger btn-xs" type="button">
+                              <button class="btn btn-danger btn-xs" data-ctr-del data-id="{{ item.id }}" type="button">
                                   <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
                               </button>
                             </div>
                         </td>
                         <td>
-                            {% include "schedule/dialogs.html" %}
+                            {% include "schedule/dialogs.html" with schedule=item places=data.places  %}
                         </td>
                     </tr>
                 {% endfor %}
