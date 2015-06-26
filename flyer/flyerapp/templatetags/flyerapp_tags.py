@@ -23,6 +23,10 @@ def to_date(value, arg):
         return ""
 
 @register.filter
+def convertdateformat(value, fmt):
+    return datetime.strptime(value, '%Y-%m-%d').strftime(fmt)
+
+@register.filter
 def jsonify(value):
     return mark_safe(json.dumps(value))
 
@@ -180,7 +184,8 @@ def currency(value, arg = '', symbol = True):
         given = 'en_US.UTF-8'
     try:
         locale.setlocale(locale.LC_ALL, given)
-        return locale.currency(value or 0, symbol, True)
+        res = locale.currency(float(value) or 0, symbol, True)
+        return res
     except (TypeError, locale.Error):
         return ''
 

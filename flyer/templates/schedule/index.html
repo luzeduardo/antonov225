@@ -26,7 +26,7 @@
                 {% for item in data.schedules %}
                     <tr>
                         <td>{{ item.active }}</td>
-                        <td>
+                        <td class="col-md-4">
                             {% for landing in item.landing %}
                                 {{ landing.name }}{% if forloop.last %}.{% else %}, {% endif %}
                             {% endfor %}
@@ -35,10 +35,10 @@
                             {{ item.days_in_place }}
                         </td>
                         <td>
-                            {{ item.departure_date }}
+                            {{ item.departure_date|convertdateformat:"%d/%m/%Y"}}
                         </td>
-                        <td>{{ item.landing_date }}</td>
-                        <td>{{item.price }}</td>
+                        <td>{{ item.landing_date|convertdateformat:"%d/%m/%Y"}}</td>
+                        <td>{{item.price|currency:"pt_BR"}}</td>
                         <td>
                             [<a href="#">X</a>]
                         </td>
