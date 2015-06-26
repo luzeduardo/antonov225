@@ -1,4 +1,62 @@
 <!-- MODAL EDICAO - Begin -->
+<script type="text/javascript">
+    function leftValue( value, handle, slider ) {
+        $(this).text( handle.parent()[0].style.left );
+    }
+
+    function priceConvert( value, handle, slider ) {
+        var tmpvalue = value.replace(/\D+/g, '' );
+        tmpvalue = (tmpvalue/10000) + 1;
+        $(this).val( tmpvalue );
+        $(this).text( tmpvalue );
+    }
+
+    $(document).ready(function () {
+        //range pesquisa
+        var elid = "#slider-price-sch-{{ schedule.id }}";
+        $(elid).noUiSlider({
+            start: [ 20, 30 ],
+            snap: true,
+            connect: true,
+            step: 1,
+            range: {
+                'min': 1,
+                '10%': 10,
+                '20%': 20,
+                '30%': 30,
+                '40%': 40,
+                '50%': 50,
+                '60%': 60,
+                '70%': 70,
+                '80%': 80,
+                '90%': 90,
+                'max': 100
+            }
+        });
+        $(elid).Link('upper').to($("#hprice-{{ schedule.id }}"), priceConvert);
+        $(elid).Link('lower').to($("#lprice-{{ schedule.id }}"), priceConvert);
+
+        $(elid).Link('lower').to($("#lower-value-{{ schedule.id }}"));
+        $(elid).Link('lower').to($("#lower-offset-{{ schedule.id }}"), leftValue);
+
+        $(elid).Link('upper').to($("#upper-value-{{ schedule.id }}"));
+        $(elid).Link('upper').to($("#upper-offset-{{ schedule.id }}"), leftValue);
+
+
+        //preco atual
+        var atualpriceelid = "#slider-atual-price-sch-{{ schedule.id }}";
+        $(atualpriceelid).noUiSlider({
+            start: "{{ schedule.price }}",
+            step: 50,
+            range: {
+                'min': 100,
+                'max': 5000
+            }
+        });
+        $(atualpriceelid).Link('lower').to($("#sch-price-{{ schedule.id }}"));
+    });
+</script>
+
 <div class="modal" id="modal-schedule-edit-{{ schedule.id }}" tabindex="-1" role="dialog" aria-labelledby="schEdit"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -14,8 +72,20 @@
                         <input type="hidden" value="{{ schedule.id }}">
 
                         <div class="form-group">
-                            <label class="control-label" for="sch_price"></label>
-                            <input type="text" name="sch_price" id=sch_price" value="{{ schedule.price }}">
+                            <label class="control-label" for="sch-price">Preço de busca</label>
+                            <div id="slider-atual-price-sch-{{ schedule.id }}"></div>
+                            <input type="hidden" name="sch-price" id="sch-price-{{ schedule.id }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="sch_price">Preço mínimo e máximo</label>
+                            <div id="slider-price-sch-{{ schedule.id }}"></div>
+
+                            <p>Mínimo: <span id="lower-offset-{{ schedule.id }}"></span></p>
+                            <p>Máximo: <span id="upper-offset-{{ schedule.id }}"></span></p>
+                            <input type="hidden" name="lprice" id="lprice-{{ schedule.id }}">
+                            <input type="hidden" name="hprice" id="hprice-{{ schedule.id }}">
+
                         </div>
 
                     </fieldset>

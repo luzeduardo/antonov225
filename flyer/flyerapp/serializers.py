@@ -24,6 +24,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
         fields = (
+            'id',
             'active',
             'departure',
             'landing',
