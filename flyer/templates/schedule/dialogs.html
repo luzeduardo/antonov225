@@ -73,6 +73,15 @@
         });
         $(atualpriceelid).Link('lower').to($("#current-sch-price-{{ schedule.id }}"));
         $(atualpriceelid).Link('lower').to($("#current-price-{{ schedule.id }}"));
+
+        var $input = $( "#dt-start-{{ schedule.id }}" ).pickadate({
+            formatSubmit: 'dd/mm/yyyy',
+            // min: [2015, 7, 14],
+{#            container: '#container',#}
+            // editable: true,
+            closeOnSelect: false,
+            closeOnClear: false
+        })
     });
 </script>
 
@@ -89,6 +98,11 @@
                 <form method="POST" role="form" id="frm_sch_edit">
                     <fieldset>
                         <input type="hidden" value="{{ schedule.id }}">
+
+                        <div class="form-group">
+                            <input type="text" id="dt-start-{{ schedule.id }}" type="text" class="form-control">
+                        </div>
+
 
                         <div class="form-group">
                             <label class="control-label" for="sch-price">Preço de busca</label>
