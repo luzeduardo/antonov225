@@ -54,6 +54,7 @@
             }
         });
         $(atualpriceelid).Link('lower').to($("#sch-price-{{ schedule.id }}"));
+        $(atualpriceelid).Link('lower').to($("#current-price-{{ schedule.id }}"));
     });
 </script>
 
@@ -74,6 +75,7 @@
                         <div class="form-group">
                             <label class="control-label" for="sch-price">Preço de busca</label>
                             <div id="slider-atual-price-sch-{{ schedule.id }}"></div>
+                            <p>Preço: <span id="current-price-{{ schedule.id }}"></span></p>
                             <input type="hidden" name="sch-price" id="sch-price-{{ schedule.id }}">
                         </div>
 
