@@ -4,6 +4,24 @@
         $(this).text( handle.parent()[0].style.left );
     }
 
+    function hleftValue( value, handle, slider ) {
+{#        $(this).text( handle.parent()[0].style.left );#}
+        var tmpvalue = value.replace(/\D+/g, '' );
+        tmpvalue = (tmpvalue/10000) + 1;
+        tmpvalue = ((tmpvalue/10000) + 1) * $("#current-sch-price-{{ schedule.id }}").val();
+        $(this).val( tmpvalue );
+        $(this).text( tmpvalue );
+    }
+
+    function lleftValue( value, handle, slider ) {
+{#        $(this).text( handle.parent()[0].style.left );#}
+        var tmpvalue = value.replace(/\D+/g, '' );
+        var subvalue = ((tmpvalue/10000) + 1) * $("#current-sch-price-{{ schedule.id }}").val();
+        var result = tmpvalue - (subvalue - $("#current-sch-price-{{ schedule.id }}").val())
+        $(this).val( tmpvalue );
+        $(this).text( tmpvalue );
+    }
+
     function priceConvert( value, handle, slider ) {
         var tmpvalue = value.replace(/\D+/g, '' );
         tmpvalue = (tmpvalue/10000) + 1;
@@ -15,7 +33,7 @@
         //range pesquisa
         var elid = "#slider-price-sch-{{ schedule.id }}";
         $(elid).noUiSlider({
-            start: [ 20, 30 ],
+            start: [ 10, 10 ],
             snap: true,
             connect: true,
             step: 1,
@@ -37,10 +55,10 @@
         $(elid).Link('lower').to($("#lprice-{{ schedule.id }}"), priceConvert);
 
         $(elid).Link('lower').to($("#lower-value-{{ schedule.id }}"));
-        $(elid).Link('lower').to($("#lower-offset-{{ schedule.id }}"), leftValue);
+        $(elid).Link('lower').to($("#lower-offset-{{ schedule.id }}"), lleftValue);
 
         $(elid).Link('upper').to($("#upper-value-{{ schedule.id }}"));
-        $(elid).Link('upper').to($("#upper-offset-{{ schedule.id }}"), leftValue);
+        $(elid).Link('upper').to($("#upper-offset-{{ schedule.id }}"), hleftValue);
 
 
         //preco atual
@@ -53,7 +71,7 @@
                 'max': 5000
             }
         });
-        $(atualpriceelid).Link('lower').to($("#sch-price-{{ schedule.id }}"));
+        $(atualpriceelid).Link('lower').to($("#current-sch-price-{{ schedule.id }}"));
         $(atualpriceelid).Link('lower').to($("#current-price-{{ schedule.id }}"));
     });
 </script>
@@ -75,8 +93,9 @@
                         <div class="form-group">
                             <label class="control-label" for="sch-price">Preço de busca</label>
                             <div id="slider-atual-price-sch-{{ schedule.id }}"></div>
-                            <p>Preço: <span id="current-price-{{ schedule.id }}"></span></p>
-                            <input type="hidden" name="sch-price" id="sch-price-{{ schedule.id }}">
+                            <br>
+                            <p>Preço: <b><span id="current-price-{{ schedule.id }}"></span></b></p>
+                            <input type="hidden" name="sch-price" id="current-sch-price-{{ schedule.id }}">
                         </div>
 
                         <div class="form-group">
