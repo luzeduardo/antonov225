@@ -77,6 +77,7 @@ def index(request, *args, **kwargs):
     response = {}
     response['schedules'] = scheduleserializer.data
     response['places'] = placeserializer.data
+
     return render_to_response("schedule/index.html", {
         'data' : response
     })

@@ -20,6 +20,7 @@ class PlaceListSerializer(serializers.ListSerializer):
 
 class ScheduleSerializer(serializers.ModelSerializer):
     landing = PlaceSerializer(many=True)
+    departure = PlaceSerializer()
 
     class Meta:
         model = Schedule
