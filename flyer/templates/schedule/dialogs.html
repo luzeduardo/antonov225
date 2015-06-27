@@ -74,14 +74,17 @@
         $(atualpriceelid).Link('lower').to($("#current-sch-price-{{ schedule.id }}"));
         $(atualpriceelid).Link('lower').to($("#current-price-{{ schedule.id }}"));
 
-        var $input = $( "#dt-start-{{ schedule.id }}" ).pickadate({
-            formatSubmit: 'dd/mm/yyyy',
-            // min: [2015, 7, 14],
-{#            container: '#container',#}
-            // editable: true,
-            closeOnSelect: false,
-            closeOnClear: false
-        })
+        $("#dt-start-{{ schedule.id }}").datetimepicker({
+            format: 'DD/MM/YYYY',
+            locale: 'pt-br',
+            allowInputToggle: true
+        });
+
+        $("#dt-end-{{ schedule.id }}").datetimepicker({
+            format: 'DD/MM/YYYY',
+            locale: 'pt-br',
+            allowInputToggle: true
+        });
     });
 </script>
 
@@ -100,9 +103,14 @@
                         <input type="hidden" value="{{ schedule.id }}">
 
                         <div class="form-group">
-                            <input type="text" id="dt-start-{{ schedule.id }}" type="text" class="form-control">
+                            <label class="control-label" for="sch-price">Pouso</label>
+                            <div class='input-group date' id='dt-start-{{ schedule.id }}'>
+                                <input type='text' class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
                         </div>
-
 
                         <div class="form-group">
                             <label class="control-label" for="sch-price">Preço de busca</label>
