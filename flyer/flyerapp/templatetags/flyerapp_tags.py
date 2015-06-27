@@ -203,3 +203,11 @@ def currency_formated_multiply_highter(value, arg):
 @register.filter
 def currency_formated_multiply_lower(value, arg):
     return currency(float(value)*float(arg) - float(arg))
+
+@register.filter
+def currency_multiply_highter(value, arg):
+    return currency(float(value)*float(arg),'',False)
+
+@register.filter
+def currency_multiply_lower(value, arg):
+    return currency(float(value)*float(arg) - float(arg),'',False)

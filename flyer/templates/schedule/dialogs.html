@@ -7,21 +7,19 @@
     }
 
     function hleftValue( value, handle, slider ) {
-{#        $(this).text( handle.parent()[0].style.left );#}
-        var tmpvalue = value.replace(/\D+/g, '' );
-        tmpvalue = (tmpvalue/10000) + 1;
-        tmpvalue = ((tmpvalue/10000) + 1) * $("#current-sch-price-{{ schedule.id }}").val();
-        $(this).val( tmpvalue );
-        $(this).text( tmpvalue );
+        var tmpvalue = value.replace(/\D+/g, '' )/10000;
+        var current = $("#current-sch-price-{{ schedule.id }}").val();
+        var pctvalue = (parseInt(current) * tmpvalue) + parseInt(current);
+        $(this).val( pctvalue );
+        $(this).text( pctvalue );
     }
 
     function lleftValue( value, handle, slider ) {
-{#        $(this).text( handle.parent()[0].style.left );#}
-        var tmpvalue = value.replace(/\D+/g, '' );
-        var subvalue = ((tmpvalue/10000) + 1) * $("#current-sch-price-{{ schedule.id }}").val();
-        var result = tmpvalue - (subvalue - $("#current-sch-price-{{ schedule.id }}").val())
-        $(this).val( tmpvalue );
-        $(this).text( tmpvalue );
+        var tmpvalue = value.replace(/\D+/g, '' )/10000;
+        var current = $("#current-sch-price-{{ schedule.id }}").val();
+        var pctvalue =  parseInt(current) - (parseInt(current) * tmpvalue);
+        $(this).val( pctvalue );
+        $(this).text( pctvalue );
     }
 
     function priceConvert( value, handle, slider ) {
@@ -33,12 +31,20 @@
 
     $(document).ready(function () {
         //range pesquisa
-        var elid = "#slider-price-sch-{{ schedule.id }}";
-        $(elid).noUiSlider({
-            start: [ 10, 10 ],
-            snap: true,
-            connect: true,
-            step: 1,
+        var elidlower = "#slider-price-lower-sch-{{ schedule.id }}";
+        var elidhighter = "#slider-price-highter-sch-{{ schedule.id }}";
+
+        var tmplvalue = "{{ schedule.price_percent_lower }}";
+        tmplvalue = tmplvalue - 1;
+        tmplvalue = parseInt(tmplvalue * 100);
+
+        var tmphvalue = "{{ schedule.price_percent_highter }}";
+        tmphvalue = tmphvalue - 1;
+        tmphvalue = parseInt(tmphvalue * 100);
+
+        $(elidlower).noUiSlider({
+            start: tmplvalue,
+            step: 10,
             range: {
                 'min': 1,
                 '10%': 10,
@@ -53,14 +59,39 @@
                 'max': 100
             }
         });
-        $(elid).Link('upper').to($("#hprice-{{ schedule.id }}"), priceConvert);
-        $(elid).Link('lower').to($("#lprice-{{ schedule.id }}"), priceConvert);
+        $(elidlower).Link('lower').to($("#current-sch-price-lower-{{ schedule.id }}"),leftValue);
+        $(elidlower).Link('lower').to($("#current-price-lower-{{ schedule.id }}"),lleftValue);
 
-        $(elid).Link('lower').to($("#lower-value-{{ schedule.id }}"));
-        $(elid).Link('lower').to($("#lower-offset-{{ schedule.id }}"), lleftValue);
+        console.log(tmplvalue);
+        console.log(tmphvalue);
+        $(elidhighter).noUiSlider({
+            start: tmphvalue,
+            step: 10,
+            range: {
+                'min': 1,
+                '10%': 10,
+                '20%': 20,
+                '30%': 30,
+                '40%': 40,
+                '50%': 50,
+                '60%': 60,
+                '70%': 70,
+                '80%': 80,
+                '90%': 90,
+                'max': 100
+            }
+        });
+        $(elidhighter).Link('lower').to($("#current-sch-price-highter-{{ schedule.id }}"),leftValue);
+        $(elidhighter).Link('lower').to($("#current-price-highter-{{ schedule.id }}"),hleftValue);
 
-        $(elid).Link('upper').to($("#upper-value-{{ schedule.id }}"));
-        $(elid).Link('upper').to($("#upper-offset-{{ schedule.id }}"), hleftValue);
+{#        $(elidhighter).Link('lower').to($("#hprice-{{ schedule.id }}"), priceConvert);#}
+{#        $(elidlower).Link('lower').to($("#lprice-{{ schedule.id }}"), priceConvert);#}
+{##}
+{#        $(elidlower).Link('lower').to($("#lower-value-{{ schedule.id }}"));#}
+{#        $(elidlower).Link('lower').to($("#lower-offset-{{ schedule.id }}"), lleftValue);#}
+
+{#        $(elidhighter).Link('lower').to($("#upper-value-{{ schedule.id }}"));#}
+{#        $(elidhighter).Link('lower').to($("#upper-offset-{{ schedule.id }}"), hleftValue);#}
 
 
         //preco atual
@@ -69,7 +100,7 @@
             start: "{{ schedule.price }}",
             step: 50,
             range: {
-                'min': 100,
+                'min': 200,
                 'max': 5000
             }
         });
@@ -140,23 +171,32 @@
                         <div class="col-md-6">
 
                             <div class="form-group">
-                                <label class="control-label" for="sch-price">Preço de busca</label>
+                                <label class="control-label" for="sch-price">Preço de busca: <b><span id="current-price-{{ schedule.id }}"></span></b></label>
                                 <div id="slider-atual-price-sch-{{ schedule.id }}"></div>
-                                <br>
-                                <p>Preço: <b><span id="current-price-{{ schedule.id }}"></span></b></p>
+
                                 <input type="hidden" name="sch-price" id="current-sch-price-{{ schedule.id }}">
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label" for="sch_price">Preço mínimo e máximo</label>
-                                <div id="slider-price-sch-{{ schedule.id }}"></div>
+                                <label class="control-label" for="sch-price">Preço mínimo: <b><span id="current-price-lower-{{ schedule.id }}"></span></b></label>
+                                <div id="slider-price-lower-sch-{{ schedule.id }}"></div>
 
-                                <p>Mínimo: <span id="lower-offset-{{ schedule.id }}"></span></p>
-                                <p>Máximo: <span id="upper-offset-{{ schedule.id }}"></span></p>
-                                <input type="hidden" name="lprice" id="lprice-{{ schedule.id }}">
-                                <input type="hidden" name="hprice" id="hprice-{{ schedule.id }}">
-
+                                <input type="hidden" name="sch-price-lower" id="current-sch-price-lower-{{ schedule.id }}">
                             </div>
+
+                            <div class="form-group">
+                                <label class="control-label" for="sch-price">Preço máximo: <b><span id="current-price-highter-{{ schedule.id }}"></span></b></label>
+                                <div id="slider-price-highter-sch-{{ schedule.id }}"></div>
+
+                                <input type="hidden" name="sch-price-highter" id="current-sch-price-highter-{{ schedule.id }}">
+                            </div>
+{##}
+{#                            <div class="form-group">#}
+{#                                <p>Mínimo: <span id="lower-offset-{{ schedule.id }}"></span></p>#}
+{#                                <p>Máximo: <span id="upper-offset-{{ schedule.id }}"></span></p>#}
+{#                                <input type="hidden" name="lprice" id="lprice-{{ schedule.id }}">#}
+{#                                <input type="hidden" name="hprice" id="hprice-{{ schedule.id }}">#}
+{#                            </div>#}
                         </div>
 
 
