@@ -83,9 +83,12 @@
                                     <label class="control-label" for="sch-place-departure-{{ schedule.id }}">Origem</label>
                                     <div class='input-group'>
                                         <select id="sch-place-departure-{{ schedule.id }}" name="sch-place-departure">
-                                            <option value="">Selecione</option>
                                             {% for place in places %}
-                                                <option value="{{ place.id }}">{{ place.name }}</option>
+                                                {% if place.id|slugify == schedule.departure.id|slugify %}
+                                                    <option selected="selected" value="{{ place.id }}">{{ place.name }}</option>
+                                                {% else %}
+                                                    <option value="{{ place.id }}">{{ place.name }}</option>
+                                                {% endif %}
                                             {% endfor %}
                                         </select>
                                     </div>
