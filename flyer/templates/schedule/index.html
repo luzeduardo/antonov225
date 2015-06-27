@@ -54,9 +54,9 @@
                             {{ item.departure_date|convertdateformat:"%d/%m/%Y"}}
                         </td>
                         <td>{{ item.landing_date|convertdateformat:"%d/%m/%Y"}}</td>
-                        <td>{{item.price_percent_lower|currency_formated_multiply_lower:item.price }}</td>
+                        <td>{{item.price_lower|currency:"pt_BR" }}</td>
                         <td>{{item.price|currency:"pt_BR"}}</td>
-                        <td>{{item.price_percent_highter|currency_formated_multiply_highter:item.price }}</td>
+                        <td>{{item.price_highter|currency:"pt_BR" }}</td>
 
                         <td>
                             <div role="toolbar" class="btn-toolbar">

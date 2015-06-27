@@ -166,8 +166,8 @@ def enqueue_search(departure, config_origem, config_destinos, config_datas, ida_
 
 def notify_price_range_to_user(price, schedule):
     tprice = float(price)
-    hpct = float(schedule.price_percent_highter)
-    lpct = float(schedule.price_percent_lower)
+    hpct = float(schedule.price_highter)
+    lpct = float(schedule.price_lower)
     sprice = float(schedule.price)
     hprice = sprice * hpct
     lprice = sprice * lpct - sprice

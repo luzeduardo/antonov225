@@ -6,43 +6,12 @@
         $(this).text( handle.parent()[0].style.left );
     }
 
-    function hleftValue( value, handle, slider ) {
-        var tmpvalue = value.replace(/\D+/g, '' )/10000;
-        var current = $("#current-sch-price-{{ schedule.id }}").val();
-        var pctvalue = (parseInt(current) * tmpvalue) + parseInt(current);
-        $(this).val( pctvalue );
-        $(this).text( pctvalue );
-    }
-
-    function lleftValue( value, handle, slider ) {
-        var tmpvalue = value.replace(/\D+/g, '' )/10000;
-        var current = $("#current-sch-price-{{ schedule.id }}").val();
-        var pctvalue =  parseInt(current) - (parseInt(current) * tmpvalue);
-        $(this).val( pctvalue );
-        $(this).text( pctvalue );
-    }
-
-    function priceConvert( value, handle, slider ) {
-        var tmpvalue = value.replace(/\D+/g, '' );
-        tmpvalue = (tmpvalue/10000) + 1;
-        $(this).val( tmpvalue );
-        $(this).text( tmpvalue );
-    }
-
     $(document).ready(function () {
         //range pesquisa
         var elidlower = "#slider-price-lower-sch-{{ schedule.id }}";
         var elidhighter = "#slider-price-highter-sch-{{ schedule.id }}";
 
-        var tmplvalue = "{{ schedule.price_percent_lower }}";
-        tmplvalue = tmplvalue - 1;
-        tmplvalue = parseInt(tmplvalue * 100);
-
-        var tmphvalue = "{{ schedule.price_percent_highter }}";
-        tmphvalue = tmphvalue - 1;
-        tmphvalue = parseInt(tmphvalue * 100);
-
-                //preco atual
+        //preco atual
         var atualpriceelid = "#slider-atual-price-sch-{{ schedule.id }}";
         $(atualpriceelid).noUiSlider({
             start: "{{ schedule.price }}",
@@ -55,39 +24,27 @@
         $(atualpriceelid).Link('lower').to($("#current-sch-price-{{ schedule.id }}"));
         $(atualpriceelid).Link('lower').to($("#current-price-{{ schedule.id }}"));
 
-
         $(elidlower).noUiSlider({
-            start: tmplvalue,
+            start: {{ schedule.price_lower }},
             step: 50,
             range: {
                 'min': 200,
                 'max': {{ schedule.price }}
             }
         });
-        $(elidlower).Link('lower').to($("#current-sch-price-lower-{{ schedule.id }}"),leftValue);
-        $(elidlower).Link('lower').to($("#current-price-lower-{{ schedule.id }}"),lleftValue);
+        $(elidlower).Link('lower').to($("#current-sch-price-lower-{{ schedule.id }}"));
+        $(elidlower).Link('lower').to($("#current-price-lower-{{ schedule.id }}"));
 
-        console.log(tmplvalue);
-        console.log(tmphvalue);
         $(elidhighter).noUiSlider({
-            start: tmphvalue,
+            start: {{ schedule.price_highter }},
             step: 50,
             range: {
                 'min': {{ schedule.price }},
                 'max': 5000
             }
         });
-        $(elidhighter).Link('lower').to($("#current-sch-price-highter-{{ schedule.id }}"),leftValue);
-        $(elidhighter).Link('lower').to($("#current-price-highter-{{ schedule.id }}"),hleftValue);
-
-{#        $(elidhighter).Link('lower').to($("#hprice-{{ schedule.id }}"), priceConvert);#}
-{#        $(elidlower).Link('lower').to($("#lprice-{{ schedule.id }}"), priceConvert);#}
-{##}
-{#        $(elidlower).Link('lower').to($("#lower-value-{{ schedule.id }}"));#}
-{#        $(elidlower).Link('lower').to($("#lower-offset-{{ schedule.id }}"), lleftValue);#}
-
-{#        $(elidhighter).Link('lower').to($("#upper-value-{{ schedule.id }}"));#}
-{#        $(elidhighter).Link('lower').to($("#upper-offset-{{ schedule.id }}"), hleftValue);#}
+        $(elidhighter).Link('lower').to($("#current-sch-price-highter-{{ schedule.id }}"));
+        $(elidhighter).Link('lower').to($("#current-price-highter-{{ schedule.id }}"));
 
         $("#dt-start-{{ schedule.id }}").datetimepicker({
             format: 'DD/MM/YYYY',
