@@ -59,6 +59,8 @@
             locale: 'pt-br',
             allowInputToggle: true
         });
+
+        $('#sch-place-{{ schedule.id }}').multiselect();
     });
 </script>
 
@@ -76,6 +78,32 @@
                     <fieldset>
                         <input type="hidden" value="{{ schedule.id }}">
 
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="sch-place-departure-{{ schedule.id }}">Origem</label>
+                                    <div class='input-group'>
+                                        <select id="sch-place-departure-{{ schedule.id }}" name="sch-place-departure">
+                                            <option value="">Selecione</option>
+                                            {% for place in places %}
+                                                <option value="{{ place.id }}">{{ place.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="sch-place-landing-{{ schedule.id }}">Destino</label>
+                                    <div class='input-group'>
+                                        <select id="sch-place-landing-{{ schedule.id }}" name="sch-place-landing" multiple="multiple">
+                                            {% for place in places %}
+                                                <option value="{{ place.id }}">{{ place.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -88,6 +116,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label" for="sch-price">Pouso</label>
