@@ -1,3 +1,5 @@
+{% load flyerapp_tags %}
+
 <!-- MODAL EDICAO - Begin -->
 <script type="text/javascript">
     function leftValue( value, handle, slider ) {
@@ -76,12 +78,14 @@
 
         $("#dt-start-{{ schedule.id }}").datetimepicker({
             format: 'DD/MM/YYYY',
+            defaultDate: "{{ schedule.departure_date|convertdateformat:"%Y-%m-%d" }}",
             locale: 'pt-br',
             allowInputToggle: true
         });
 
         $("#dt-end-{{ schedule.id }}").datetimepicker({
             format: 'DD/MM/YYYY',
+            defaultDate: "{{ schedule.landing_date|convertdateformat:"%Y-%m-%d" }}",
             locale: 'pt-br',
             allowInputToggle: true
         });
