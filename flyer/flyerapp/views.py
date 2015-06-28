@@ -71,7 +71,7 @@ def index(request, *args, **kwargs):
     schedules = Schedule.objects.select_related("departure").all()
     scheduleserializer = ScheduleSerializer(schedules, many=True)
 
-    places = Place.objects.all()
+    places = Place.objects.all().order_by('name')
     placeserializer = PlaceListSerializer(places)
 
     response = {}
