@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.urlresolvers import reverse
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, render_to_response
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
@@ -81,6 +83,16 @@ def index(request, *args, **kwargs):
     return render_to_response("schedule/index.html", {
         'data' : response
     })
+
+@csrf_exempt
+def edit_schedule(request,*args, **kwargs):
+	itens_pedido = request.session.get('itens_pedido', [])
+
+	item = json.loads(request.body)['item']
+	itens_pedido.append(item)
+
+	request.session['itens_pedido'] = itens_pedido
+	return HttpResponse(json.dumps(itens_pedido))
 
 def add_schedule(request):
 	itens_pedido = request.session.get('itens_pedido', [])

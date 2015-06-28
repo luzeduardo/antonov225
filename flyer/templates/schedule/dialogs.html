@@ -74,7 +74,8 @@
                 <h4 class="modal-title">Editar Pesquisa</h4>
             </div>
             <div class="modal-body">
-                <form method="POST" role="form" id="frm_sch_edit">
+                <form method="POST" role="form" id="frm_sch_edit" action="{% url 'flyerapp:edit_schedule' %}">
+                    {% csrf_token %}
                     <fieldset>
                         <input type="hidden" value="{{ schedule.id }}">
 
@@ -136,13 +137,6 @@
                                     </div>
                                 </div>
                             </div>
-{#                            <label class="control-label" for="sch-price">Pouso</label>#}
-{#                            <div class='input-group date' id='dt-start-{{ schedule.id }}'>#}
-{#                                <input type='text' class="form-control" />#}
-{#                                <span class="input-group-addon">#}
-{#                                    <span class="glyphicon glyphicon-calendar"></span>#}
-{#                                </span>#}
-{#                            </div>#}
 
                         <div class="col-md-6">
 
@@ -166,22 +160,15 @@
 
                                 <input type="hidden" name="sch-price-highter" id="current-sch-price-highter-{{ schedule.id }}">
                             </div>
-{##}
-{#                            <div class="form-group">#}
-{#                                <p>Mínimo: <span id="lower-offset-{{ schedule.id }}"></span></p>#}
-{#                                <p>Máximo: <span id="upper-offset-{{ schedule.id }}"></span></p>#}
-{#                                <input type="hidden" name="lprice" id="lprice-{{ schedule.id }}">#}
-{#                                <input type="hidden" name="hprice" id="hprice-{{ schedule.id }}">#}
-{#                            </div>#}
                         </div>
 
 
                     </fieldset>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="bt-sch-edit-sim">Salvar</button>
+                </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="bt-sch-edit-sim">Salvar</button>
             </div>
         </div>
 
