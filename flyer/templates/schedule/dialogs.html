@@ -99,9 +99,16 @@
                                 <div class="form-group">
                                     <label class="control-label" for="sch-place-landing-{{ schedule.id }}">Destino</label>
                                     <div class='input-group'>
+
                                         <select id="sch-place-landing-{{ schedule.id }}" name="sch-place-landing" multiple="multiple">
-                                            {% for place in places %}
-                                                <option value="{{ place.id }}">{{ place.name }}</option>
+                                            {% for sch_place in schedule.landing  %}
+                                                {% for place in places %}
+                                                    {% if sch_place.id|slugify == place.id|slugify %}
+                                                        <option selected="selected" value="{{ place.id }}">{{ place.name }}</option>
+                                                    {% else %}
+                                                        <option value="{{ place.id }}">{{ place.name }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
                                             {% endfor %}
                                         </select>
                                     </div>
