@@ -213,9 +213,8 @@ def currency_multiply_lower(value, arg):
     return currency(float(value)*float(arg) - float(arg),'',False)
 
 @register.filter()
-def check_multiple_values_dict(id, arg):
-    list = {id}
-    if all (k in arg for k in (list)):
-	    return True
-    else:
-        return False
+def check_multiple_id_values_dict(id, lst):
+    for prm in lst:
+        if int(id) == int(prm['id']):
+            return True
+    return False

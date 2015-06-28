@@ -99,18 +99,14 @@
                                 <div class="form-group">
                                     <label class="control-label" for="sch-place-landing-{{ schedule.id }}">Destino</label>
                                     <div class='input-group'>
-
                                         <select id="sch-place-landing-{{ schedule.id }}" name="sch-place-landing" multiple="multiple">
 
                                             {% for place in places %}
-                                                {% for sch_place in schedule.landing  %}
-                                                    {% if sch_place.id|slugify == place.id|slugify %}
+                                                    {% if place.id|check_multiple_id_values_dict:schedule.landing %}
                                                         <option selected="selected" value="{{ place.id }}">{{ place.name }}</option>
+                                                    {% else %}
+                                                        <option value="{{ place.id }}">{{ place.name }}</option>
                                                     {% endif %}
-                                                {% endfor %}
-{#                                                {% if sch_place.id|slugify != place.id|slugify %}#}
-{#                                                    <option value="{{ place.id }}">{{ place.name }}</option>#}
-{#                                                {% endif %}#}
                                             {% endfor %}
                                         </select>
                                     </div>
