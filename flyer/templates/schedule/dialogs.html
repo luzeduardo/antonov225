@@ -75,6 +75,7 @@
             </div>
             <div class="modal-body">
                 <form method="POST" role="form" id="frm_sch_edit" action="{% url 'flyerapp:edit_schedule' %}">
+                    <input type="hidden" name="sch-id" value="{{ schedule.id }}">
                     {% csrf_token %}
                     <fieldset>
                         <input type="hidden" value="{{ schedule.id }}">
@@ -118,7 +119,7 @@
                                 <div class="form-group">
                                     <label class="control-label" for="sch-price">Decolagem</label>
                                     <div class='input-group date' id='dt-start-{{ schedule.id }}'>
-                                        <input type='text' class="form-control" />
+                                        <input type='text' class="form-control" name="dt-start" />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
@@ -130,7 +131,7 @@
                                 <div class="form-group">
                                     <label class="control-label" for="sch-price">Pouso</label>
                                     <div class='input-group date' id='dt-end-{{ schedule.id }}'>
-                                        <input type='text' class="form-control" />
+                                        <input type='text' class="form-control" name="dt-end" />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>

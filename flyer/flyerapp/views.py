@@ -86,22 +86,28 @@ def index(request, *args, **kwargs):
 
 @csrf_exempt
 def edit_schedule(request,*args, **kwargs):
-	itens_pedido = request.session.get('itens_pedido', [])
+    if request.method == 'POST':
+        id = request.POST.get('sch-id', None)
 
-	item = json.loads(request.body)['item']
-	itens_pedido.append(item)
+        Schedule.objects.filter(id=id)
+            # .update(valor=valor,
+            #                                              titulo=titulo)
+    itens_pedido = request.session.get('itens_pedido', [])
 
-	request.session['itens_pedido'] = itens_pedido
-	return HttpResponse(json.dumps(itens_pedido))
+    item = json.loads(request.body)['item']
+    itens_pedido.append(item)
+
+    request.session['itens_pedido'] = itens_pedido
+    return HttpResponse(json.dumps(itens_pedido))
 
 def add_schedule(request):
-	itens_pedido = request.session.get('itens_pedido', [])
+    itens_pedido = request.session.get('itens_pedido', [])
 
-	item = json.loads(request.body)['item']
-	itens_pedido.append(item)
+    item = json.loads(request.body)['item']
+    itens_pedido.append(item)
 
-	request.session['itens_pedido'] = itens_pedido
-	return HttpResponse(json.dumps(itens_pedido))
+    request.session['itens_pedido'] = itens_pedido
+    return HttpResponse(json.dumps(itens_pedido))
 
 def delete_schedule(request, index):
     itens_pedido = request.session.get('itens_pedido', [])
