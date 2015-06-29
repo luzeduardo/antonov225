@@ -7,4 +7,9 @@ $(document).ready(function () {
         var id = $(this).data('id');
         $('#modal-schedule-edit-' + id).modal('toggle');
     });
+
+    $("button[data-ctr-new]").on('click', function () {
+        $('#modal-schedule-new').modal('toggle');
+    });
+
 })

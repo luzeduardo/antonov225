@@ -7,13 +7,15 @@
     }
 
     $(document).ready(function () {
+{#        @TODO REFATORAR#}
+        {# EDIT BEGIN #}
         //range pesquisa
-        var elidlower = "#slider-price-lower-sch-{{ schedule.id }}";
-        var elidhighter = "#slider-price-highter-sch-{{ schedule.id }}";
+        var edit_elidlower = "#slider-price-lower-sch-{{ schedule.id }}";
+        var edit_elidhighter = "#slider-price-highter-sch-{{ schedule.id }}";
 
         //preco atual
-        var atualpriceelid = "#slider-atual-price-sch-{{ schedule.id }}";
-        $(atualpriceelid).noUiSlider({
+        var edit_atualpriceelid = "#slider-atual-price-sch-{{ schedule.id }}";
+        $(edit_atualpriceelid).noUiSlider({
             start: "{{ schedule.price }}",
             step: 50,
             range: {
@@ -21,8 +23,67 @@
                 'max': 5000
             }
         });
-        $(atualpriceelid).Link('lower').to($("#current-sch-price-{{ schedule.id }}"));
-        $(atualpriceelid).Link('lower').to($("#current-price-{{ schedule.id }}"));
+        $(edit_atualpriceelid).Link('lower').to($("#current-sch-price-{{ schedule.id }}"));
+        $(edit_atualpriceelid).Link('lower').to($("#current-price-{{ schedule.id }}"));
+
+        $(edit_elidlower).noUiSlider({
+            start: {{ schedule.price_lower }},
+            step: 50,
+            range: {
+                'min': 200,
+                'max': {{ schedule.price }}
+            }
+        });
+        $(edit_elidlower).Link('lower').to($("#current-sch-price-lower-{{ schedule.id }}"));
+        $(edit_elidlower).Link('lower').to($("#current-price-lower-{{ schedule.id }}"));
+
+        $(edit_elidhighter).noUiSlider({
+            start: {{ schedule.price_highter }},
+            step: 50,
+            range: {
+                'min': {{ schedule.price }},
+                'max': 5000
+            }
+        });
+        $(edit_elidhighter).Link('lower').to($("#current-sch-price-highter-{{ schedule.id }}"));
+        $(edit_elidhighter).Link('lower').to($("#current-price-highter-{{ schedule.id }}"));
+
+        //calendars
+        $("#dt-start-{{ schedule.id }}").datetimepicker({
+            format: 'DD/MM/YYYY',
+            defaultDate: "{{ schedule.departure_date|convertdateformat:"%Y-%m-%d" }}",
+            locale: 'pt-br',
+            allowInputToggle: true
+        });
+        $("#dt-end-{{ schedule.id }}").datetimepicker({
+            format: 'DD/MM/YYYY',
+            defaultDate: "{{ schedule.landing_date|convertdateformat:"%Y-%m-%d" }}",
+            locale: 'pt-br',
+            allowInputToggle: true
+        });
+
+        $('#sch-place-{{ schedule.id }}').multiselect();
+        {# EDIT END #}
+
+
+
+        {# NEW BEGIN #}
+        //range pesquisa
+        var new_elidlower = "#slider-price-lower-sch";
+        var new_elidhighter = "#slider-price-highter-sch";
+
+        //preco atual
+        var new_atualpriceelid = "#slider-atual-price-sch";
+        $(new_atualpriceelid).noUiSlider({
+            start: "{{ schedule.price }}",
+            step: 50,
+            range: {
+                'min': 200,
+                'max': 5000
+            }
+        });
+        $(new_atualpriceelid).Link('lower').to($("#current-sch-price"));
+        $(new_atualpriceelid).Link('lower').to($("#current-price"));
 
         $(elidlower).noUiSlider({
             start: {{ schedule.price_lower }},
@@ -32,10 +93,10 @@
                 'max': {{ schedule.price }}
             }
         });
-        $(elidlower).Link('lower').to($("#current-sch-price-lower-{{ schedule.id }}"));
-        $(elidlower).Link('lower').to($("#current-price-lower-{{ schedule.id }}"));
+        $(new_elidlower).Link('lower').to($("#current-sch-price-lower"));
+        $(new_elidlower).Link('lower').to($("#current-price-lower"));
 
-        $(elidhighter).noUiSlider({
+        $(new_elidhighter).noUiSlider({
             start: {{ schedule.price_highter }},
             step: 50,
             range: {
@@ -43,24 +104,25 @@
                 'max': 5000
             }
         });
-        $(elidhighter).Link('lower').to($("#current-sch-price-highter-{{ schedule.id }}"));
-        $(elidhighter).Link('lower').to($("#current-price-highter-{{ schedule.id }}"));
+        $(new_elidhighter).Link('lower').to($("#current-sch-price-highter"));
+        $(new_elidhighter).Link('lower').to($("#current-price-highter"));
 
-        $("#dt-start-{{ schedule.id }}").datetimepicker({
+        //calendars
+        $("#dt-start").datetimepicker({
             format: 'DD/MM/YYYY',
             defaultDate: "{{ schedule.departure_date|convertdateformat:"%Y-%m-%d" }}",
             locale: 'pt-br',
             allowInputToggle: true
         });
-
-        $("#dt-end-{{ schedule.id }}").datetimepicker({
+        $("#dt-end").datetimepicker({
             format: 'DD/MM/YYYY',
             defaultDate: "{{ schedule.landing_date|convertdateformat:"%Y-%m-%d" }}",
             locale: 'pt-br',
             allowInputToggle: true
         });
 
-        $('#sch-place-{{ schedule.id }}').multiselect();
+        $('#sch-place').multiselect();
+        {# NEW END #}
     });
 </script>
 
@@ -78,8 +140,6 @@
                     <input type="hidden" name="sch-id" value="{{ schedule.id }}">
                     {% csrf_token %}
                     <fieldset>
-                        <input type="hidden" value="{{ schedule.id }}">
-
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label" for="sch-place-departure-{{ schedule.id }}">Origem</label>
@@ -176,3 +236,107 @@
     </div>
 </div>
 <!-- MODAL EDICAO- End -->
+
+
+<!-- MODAL NOVO- End -->
+<div class="modal" id="modal-schedule-new" tabindex="-1" role="dialog" aria-labelledby="schNew"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Fechar</span></button>
+                <h4 class="modal-title">Nova Pesquisa</h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" role="form" id="frm_sch_new" action="{% url 'flyerapp:edit_schedule' %}">
+                    {% csrf_token %}
+                    <fieldset>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="sch-place-departure">Origem</label>
+                                    <div class='input-group'>
+                                        <select id="sch-place-departure" name="sch-place-departure">
+                                            {% for place in places %}
+                                                <option value="{{ place.id }}">{{ place.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="sch-place-landing">Destino</label>
+                                    <div class='input-group'>
+                                        <select id="sch-place-landing" name="sch-place-landing" multiple="multiple">
+
+                                            {% for place in places %}
+                                                <option value="{{ place.id }}">{{ place.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="sch-price">Decolagem</label>
+                                    <div class='input-group date' id='dt-start'>
+                                        <input type='text' class="form-control" name="dt-start" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="sch-price">Pouso</label>
+                                    <div class='input-group date' id='dt-end'>
+                                        <input type='text' class="form-control" name="dt-end" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <label class="control-label" for="sch-price">Preço de busca: <b><span id="current-price"></span></b></label>
+                                <div id="slider-atual-price-sch"></div>
+
+                                <input type="hidden" name="sch-price" id="current-sch-price">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label" for="sch-price">Preço mínimo: <b><span id="current-price-lower"></span></b></label>
+                                <div id="slider-price-lower-sch"></div>
+
+                                <input type="hidden" name="sch-price-lower" id="current-sch-price-lower">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label" for="sch-price">Preço máximo: <b><span id="current-price-highter"></span></b></label>
+                                <div id="slider-price-highter-sch"></div>
+
+                                <input type="hidden" name="sch-price-highter" id="current-sch-price-highter">
+                            </div>
+                        </div>
+
+
+                    </fieldset>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="bt-sch-new-sim">Salvar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- MODAL NOVO- End -->

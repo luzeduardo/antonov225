@@ -9,72 +9,78 @@
 {% block content %}
 <body>
 	<div class="table-responsive">
-        <table class="table table-striped table-condensed">
-            <thead>
-                <tr>
-                    <th>Ativo</th>
-                    <th>Origem</th>
-                    <th class="visible-lg hidden-xs">Destino</th>
-                    <th class="hidden-lg visible-xs">Destino</th>
-{#                    <th>Dias no local</th>#}
-                    <th>Decolagem</th>
-                    <th>Pouso</th>
-{#                    <th>Preço mínimo</th>#}
-                    <th>Preço busca</th>
-{#                    <th>Preço máximo</th>#}
-                    <th></th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for item in data.schedules %}
+        <div class="col-md-12">
+            <table class="table table-striped table-condensed">
+                <thead>
                     <tr>
-                        <td>
-                            {% if item.active  %}
-                            Ativo
-                            {% else %}
-                                Inativo
-                            {% endif %}
-                        </td>
-                        <td>{{ item.departure.name }}</td>
-                        <td class="col-md-4 visible-lg hidden-xs">
-                            {% for landing in item.landing %}
-                                {{ landing.name }}{% if forloop.last %}.{% else %}, {% endif %}
-                            {% endfor %}
-                        </td>
-                        <td class="hidden-lg visible-xs">
-                            {% for landing in item.landing|slice:":1" %}
-                                {{ landing.name }}{% if forloop.last %}...{% else %}, {% endif %}
-                            {% endfor %}
-                        </td>
-{#                        <td>#}
-{#                            {{ item.days_in_place }}#}
-{#                        </td>#}
-                        <td>
-                            {{ item.departure_date|convertdateformat:"%d/%m/%Y"}}
-                        </td>
-                        <td>{{ item.landing_date|convertdateformat:"%d/%m/%Y"}}</td>
-{#                        <td>{{item.price_lower|currency:"pt_BR" }}</td>#}
-                        <td>{{item.price|currency:"pt_BR"}}</td>
-{#                        <td>{{item.price_highter|currency:"pt_BR" }}</td>#}
-
-                        <td>
-                            <div role="toolbar" class="btn-toolbar">
-                              <button class="btn btn-default btn-xs" data-ctr-edit data-id="{{ item.id }}" type="button">
-                                  <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
-                              </button>
-                              <button class="btn btn-danger btn-xs" data-ctr-del data-id="{{ item.id }}" type="button">
-                                  <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
-                              </button>
-                            </div>
-                        </td>
-                        <td>
-                            {% include "schedule/dialogs.html" with schedule=item places=data.places  %}
-                        </td>
+                        <th>Ativo</th>
+                        <th>Origem</th>
+                        <th class="visible-lg hidden-xs">Destino</th>
+                        <th class="hidden-lg visible-xs">Destino</th>
+    {#                    <th>Dias no local</th>#}
+                        <th>Decolagem</th>
+                        <th>Pouso</th>
+    {#                    <th>Preço mínimo</th>#}
+                        <th>Preço busca</th>
+    {#                    <th>Preço máximo</th>#}
+                        <th></th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-	</div>
+                </thead>
+
+                <tbody>
+                    {% for item in data.schedules %}
+                        <tr>
+                            <td>
+                                {% if item.active  %}
+                                Ativo
+                                {% else %}
+                                    Inativo
+                                {% endif %}
+                            </td>
+                            <td>{{ item.departure.name }}</td>
+                            <td class="col-md-4 visible-lg hidden-xs">
+                                {% for landing in item.landing %}
+                                    {{ landing.name }}{% if forloop.last %}.{% else %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td class="hidden-lg visible-xs">
+                                {% for landing in item.landing|slice:":1" %}
+                                    {{ landing.name }}{% if forloop.last %}...{% else %}, {% endif %}
+                                {% endfor %}
+                            </td>
+    {#                        <td>#}
+    {#                            {{ item.days_in_place }}#}
+    {#                        </td>#}
+                            <td>
+                                {{ item.departure_date|convertdateformat:"%d/%m/%Y"}}
+                            </td>
+                            <td>{{ item.landing_date|convertdateformat:"%d/%m/%Y"}}</td>
+    {#                        <td>{{item.price_lower|currency:"pt_BR" }}</td>#}
+                            <td>{{item.price|currency:"pt_BR"}}</td>
+    {#                        <td>{{item.price_highter|currency:"pt_BR" }}</td>#}
+
+                            <td>
+                                <div role="toolbar" class="btn-toolbar">
+                                  <button class="btn btn-default btn-xs" data-ctr-edit data-id="{{ item.id }}" type="button">
+                                      <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
+                                  </button>
+                                  <button class="btn btn-danger btn-xs" data-ctr-del data-id="{{ item.id }}" type="button">
+                                      <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
+                                  </button>
+                                </div>
+                            </td>
+                            <td>
+                                {% include "schedule/dialogs.html" with schedule=item places=data.places  %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12">
+            <button class="btn btn-success btn-md" data-ctr-new data-id="{{ item.id }}" type="button">
+              <span aria-hidden="true" class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
 </body>
 {% endblock %}

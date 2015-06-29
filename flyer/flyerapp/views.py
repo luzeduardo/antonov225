@@ -88,6 +88,10 @@ def index(request, *args, **kwargs):
 def edit_schedule(request,*args, **kwargs):
     if request.method == 'POST':
         id = request.POST.get('sch-id', None)
+        if id is None:
+            'insert'
+        else:
+            'update'
 
         Schedule.objects.filter(id=id)
             # .update(valor=valor,
