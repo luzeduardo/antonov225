@@ -113,7 +113,7 @@ def edit_schedule(request, *args, **kwargs):
             # schobj.exactly_days_check = request.POST.get('sch-', None)
             schobj.save()
 
-            landings = request.POST.get('sch-place-landing', None)
+            landings = request.POST.getlist('sch-place-landing', None)
             places = Place.objects.filter(pk__in=landings)
             schobj.landing = places
             schobj.save()
