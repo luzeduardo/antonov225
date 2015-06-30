@@ -70,10 +70,11 @@
                                 </div>
                             </td>
                             <td>
-                                {% include "schedule/dialogs.html" with schedule=item places=data.places  %}
+                                {% include "schedule/dialogs_edit.html" with schedule=item places=data.places  %}
                             </td>
                         </tr>
                     {% endfor %}
+                    {% include "schedule/dialogs.html" with places=data.places %}
                 </tbody>
             </table>
         </div>
