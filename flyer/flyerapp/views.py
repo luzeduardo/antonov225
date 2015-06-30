@@ -98,17 +98,24 @@ def edit_schedule(request, *args, **kwargs):
             dt_end_temp = request.POST.get('dt-end', None)
             dt_end = datetime.strptime(dt_end_temp, '%d/%m/%Y').strftime("%Y-%m-%d")
 
-            schobj.departure = request.POST.get('sch-place-departure', None)
-            schobj.landing = request.POST.get('sch-place-landing', None)
+            departure_id = request.POST.get('sch-place-departure', None)
+            placeobj = Place.objects.get(pk=departure_id)
+            schobj.departure = placeobj
+
             schobj.price = float(request.POST.get('sch-price', 0))
             schobj.price_lower = float(request.POST.get('sch-price-lower', 0))
             schobj.price_highter = float(request.POST.get('sch-price-highter', 0))
             schobj.departure_date = dt_start
             schobj.landing_date = dt_end
-            # schobj.days_in_place = request.POST.get('sch-', 0)
+            schobj.days_in_place = diffdays(dt_start_temp, dt_end_temp)
             # schobj.departure_in_weekend_only = request.POST.get('sch-', None)
             # schobj.landing_in_weekend_only = request.POST.get('sch-', None)
             # schobj.exactly_days_check = request.POST.get('sch-', None)
+            schobj.save()
+
+            landings = request.POST.get('sch-place-landing', None)
+            places = Place.objects.filter(pk__in=landings)
+            schobj.landing = places
             schobj.save()
 
         else:
@@ -116,7 +123,7 @@ def edit_schedule(request, *args, **kwargs):
             Schedule.objects.filter(id=id)
             # .update(valor=valor,
             #                                              titulo=titulo)
-        return HttpResponseRedirect( reverse( 'flyerapp:index' ) )
+        return HttpResponseRedirect( reverse( 'flyerapp:home' ) )
 
 def add_schedule(request):
     itens_pedido = request.session.get('itens_pedido', [])
@@ -132,3 +139,9 @@ def delete_schedule(request, index):
     del itens_pedido[int(index)]
     request.session['itens_pedido'] = itens_pedido
     return HttpResponse(json.dumps(itens_pedido))
+
+def diffdays(date_a, date_b, date_format="%d/%m/%Y"):
+    a = datetime.strptime(date_a, date_format)
+    b = datetime.strptime(date_b, date_format)
+    delta = b - a
+    return int(delta.days)

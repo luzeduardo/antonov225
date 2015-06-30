@@ -4,7 +4,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = patterns('',
     # url( r'^/?$', 'flyerapp.views.index_view', name='home' ),
-    url(r'^$', 'flyerapp.views.index'),  # NOQA
+    url(r'^$', 'flyerapp.views.index', name='home'),  # NOQA
 
     url(r'^schedules/$', 'flyerapp.views.schedule_list'),
     url(r'^schedules/(?P<pk>[0-9]+)/$', 'flyerapp.views.schedule_detail'),
