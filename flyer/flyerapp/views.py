@@ -7,7 +7,7 @@ from django.shortcuts import render, render_to_response, redirect
 from django.http import HttpResponseRedirect
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from models import Schedule, Place
+from models import Schedule, Place, Flight
 from serializers import ScheduleSerializer, PlaceSerializer, PlaceListSerializer
 import json
 
@@ -72,7 +72,7 @@ def schedule_detail(request, pk):
         return HttpResponse(status=204)
 
 def index(request, *args, **kwargs):
-    schedules = Schedule.objects.select_related("departure").all()
+    schedules = Schedule.objects.filter(logic_delete=False).select_related("departure").all()
     scheduleserializer = ScheduleSerializer(schedules, many=True)
 
     places = Place.objects.all().order_by('name')
@@ -89,56 +89,51 @@ def index(request, *args, **kwargs):
 @csrf_exempt
 def edit_schedule(request, *args, **kwargs):
     if request.method == 'POST':
+
+        schobj = Schedule()
+        dt_start_temp = request.POST.get('dt-start', None)
+        dt_start = datetime.strptime(dt_start_temp, '%d/%m/%Y').strftime("%Y-%m-%d")
+        dt_end_temp = request.POST.get('dt-end', None)
+        dt_end = datetime.strptime(dt_end_temp, '%d/%m/%Y').strftime("%Y-%m-%d")
+
+        schobj.price = float(request.POST.get('sch-price', 0))
+        schobj.price_lower = float(request.POST.get('sch-price-lower', 0))
+        schobj.price_highter = float(request.POST.get('sch-price-highter', 0))
+        schobj.departure_date = dt_start
+        schobj.landing_date = dt_end
+        schobj.days_in_place = diffdays(dt_start_temp, dt_end_temp)
+
+        # schobj.departure_in_weekend_only = request.POST.get('sch-', None)
+        # schobj.landing_in_weekend_only = request.POST.get('sch-', None)
+        # schobj.exactly_days_check = request.POST.get('sch-', None)
+
+        departure_id = request.POST.get('sch-place-departure', None)
+        placeobj = Place.objects.get(pk=departure_id)
+        schobj.departure = placeobj
+
         id = request.POST.get('sch-id', None)
-        if id is None:
-            schobj = Schedule()
 
-            dt_start_temp = request.POST.get('dt-start', None)
-            dt_start = datetime.strptime(dt_start_temp, '%d/%m/%Y').strftime("%Y-%m-%d")
-            dt_end_temp = request.POST.get('dt-end', None)
-            dt_end = datetime.strptime(dt_end_temp, '%d/%m/%Y').strftime("%Y-%m-%d")
+        if id:
+            Schedule.objects.filter(pk=id).update(logic_delete=True)
 
-            departure_id = request.POST.get('sch-place-departure', None)
-            placeobj = Place.objects.get(pk=departure_id)
-            schobj.departure = placeobj
-
-            schobj.price = float(request.POST.get('sch-price', 0))
-            schobj.price_lower = float(request.POST.get('sch-price-lower', 0))
-            schobj.price_highter = float(request.POST.get('sch-price-highter', 0))
-            schobj.departure_date = dt_start
-            schobj.landing_date = dt_end
-            schobj.days_in_place = diffdays(dt_start_temp, dt_end_temp)
-            # schobj.departure_in_weekend_only = request.POST.get('sch-', None)
-            # schobj.landing_in_weekend_only = request.POST.get('sch-', None)
-            # schobj.exactly_days_check = request.POST.get('sch-', None)
-            schobj.save()
-
-            landings = request.POST.getlist('sch-place-landing', None)
-            places = Place.objects.filter(pk__in=landings)
-            schobj.landing = places
-            schobj.save()
-
-        else:
-            vasd = 'update'
-            Schedule.objects.filter(id=id)
-            # .update(valor=valor,
-            #                                              titulo=titulo)
+        schobj.save()
+        landings = request.POST.getlist('sch-place-landing', None)
+        places = Place.objects.filter(pk__in=landings)
+        schobj.landing = places
+        schobj.save()
         return HttpResponseRedirect( reverse( 'flyerapp:home' ) )
 
-def add_schedule(request):
-    itens_pedido = request.session.get('itens_pedido', [])
-
-    item = json.loads(request.body)['item']
-    itens_pedido.append(item)
-
-    request.session['itens_pedido'] = itens_pedido
-    return HttpResponse(json.dumps(itens_pedido))
-
-def delete_schedule(request, index):
-    itens_pedido = request.session.get('itens_pedido', [])
-    del itens_pedido[int(index)]
-    request.session['itens_pedido'] = itens_pedido
-    return HttpResponse(json.dumps(itens_pedido))
+@csrf_exempt
+def delete_schedule(request, *args, **kwargs):
+    if request.method == 'POST':
+        id = request.POST.get('sch-id', None)
+        if id:
+            schobj = Schedule.objects.get(pk=id)
+            if schobj:
+                schobj.delete()
+        else:
+            msg = 'show errors'
+    return HttpResponseRedirect( reverse( 'flyerapp:home' ) )
 
 def diffdays(date_a, date_b, date_format="%d/%m/%Y"):
     a = datetime.strptime(date_a, date_format)

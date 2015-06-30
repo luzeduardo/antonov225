@@ -12,4 +12,9 @@ $(document).ready(function () {
         $('#modal-schedule-new').modal('toggle');
     });
 
+    $("button[data-ctr-del]").on('click', function () {
+        var id = $(this).data('id');
+        $('#modal-schedule-delete-' + id).modal('toggle');
+    });
+
 })

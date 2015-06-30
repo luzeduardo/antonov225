@@ -23,6 +23,7 @@ class Flight(models.Model):
 
 class Schedule(models.Model):
     active = models.BooleanField(default=True, null=False)
+    logic_delete = models.BooleanField(default=False, null=False)
     departure = models.ForeignKey(Place, related_name="departure_schedule", null=False)
     landing = models.ManyToManyField(Place, related_name="landing_schedule", null=False)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=False)

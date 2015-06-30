@@ -67,6 +67,7 @@
     });
 </script>
 
+<!-- MODAL EDICAO- Begin -->
 <div class="modal" id="modal-schedule-edit-{{ schedule.id }}" tabindex="-1" role="dialog" aria-labelledby="schEdit"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -177,3 +178,94 @@
     </div>
 </div>
 <!-- MODAL EDICAO- End -->
+
+<!-- MODAL EXCLUSAO - Begin -->
+<div class="modal" id="modal-schedule-delete-{{ schedule.id }}" tabindex="-1" role="dialog" aria-labelledby="schDelete"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Fechar</span></button>
+                <h4 class="modal-title">Excluir Pesquisa</h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" role="form" id="frm_sch_delete" action="{% url 'flyerapp:delete_schedule' %}">
+                    <input type="hidden" name="sch-id" value="{{ schedule.id }}">
+                    {% csrf_token %}
+                    <fieldset>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="sch-place-departure-{{ schedule.id }}">Origem</label>
+                                    <div class='input-group'>
+                                        <select id="sch-place-departure-{{ schedule.id }}" name="sch-place-departure" disabled="disabled">
+                                            {% for place in places %}
+                                                {% if place.id|slugify == schedule.departure.id|slugify %}
+                                                    <option selected="selected" value="{{ place.id }}">{{ place.name }}</option>
+                                                {% else %}
+                                                    <option value="{{ place.id }}">{{ place.name }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="sch-place-landing-{{ schedule.id }}">Destino</label>
+                                    <div class='input-group'>
+                                        <select id="sch-place-landing-{{ schedule.id }}" name="sch-place-landing" multiple="multiple" disabled="disabled">
+
+                                            {% for place in places %}
+                                                    {% if place.id|check_multiple_id_values_dict:schedule.landing %}
+                                                        <option selected="selected" value="{{ place.id }}">{{ place.name }}</option>
+                                                    {% else %}
+                                                        <option value="{{ place.id }}">{{ place.name }}</option>
+                                                    {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="sch-price">Decolagem: {{ schedule.departure_date|convertdateformat:"%d/%m/%Y" }}</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="sch-price">Pouso: {{ schedule.landing_date|convertdateformat:"%d/%m/%Y" }}</label>
+                                </div>
+                            </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <label class="control-label" for="sch-price">Preço de busca: {{ schedule.price|currency:"pt_BR" }}</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label" for="sch-price">Preço mínimo: {{ schedule.price_highter|currency:"pt_BR" }}</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label" for="sch-price">Preço máximo: {{ schedule.price_lower|currency:"pt_BR" }}</label>
+                            </div>
+                        </div>
+
+
+                    </fieldset>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger" id="bt-sch-delete-sim">Excluir</button>
+                </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- MODAL EXCLUSAO - End -->
