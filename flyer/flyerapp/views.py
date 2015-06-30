@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
+from datetime import datetime, date
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, redirect
+from django.http import HttpResponseRedirect
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from models import Schedule, Place
@@ -85,24 +87,36 @@ def index(request, *args, **kwargs):
     })
 
 @csrf_exempt
-def edit_schedule(request,*args, **kwargs):
+def edit_schedule(request, *args, **kwargs):
     if request.method == 'POST':
         id = request.POST.get('sch-id', None)
         if id is None:
-            'insert'
-        else:
-            'update'
+            schobj = Schedule()
 
-        Schedule.objects.filter(id=id)
+            dt_start_temp = request.POST.get('dt-start', None)
+            dt_start = datetime.strptime(dt_start_temp, '%d/%m/%Y').strftime("%Y-%m-%d")
+            dt_end_temp = request.POST.get('dt-end', None)
+            dt_end = datetime.strptime(dt_end_temp, '%d/%m/%Y').strftime("%Y-%m-%d")
+
+            schobj.departure = request.POST.get('sch-place-departure', None)
+            schobj.landing = request.POST.get('sch-place-landing', None)
+            schobj.price = float(request.POST.get('sch-price', 0))
+            schobj.price_lower = float(request.POST.get('sch-price-lower', 0))
+            schobj.price_highter = float(request.POST.get('sch-price-highter', 0))
+            schobj.departure_date = dt_start
+            schobj.landing_date = dt_end
+            # schobj.days_in_place = request.POST.get('sch-', 0)
+            # schobj.departure_in_weekend_only = request.POST.get('sch-', None)
+            # schobj.landing_in_weekend_only = request.POST.get('sch-', None)
+            # schobj.exactly_days_check = request.POST.get('sch-', None)
+            schobj.save()
+
+        else:
+            vasd = 'update'
+            Schedule.objects.filter(id=id)
             # .update(valor=valor,
             #                                              titulo=titulo)
-    itens_pedido = request.session.get('itens_pedido', [])
-
-    item = json.loads(request.body)['item']
-    itens_pedido.append(item)
-
-    request.session['itens_pedido'] = itens_pedido
-    return HttpResponse(json.dumps(itens_pedido))
+        return HttpResponseRedirect( reverse( 'flyerapp:index' ) )
 
 def add_schedule(request):
     itens_pedido = request.session.get('itens_pedido', [])
