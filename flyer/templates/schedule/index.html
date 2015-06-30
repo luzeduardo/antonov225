@@ -67,6 +67,21 @@
                                   <button class="btn btn-danger btn-xs" data-ctr-del data-id="{{ item.id }}" type="button">
                                       <span aria-hidden="true" class="glyphicon glyphicon-trash"></span>
                                   </button>
+
+                                  {#@TODO caso tenha resultado exibe#}
+                                  <button class="btn btn-success btn-xs" data-ctr-del data-id="{{ item.id }}" type="button">
+                                      <span aria-hidden="true" class="glyphicon glyphicon-send"></span>
+                                  </button>
+
+                                  {#executar agora#}
+                                  <button class="btn btn-default btn-xs" data-ctr-del data-id="{{ item.id }}" type="button">
+                                      <span aria-hidden="true" class="glyphicon glyphicon-play"></span>
+                                  </button>
+
+                                  {#executar continuamente#}
+                                  <button class="btn btn-default btn-xs" data-ctr-del data-id="{{ item.id }}" type="button">
+                                      <span aria-hidden="true" class="glyphicon glyphicon-refresh"></span>
+                                  </button>
                                 </div>
                             </td>
                             <td>
