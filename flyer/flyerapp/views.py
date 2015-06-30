@@ -128,6 +128,7 @@ def delete_schedule(request, *args, **kwargs):
     if request.method == 'POST':
         id = request.POST.get('sch-id', None)
         if id:
+            Flight.objects.filter(schedule=id).delete()
             schobj = Schedule.objects.get(pk=id)
             if schobj:
                 schobj.delete()

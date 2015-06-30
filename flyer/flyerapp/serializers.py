@@ -38,6 +38,5 @@ class ScheduleSerializer(serializers.ModelSerializer):
             'departure_in_weekend_only',
             'landing_in_weekend_only',
             'exactly_days_check',
-            'url_access',
             'email'
         )

@@ -9,18 +9,6 @@ class Place(models.Model):
     def __unicode__(self):
         return self.name
 
-class Flight(models.Model):
-    departure = models.ForeignKey(Place, related_name="departure_flight", null=False)
-    landing = models.ForeignKey(Place, related_name="landing_flight", null=False)
-    price = models.DecimalField(max_digits=10, decimal_places=2, null=False)
-    departure_date = models.DateField(default=None, null=False) 
-    landing_date = models.DateField(default=None, null=False)
-    pub_date = models.DateTimeField('date published', null=True,default=datetime.now())
-    link = models.TextField()
-
-    def __unicode__(self):
-      return u'%s | %s: %s - %s >> %s - %s' % (self.departure, self.landing, self.departure_date, self.landing_date, self.price, self.link)
-
 class Schedule(models.Model):
     active = models.BooleanField(default=True, null=False)
     logic_delete = models.BooleanField(default=False, null=False)
@@ -35,12 +23,24 @@ class Schedule(models.Model):
     departure_in_weekend_only = models.BooleanField(default=False, null=False)
     landing_in_weekend_only = models.BooleanField(default=False, null=False)
     exactly_days_check = models.BooleanField(default=False, null=False)
-    url_access = models.TextField(default=None, null=True, blank=True)
     email = models.CharField(max_length=80,default=None, null=True, blank=True)
     pub_date = models.DateTimeField('date published', null=True, default=datetime.now() )
 
     def __unicode__(self):
         return u'%s | %s: %s - %s >> %s' % (self.departure, ", ".join(l.name for l in self.landing.all()[:5]), self.departure_date, self.landing_date, self.price)
+
+class Flight(models.Model):
+    schedule = models.ForeignKey(Schedule, related_name="schedule_flight", null=False, default=None)
+    departure = models.ForeignKey(Place, related_name="departure_flight", null=False)
+    landing = models.ForeignKey(Place, related_name="landing_flight", null=False)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=False)
+    departure_date = models.DateField(default=None, null=False)
+    landing_date = models.DateField(default=None, null=False)
+    pub_date = models.DateTimeField('date published', null=True,default=datetime.now())
+    link = models.TextField()
+
+    def __unicode__(self):
+      return u'%s | %s: %s - %s >> %s - %s' % (self.departure, self.landing, self.departure_date, self.landing_date, self.price, self.link)
 
 class PossibleFlights(models.Model):
     schedule = models.ForeignKey(Schedule, related_name="schedule_schedule")
