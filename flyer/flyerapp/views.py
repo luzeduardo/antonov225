@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
-from datetime import datetime, date, timedelta, time
+from datetime import datetime, date, timedelta
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, render_to_response, redirect
 from django.http import HttpResponseRedirect
@@ -18,6 +18,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import json
 import re
 import tasks
+import time
 import django_rq
 from rq import get_current_job
 from django_rq import job
@@ -158,7 +159,7 @@ This code will create manual jobs in queue to do a flight search
 @csrf_exempt
 def manual_exec(request, *args, **kwargs):
     sch_id = request.POST.get('id',None)
-    schedule = Schedule.objects.filter(pk=sch_id, active=1).get()
+    schedule = Schedule.objects.filter(pk=sch_id, active=1, logic_delete=False).get()
     if schedule:
         departure = Place.objects.filter(pk=schedule.departure_id).get()
         schedule_data_search(schedule, departure)
@@ -169,7 +170,7 @@ Code for cronjob execution.
 This code will create automatically jobs in queue to do a flight search
 """
 @csrf_exempt
-def autoexec_search_flights(modeladmin, request, queryset):
+def automatic_exec(request, *args, **kwargs):
     scheduler = django_rq.get_scheduler('default')
     scheduler.schedule(
         scheduled_time=datetime.utcnow(),
@@ -386,9 +387,9 @@ def fligth_value_search(departure, config_origem, destino, config_dia_inicio, co
 
 @job
 def auto_schedule_search():
-    ids = Schedule.objects.filter(active=1).values()
+    ids = Schedule.objects.filter(active=1,logic_delete=False).values()
     for scd in ids:
-        schedule = Schedule.objects.filter(id=int(scd['id']), active=1)
+        schedule = Schedule.objects.filter(id=int(scd['id']), active=1,logic_delete=False)
         if schedule:
             schedule = schedule.get()
             departure = Place.objects.filter(id=schedule.departure_id).get()

@@ -35,4 +35,19 @@ $(document).ready(function () {
 
     });
 
+    $("button[data-ctr-play-auto]").on('click', function () {
+        var id = $(this).data('id');
+
+        $.ajax({
+                type: 'POST',
+                url: '/automatic/',
+                success: function (result, status, xhr) {
+
+                },
+                error: function (result, status, xhr) {
+                }
+            });
+
+    });
+
 })

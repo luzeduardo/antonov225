@@ -11,5 +11,6 @@ urlpatterns = patterns('',
     url(r'^edit/', 'flyerapp.views.edit_schedule', name='edit_schedule'),
     url(r'^delete/', 'flyerapp.views.delete_schedule', name='delete_schedule'),
     url(r'^manual/', 'flyerapp.views.manual_exec', name='manual_exec'),
+    url(r'^automatic/', 'flyerapp.views.automatic_exec', name='automatic_exec'),
 )
 urlpatterns += staticfiles_urlpatterns()

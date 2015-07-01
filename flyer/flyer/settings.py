@@ -210,4 +210,7 @@ LOGGING = {
 #https://github.com/ui/django-rq
 #running workers to process searchs
 #python manage.py rqworker high default low
+
+# necessita ativar o venv e executar de dentro do projeto
+#python manage.py rqworker default
 #rqscheduler
