@@ -89,7 +89,7 @@ def schedule_detail(request, pk):
         return HttpResponse(status=204)
 
 def index(request, *args, **kwargs):
-    schedules = Schedule.objects.filter(logic_delete=False).select_related("departure").all()
+    schedules = Schedule.objects.filter(logic_delete=False, departure_date__gte=datetime.now() ).select_related("departure").all()
     scheduleserializer = ScheduleSerializer(schedules, many=True)
 
     places = Place.objects.all().order_by('name')
@@ -159,7 +159,7 @@ This code will create manual jobs in queue to do a flight search
 @csrf_exempt
 def manual_exec(request, *args, **kwargs):
     sch_id = request.POST.get('id',None)
-    schedule = Schedule.objects.filter(pk=sch_id, active=1, logic_delete=False).get()
+    schedule = Schedule.objects.filter(pk=sch_id, active=1, logic_delete=False, departure_date__gte=datetime.now()).get()
     if schedule:
         departure = Place.objects.filter(pk=schedule.departure_id).get()
         schedule_data_search(schedule, departure)
@@ -185,7 +185,7 @@ def automatic_exec(request, *args, **kwargs):
 """
 def schedule_data_search(schedule, departure):
     landing_list = {}
-    for lnd in schedule.landing.all():
+    for lnd in schedule.landing.all(departure_date__gte=datetime.now()):
         landing = {}
         landing[lnd.iata_code] = lnd.name
         landing_list[lnd.id] = landing
@@ -387,7 +387,7 @@ def fligth_value_search(departure, config_origem, destino, config_dia_inicio, co
 
 @job
 def auto_schedule_search():
-    ids = Schedule.objects.filter(active=1,logic_delete=False).values()
+    ids = Schedule.objects.filter(active=1,logic_delete=False, departure_date__gte=datetime.now()).values()
     for scd in ids:
         schedule = Schedule.objects.filter(id=int(scd['id']), active=1,logic_delete=False)
         if schedule:
