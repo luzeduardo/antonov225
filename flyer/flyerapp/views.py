@@ -38,6 +38,22 @@ def diffdays(date_a, date_b, date_format="%d/%m/%Y"):
     delta = b - a
     return int(delta.days)
 
+def get_interval_from_diffdays(days):
+    if days <= 2:
+        return 1
+    if days <= 5:
+        return 2
+    if days <= 10:
+        return 7
+    if days <= 15:
+        return 13
+    if days <= 30:
+        return 25
+    return 30
+
+
+
+
 def schedule_list(request):
     """
     List all code snippets, or create a new snippet.
@@ -118,7 +134,7 @@ def edit_schedule(request, *args, **kwargs):
         schobj.price_highter = float(request.POST.get('sch-price-highter', 0))
         schobj.departure_date = dt_start
         schobj.landing_date = dt_end
-        schobj.days_in_place = diffdays(dt_start_temp, dt_end_temp)
+        schobj.days_in_place = get_interval_from_diffdays(diffdays(dt_start_temp, dt_end_temp))
 
         # schobj.departure_in_weekend_only = request.POST.get('sch-', None)
         # schobj.landing_in_weekend_only = request.POST.get('sch-', None)
@@ -132,6 +148,8 @@ def edit_schedule(request, *args, **kwargs):
 
         if id:
             Schedule.objects.filter(pk=id).update(logic_delete=True)
+            scheduler = django_rq.get_scheduler('default')
+            scheduler.cancel("auto_schedule_search(id=u'" + id + "')")
 
         schobj.save()
         landings = request.POST.getlist('sch-place-landing', None)
@@ -171,21 +189,24 @@ This code will create automatically jobs in queue to do a flight search
 """
 @csrf_exempt
 def automatic_exec(request, *args, **kwargs):
-    scheduler = django_rq.get_scheduler('default')
-    scheduler.schedule(
-        scheduled_time=datetime.utcnow(),
-        func=auto_schedule_search,
-        # args=[],
-        kwargs={},
-        interval=30,
-        repeat=None
-    )
+    sch_id = request.POST.get('id',None)
+    schedule = Schedule.objects.filter(pk=sch_id, active=1, logic_delete=False, departure_date__gte=datetime.now()).get()
+    if schedule:
+        scheduler = django_rq.get_scheduler('default')
+        scheduler.schedule(
+            scheduled_time=datetime.utcnow(),
+            func=auto_schedule_search,
+            # args=[],
+            kwargs={'id':sch_id},
+            interval=30,
+            repeat=None
+        )
 
 """
 """
 def schedule_data_search(schedule, departure):
     landing_list = {}
-    for lnd in schedule.landing.all(departure_date__gte=datetime.now()):
+    for lnd in schedule.landing.all():
         landing = {}
         landing[lnd.iata_code] = lnd.name
         landing_list[lnd.id] = landing
@@ -386,11 +407,17 @@ def fligth_value_search(departure, config_origem, destino, config_dia_inicio, co
         return problemas
 
 @job
-def auto_schedule_search():
-    ids = Schedule.objects.filter(active=1,logic_delete=False, departure_date__gte=datetime.now()).values()
-    for scd in ids:
-        schedule = Schedule.objects.filter(id=int(scd['id']), active=1,logic_delete=False)
-        if schedule:
-            schedule = schedule.get()
-            departure = Place.objects.filter(id=schedule.departure_id).get()
-            schedule_data_search(schedule, departure)
+def auto_schedule_search(id):
+    # ids = Schedule.objects.filter(active=1,logic_delete=False, departure_date__gte=datetime.now()).values()
+    # for scd in ids:
+    #     schedule = Schedule.objects.filter(id=int(scd['id']), active=1,logic_delete=False)
+    #     if schedule:
+    #         schedule = schedule.get()
+    #         departure = Place.objects.filter(id=schedule.departure_id).get()
+    #         schedule_data_search(schedule, departure)
+
+    schedule = Schedule.objects.filter(id=int(id), active=1,logic_delete=False,departure_date__gte=datetime.now())
+    if schedule:
+        schedule = schedule.get()
+        departure = Place.objects.filter(id=schedule.departure_id).get()
+        schedule_data_search(schedule, departure)

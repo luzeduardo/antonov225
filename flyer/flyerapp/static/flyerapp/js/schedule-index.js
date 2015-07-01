@@ -40,6 +40,9 @@ $(document).ready(function () {
 
         $.ajax({
                 type: 'POST',
+                data: {
+                    'id':id
+                },
                 url: '/automatic/',
                 success: function (result, status, xhr) {
 
