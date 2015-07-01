@@ -54,7 +54,8 @@
             format: 'DD/MM/YYYY',
             defaultDate: "",
             locale: 'pt-br',
-            allowInputToggle: true
+            allowInputToggle: true,
+            minDate: {% now "d/m/Y" %}
         });
         $("#dt-end").datetimepicker({
             format: 'DD/MM/YYYY',

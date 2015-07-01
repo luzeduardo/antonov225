@@ -17,4 +17,22 @@ $(document).ready(function () {
         $('#modal-schedule-delete-' + id).modal('toggle');
     });
 
+    $("button[data-ctr-play]").on('click', function () {
+        var id = $(this).data('id');
+
+        $.ajax({
+                type: 'POST',
+                data: {
+                    'id':id
+                },
+                url: '/manual/',
+                success: function (result, status, xhr) {
+
+                },
+                error: function (result, status, xhr) {
+                }
+            });
+
+    });
+
 })
