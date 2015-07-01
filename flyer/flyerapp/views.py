@@ -177,6 +177,15 @@ This code will create manual jobs in queue to do a flight search
 @csrf_exempt
 def manual_exec(request, *args, **kwargs):
     sch_id = request.POST.get('id',None)
+
+    # cancelando o job automatico
+    # scheduler = django_rq.get_scheduler('default')
+    # list_of_job_instances = scheduler.get_jobs()
+    # for job in list_of_job_instances:
+    #     if str(job.func_name) =='flyerapp.views.auto_schedule_search' and job.kwargs['id'] == sch_id:
+    #         scheduler.cancel(job)
+
+
     schedule = Schedule.objects.filter(pk=sch_id, active=1, logic_delete=False, departure_date__gte=datetime.now()).get()
     if schedule:
         departure = Place.objects.filter(pk=schedule.departure_id).get()
