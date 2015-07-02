@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from models import Schedule, Place, Flight
-from serializers import ScheduleSerializer, PlaceSerializer, PlaceListSerializer
+from serializers import ScheduleSerializer, PlaceSerializer, PlaceListSerializer, FlightSerializer, FlightListSerializer
 from collections import OrderedDict, deque
 
 from selenium import webdriver
@@ -171,6 +171,16 @@ def delete_schedule(request, *args, **kwargs):
         else:
             msg = 'show errors'
     return HttpResponseRedirect( reverse( 'flyerapp:home' ) )
+
+
+@csrf_exempt
+def flights(request, *args, **kwargs):
+    sch_id = request.POST.get('id',None)
+    flight = Flight.objects.filter(schedule_id=sch_id).select_related("departure").all()
+    if flight:
+        flightserializer = FlightListSerializer(flight)
+        return JSONResponse(flightserializer.data)
+
 
 """
 This code will create manual jobs in queue to do a flight search

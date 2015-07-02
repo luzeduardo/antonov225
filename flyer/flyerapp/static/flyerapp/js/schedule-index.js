@@ -53,4 +53,24 @@ $(document).ready(function () {
 
     });
 
+    $("button[data-ctr-fly]").on('click', function () {
+        var id = $(this).data('id');
+
+        $.ajax({
+                type: 'POST',
+                data: {
+                    'id':id
+                },
+                url: '/flights/',
+                success: function (result, status, xhr) {
+
+                    $("#result-fligths").html(result);
+                    $('#modal-schedule-flights').modal('toggle');
+                },
+                error: function (result, status, xhr) {
+                }
+            });
+
+    });
+
 })
