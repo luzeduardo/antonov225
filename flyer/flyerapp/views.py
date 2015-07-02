@@ -175,11 +175,16 @@ def delete_schedule(request, *args, **kwargs):
 
 @csrf_exempt
 def flights(request, *args, **kwargs):
+    response = {}
     sch_id = request.POST.get('id',None)
     flight = Flight.objects.filter(schedule_id=sch_id).select_related("departure").all()
     if flight:
         flightserializer = FlightListSerializer(flight)
-        return JSONResponse(flightserializer.data)
+        response['flights'] = flightserializer.data
+
+    return render_to_response("flight/flights.html", {
+        'data' : response
+    })
 
 
 """

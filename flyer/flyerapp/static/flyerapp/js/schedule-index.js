@@ -58,12 +58,13 @@ $(document).ready(function () {
 
         $.ajax({
                 type: 'POST',
+                sync: false,
                 data: {
                     'id':id
                 },
                 url: '/flights/',
                 success: function (result, status, xhr) {
-
+                    $("#result-fligths").html("");
                     $("#result-fligths").html(result);
                     $('#modal-schedule-flights').modal('toggle');
                 },
