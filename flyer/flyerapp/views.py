@@ -137,8 +137,16 @@ def edit_schedule(request, *args, **kwargs):
         schobj.landing_date = dt_end
         schobj.days_in_place = get_interval_from_diffdays(diffdays(dt_start_temp, dt_end_temp))
 
-        # schobj.departure_in_weekend_only = request.POST.get('sch-', None)
-        # schobj.landing_in_weekend_only = request.POST.get('sch-', None)
+
+        departure_in_weekend_only = request.POST.get('departure_in_weekend_only', False)
+        if departure_in_weekend_only == 'on':
+            departure_in_weekend_only = True
+        landing_in_weekend_only = request.POST.get('landing_in_weekend_only', False)
+        if landing_in_weekend_only == 'on':
+            landing_in_weekend_only = True
+
+        schobj.departure_in_weekend_only = departure_in_weekend_only
+        schobj.landing_in_weekend_only = landing_in_weekend_only
         # schobj.exactly_days_check = request.POST.get('sch-', None)
 
         departure_id = request.POST.get('sch-place-departure', None)
