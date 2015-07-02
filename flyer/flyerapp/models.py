@@ -11,6 +11,7 @@ class Place(models.Model):
 
 class Schedule(models.Model):
     active = models.BooleanField(default=True, null=False)
+    # notify = models.BooleanField(default=True, null=False)
     logic_delete = models.BooleanField(default=False, null=False)
     departure = models.ForeignKey(Place, related_name="departure_schedule", null=False)
     landing = models.ManyToManyField(Place, related_name="landing_schedule", null=False)

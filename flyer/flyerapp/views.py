@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.conf import settings
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from datetime import datetime, date, timedelta
@@ -148,8 +149,7 @@ def edit_schedule(request, *args, **kwargs):
 
         if id:
             Schedule.objects.filter(pk=id).update(logic_delete=True)
-            scheduler = django_rq.get_scheduler('default')
-            scheduler.cancel("auto_schedule_search(id=u'" + id + "')")
+            remove_automatic_scheduled_jobs(id)
 
         schobj.save()
         landings = request.POST.getlist('sch-place-landing', None)
@@ -167,6 +167,7 @@ def delete_schedule(request, *args, **kwargs):
             schobj = Schedule.objects.get(pk=id)
             if schobj:
                 schobj.delete()
+                remove_automatic_scheduled_jobs(id)
         else:
             msg = 'show errors'
     return HttpResponseRedirect( reverse( 'flyerapp:home' ) )
@@ -177,14 +178,6 @@ This code will create manual jobs in queue to do a flight search
 @csrf_exempt
 def manual_exec(request, *args, **kwargs):
     sch_id = request.POST.get('id',None)
-
-    # cancelando o job automatico
-    # scheduler = django_rq.get_scheduler('default')
-    # list_of_job_instances = scheduler.get_jobs()
-    # for job in list_of_job_instances:
-    #     if str(job.func_name) =='flyerapp.views.auto_schedule_search' and job.kwargs['id'] == sch_id:
-    #         scheduler.cancel(job)
-
 
     schedule = Schedule.objects.filter(pk=sch_id, active=1, logic_delete=False, departure_date__gte=datetime.now()).get()
     if schedule:
@@ -210,6 +203,15 @@ def automatic_exec(request, *args, **kwargs):
             interval=30,
             repeat=None
         )
+
+
+def remove_automatic_scheduled_jobs(sch_id):
+    # cancelando o job automatico
+    scheduler = django_rq.get_scheduler('default')
+    list_of_job_instances = scheduler.get_jobs()
+    for job in list_of_job_instances:
+        if str(job.func_name) =='flyerapp.views.auto_schedule_search' and job.kwargs['id'] == sch_id:
+            scheduler.cancel(job)
 
 """
 """
@@ -318,19 +320,20 @@ def enqueue_search(departure, config_origem, config_destinos, config_datas, ida_
                 config_dia_fim = str(datas[1])
 
                 queue = django_rq.get_queue('default')
-                queue.enqueue(fligth_value_search, departure, config_origem, destino, config_dia_inicio, config_dia_fim, schedule.id)
-                #fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim, schedule.id)
+                if settings.DEBUG_EXECUCAO:
+                    fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim, schedule.id)
+                else:
+                    queue.enqueue(fligth_value_search, departure, config_origem, destino, config_dia_inicio, config_dia_fim, schedule.id)
+
             except Exception, e:
                 problemas.append('Problema ao retornar elemento principal: ' + str(destino[1]) +"\t")
                 return problemas
 
 def notify_price_range_to_user(price, schedule):
     tprice = float(price)
-    hpct = float(schedule.price_highter)
-    lpct = float(schedule.price_lower)
-    sprice = float(schedule.price)
-    hprice = sprice * hpct
-    lprice = sprice * lpct - sprice
+    hprice = float(schedule.price_highter)
+    lprice = float(schedule.price_lower)
+
     if lprice <= tprice <= hprice:
         return True
     else:
@@ -386,12 +389,13 @@ def fligth_value_search(departure, config_origem, destino, config_dia_inicio, co
         valor_processado = re.sub('[^0-9]+', '', valor_processado)
 
         landing = Place.objects.filter(id=int(destino[0])).get()
-        schedule = Place.objects.filter(id=int(scheduleid)).get()
+        schedule = Schedule.objects.filter(id=int(scheduleid)).get()
 
         if schedule:
             notify_price_range_to_user(valor_processado, schedule)
 
         fly = Flight()
+        fly.schedule = schedule
         fly.departure = departure
         fly.landing = landing
         fly.price = valor_processado
