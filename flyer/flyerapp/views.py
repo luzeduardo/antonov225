@@ -191,6 +191,17 @@ def flights(request, *args, **kwargs):
 This code will create manual jobs in queue to do a flight search
 """
 @csrf_exempt
+def stop_automatic_exec(request, *args, **kwargs):
+    sch_id = request.POST.get('id',None)
+    if remove_automatic_scheduled_jobs(sch_id):
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=400)
+
+"""
+This code will create manual jobs in queue to do a flight search
+"""
+@csrf_exempt
 def manual_exec(request, *args, **kwargs):
     sch_id = request.POST.get('id',None)
 
@@ -200,6 +211,7 @@ def manual_exec(request, *args, **kwargs):
         schedule_data_search(schedule, departure)
         return HttpResponse(status=200)
     return HttpResponse(status=400)
+
 """
 Code for cronjob execution.
 This code will create automatically jobs in queue to do a flight search
@@ -224,10 +236,13 @@ def remove_automatic_scheduled_jobs(sch_id):
     # cancelando o job automatico
     scheduler = django_rq.get_scheduler('default')
     list_of_job_instances = scheduler.get_jobs()
+    result = False
     for job in list_of_job_instances:
         if str(job.func_name) =='flyerapp.views.auto_schedule_search' and job.kwargs['id'] == sch_id:
             scheduler.cancel(job)
+            result = True
 
+    return result
 """
 """
 def schedule_data_search(schedule, departure):

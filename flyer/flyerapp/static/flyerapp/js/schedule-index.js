@@ -35,6 +35,27 @@ $(document).ready(function () {
 
     });
 
+    $("button[data-ctr-fly]").on('click', function () {
+        var id = $(this).data('id');
+
+        $.ajax({
+                type: 'POST',
+                sync: false,
+                data: {
+                    'id':id
+                },
+                url: '/flights/',
+                success: function (result, status, xhr) {
+                    $("#result-fligths").html("");
+                    $("#result-fligths").html(result);
+                    $('#modal-schedule-flights').modal('toggle');
+                },
+                error: function (result, status, xhr) {
+                }
+            });
+
+    });
+
     $("button[data-ctr-play-auto]").on('click', function () {
         var id = $(this).data('id');
 
@@ -53,20 +74,17 @@ $(document).ready(function () {
 
     });
 
-    $("button[data-ctr-fly]").on('click', function () {
+    $("button[data-ctr-stop-auto]").on('click', function () {
         var id = $(this).data('id');
 
         $.ajax({
                 type: 'POST',
-                sync: false,
                 data: {
                     'id':id
                 },
-                url: '/flights/',
+                url: '/stop-automatic/',
                 success: function (result, status, xhr) {
-                    $("#result-fligths").html("");
-                    $("#result-fligths").html(result);
-                    $('#modal-schedule-flights').modal('toggle');
+
                 },
                 error: function (result, status, xhr) {
                 }
