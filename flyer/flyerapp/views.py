@@ -215,7 +215,7 @@ def automatic_exec(request, *args, **kwargs):
             func=auto_schedule_search,
             # args=[],
             kwargs={'id':sch_id},
-            interval=30,
+            interval=300,
             repeat=None
         )
 
