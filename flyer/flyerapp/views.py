@@ -43,14 +43,14 @@ def get_interval_from_diffdays(days):
     if days <= 2:
         return 1
     if days <= 5:
-        return 2
+        return 5-days
     if days <= 10:
-        return 7
+        return 10-days
     if days <= 15:
-        return 13
+        return 15-days
     if days <= 30:
-        return 25
-    return 30
+        return 30-days
+    return 10
 
 
 
@@ -260,7 +260,9 @@ def schedule_data_search(schedule, departure):
         landing[lnd.iata_code] = lnd.name
         landing_list[lnd.id] = landing
 
-    config_datas = [ [schedule.departure_date,schedule.landing_date] ]
+    config_datas = date_interval(schedule.departure_date.year, schedule.departure_date.month, schedule.departure_date.day,
+                  schedule.landing_date.year, schedule.landing_date.month, schedule.landing_date.day)
+    # config_datas = [ [schedule.departure_date,schedule.landing_date] ]
     # try:
     enqueue_search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place, schedule)
     # except Exception, e:
@@ -314,24 +316,25 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
     pega a diferenca entre as datas e gera o range baseado no numero de dias
     '''
     days = days_between(s_year,s_month, s_day, e_year,e_month, e_day)
+    min_days_diff = get_interval_from_diffdays(days)
     counter_days = days
     datas = list()
 
     #menor maior
-    while counter_days > 0:
+    while counter_days > 0 and counter_days >= min_days_diff:
         for result in perdelta_start_to_end(date(s_year,s_month, s_day), date(e_year,e_month, e_day), timedelta(days=1)):
-            if counter_days > 0:
+            if counter_days >= min_days_diff:
                 datas.append( [( str(result) ), (str(date(e_year,e_month, e_day) ))] )
             counter_days = counter_days - 1
 
     #maior menor
     counter_days = days
     itr = 0
-    while counter_days > 0:
+    while counter_days > 0 and counter_days >= min_days_diff:
         for result in perdelta_end_to_start(date(s_year,s_month, s_day + itr), date(e_year,e_month, e_day), timedelta(days=1)):
             if itr == 0:
                 continue
-            if counter_days > 0:
+            if counter_days >= min_days_diff:
                 datas.append( [str(date(s_year, s_month, s_day + itr)) , str(result) ] )
         counter_days = counter_days - 1
         itr += 1
@@ -357,10 +360,10 @@ def enqueue_search(departure, config_origem, config_destinos, config_datas, ida_
                 config_dia_inicio = str(datas[0])
                 config_dia_fim = str(datas[1])
 
-                queue = django_rq.get_queue('default')
                 if settings.DEBUG_EXECUCAO:
                     fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim, schedule.id)
                 else:
+                    queue = django_rq.get_queue('default')
                     queue.enqueue(fligth_value_search, departure, config_origem, destino, config_dia_inicio, config_dia_fim, schedule.id)
 
             except Exception, e:
