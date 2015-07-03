@@ -235,7 +235,7 @@ def automatic_exec(request, *args, **kwargs):
             func=auto_schedule_search,
             # args=[],
             kwargs={'id':sch_id},
-            interval=300,
+            interval=3600,
             repeat=None
         )
 
@@ -316,7 +316,7 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
     pega a diferenca entre as datas e gera o range baseado no numero de dias
     '''
     days = days_between(s_year,s_month, s_day, e_year,e_month, e_day)
-    min_days_diff = get_interval_from_diffdays(days)
+    min_days_diff = days - get_interval_from_diffdays(days)
     counter_days = days
     datas = list()
 
@@ -336,6 +336,7 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
                 continue
             if counter_days >= min_days_diff:
                 datas.append( [str(date(s_year, s_month, s_day + itr)) , str(result) ] )
+                counter_days = counter_days - 1
         counter_days = counter_days - 1
         itr += 1
 
