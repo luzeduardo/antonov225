@@ -43,14 +43,10 @@ def get_interval_from_diffdays(days):
     if days <= 2:
         return 1
     if days <= 5:
-        return 5-days
-    if days <= 10:
-        return 10-days
+        return 2
     if days <= 15:
-        return 15-days
-    if days <= 30:
-        return 30-days
-    return 10
+        return 3
+    return 4
 
 
 
@@ -262,7 +258,6 @@ def schedule_data_search(schedule, departure):
 
     config_datas = date_interval(schedule.departure_date.year, schedule.departure_date.month, schedule.departure_date.day,
                   schedule.landing_date.year, schedule.landing_date.month, schedule.landing_date.day)
-    # config_datas = [ [schedule.departure_date,schedule.landing_date] ]
     # try:
     enqueue_search(departure, departure.iata_code, landing_list, config_datas, schedule.departure_in_weekend_only, schedule.landing_in_weekend_only, schedule.exactly_days_check, schedule.days_in_place, schedule)
     # except Exception, e:
@@ -316,29 +311,35 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
     pega a diferenca entre as datas e gera o range baseado no numero de dias
     '''
     days = days_between(s_year,s_month, s_day, e_year,e_month, e_day)
-    min_days_diff = days - get_interval_from_diffdays(days)
+    days_for_interval = get_interval_from_diffdays(days)
     counter_days = days
     datas = list()
+    tmp_days_start = list()
+    tmp_days_end = list()
 
-    #menor maior
-    while counter_days > 0 and counter_days >= min_days_diff:
-        for result in perdelta_start_to_end(date(s_year,s_month, s_day), date(e_year,e_month, e_day), timedelta(days=1)):
-            if counter_days >= min_days_diff:
-                datas.append( [( str(result) ), (str(date(e_year,e_month, e_day) ))] )
-            counter_days = counter_days - 1
+    base_start = datetime(s_year, s_month, s_day)
+    date_list_prior = [base_start - timedelta(days=x) for x in range(1, days_for_interval)]
+    for date_prior in date_list_prior:
+        tmp_days_start.append(date_prior.strftime("%Y-%m-%d"))
 
-    #maior menor
-    counter_days = days
-    itr = 0
-    while counter_days > 0 and counter_days >= min_days_diff:
-        for result in perdelta_end_to_start(date(s_year,s_month, s_day + itr), date(e_year,e_month, e_day), timedelta(days=1)):
-            if itr == 0:
-                continue
-            if counter_days >= min_days_diff:
-                datas.append( [str(date(s_year, s_month, s_day + itr)) , str(result) ] )
-                counter_days = counter_days - 1
-        counter_days = counter_days - 1
-        itr += 1
+    date_list_after = [base_start + timedelta(days=x) for x in range(1, days_for_interval)]
+    for date_after in date_list_after:
+        tmp_days_start.append(date_after.strftime("%Y-%m-%d"))
+
+
+    base_end = datetime(e_year, e_month, e_day)
+    date_list_prior = [base_end - timedelta(days=x) for x in range(1, days_for_interval)]
+    for date_prior in date_list_prior:
+        tmp_days_end.append(date_prior.strftime("%Y-%m-%d"))
+
+    date_list_after = [base_end + timedelta(days=x) for x in range(1, days_for_interval)]
+    for date_after in date_list_after:
+        tmp_days_end.append(date_after.strftime("%Y-%m-%d"))
+
+
+    for day_start in tmp_days_start:
+        for day_end in tmp_days_end:
+            datas.append( [( str(day_start) ), (str(day_end))] )
 
     return datas
 
