@@ -1,6 +1,55 @@
 /**
  * Created by eduardo on 6/26/15.
  */
+    //INICIALIZANDO O DATATABLE
+function datataTableStart(elementoId,paging,searching) {
+    $(elementoId).dataTable({
+        initComplete: function () {
+            this.api().columns().every( function () {
+                var column = this;
+                var select = $('<select><option value=""></option></select>')
+                    .appendTo( $(column.footer()).empty() )
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    } );
+
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append( '<option value="'+d+'">'+d+'</option>' )
+                } );
+            } );
+        },
+        searching: searching,
+        paging: paging,
+        "pageLength": 5,
+        "language": {
+            "search": "Filter records:"
+        },
+        "bLengthChange": false,
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "N&atilde;o foram encontrados resultados",
+            "sInfo": "",
+            "sInfoEmpty": "",
+            "sInfoFiltered": "(filtrado de _MAX_ registros no total)",
+            "sInfoPostFix": "",
+            "sUrl": "",
+            "sSearch": "Buscar:",
+            "oPaginate": {
+                "sFirst": "Primeiro",
+                "sPrevious": "Anterior",
+                "sNext": "Pr&oacute;ximo",
+                "sLast": "&Uacute;ltimo"
+            }
+        }
+    });
+}
+
 $(document).ready(function () {
 
     $("button[data-ctr-edit]").on('click', function () {

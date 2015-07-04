@@ -55,6 +55,7 @@ class FlightSerializer(serializers.ModelSerializer):
             'landing',
             'price',
             'departure_date',
+            'landing_date',
             'link'
         )
 

@@ -1,3 +1,11 @@
+@media screen and (min-width: 768px) {
+	.modal-dialog  {width:900px;}
+}
+
+.modal-dialog  {width:75%;}
+
+
+
 .btn-toolbar > button{
     margin: 5px;
     padding: 5px;

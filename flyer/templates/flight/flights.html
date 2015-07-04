@@ -1,41 +1,59 @@
 {% load flyerapp_tags %}
-
-<table class="table table-striped table-condensed">
+<div class="table-responsive">
+<table class="table table-striped flights">
                 <thead>
                     <tr>
                         <th>Origem</th>
                         <th class="visible-lg hidden-xs">Destino</th>
                         <th class="hidden-lg visible-xs">Destino</th>
-{#                        <th>Decolagem</th>#}
-{#                        <th>Pouso</th>#}
+                        <th>Decolagem</th>
+                        <th>Pouso</th>
+                        <th>Preço encontrado</th>
+                        <th class="col-md-2">Link</th>
+                    </tr>
+                </thead>
+
+                <tfoot>
+                    <tr>
+                        <th>Origem</th>
+                        <th class="visible-lg hidden-xs">Destino</th>
+                        <th class="hidden-lg visible-xs">Destino</th>
+                        <th>Decolagem</th>
+                        <th>Pouso</th>
                         <th>Preço encontrado</th>
                         <th>Link</th>
                     </tr>
-                </thead>
+                </tfoot>
 
                 <tbody>
                     {% for item in data.flights %}
                         <tr>
                             <td>{{ item.departure.name }}</td>
 
-                            <td class="col-md-4 visible-lg hidden-xs">
-                                {% for landing in item.landing %}
-                                    {{ landing.name }}{% if forloop.last %}.{% else %}, {% endif %}
-                                {% endfor %}
+                            <td class="visible-lg hidden-xs">
+                                {{ item.landing.name }}
                             </td>
-                            <td class="hidden-lg visible-xs">
-                                {% for landing in item.landing|slice:":1" %}
-                                    {{ landing.name }}{% if forloop.last %}...{% else %}, {% endif %}
-                                {% endfor %}
-                            </td>
-{#                            <td>#}
-{#                                {{ item.departure_date|convertdateformat:"%d/%m/%Y"}}#}
-{#                            </td>#}
 
-{#                            <td>{{ item.landing_date|convertdateformat:"%d/%m/%Y"}}</td>#}
-                            <td>{{item.price|currency:"pt_BR"}}</td>
-                            <td><a target="_blank" href="{{ item.link }}">{{ item.link }}</a></td>
+                            <td class="hidden-lg visible-xs">
+                                {{ item.landing.name }}
+                            </td>
+                            <td>
+                                {{ item.departure_date|convertdateformat:"%d/%m/%Y"}}
+                            </td>
+
+                            <td>{{ item.landing_date|convertdateformat:"%d/%m/%Y"}}</td>
+
+                            <td>{{item.price}}</td>
+                            <td>
+                                <a target="_blank" href="{{ item.link }}">{{ item.departure.name }} - {{ item.landing.name }}</a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        datataTableStart(".flights", true, true);
+    });
+</script>

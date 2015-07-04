@@ -24,7 +24,10 @@ def to_date(value, arg):
 
 @register.filter
 def convertdateformat(value, fmt):
-    return datetime.strptime(value, '%Y-%m-%d').strftime(fmt)
+    if value == '':
+        return '-'
+    else:
+        return datetime.strptime(value, '%Y-%m-%d').strftime(fmt)
 
 @register.filter
 def jsonify(value):
@@ -134,6 +137,10 @@ def get_at_index(list, index):
 def concatestr(value, arg):
     return str(value) + str(arg)
 
+@register.filter
+def get(mapping, key):
+  return mapping.get(key, '')
+
 @register.filter(name='access')
 def access(value, arg):
     return value[arg]
@@ -185,7 +192,7 @@ def currency(value, arg = '', symbol = True):
     try:
         locale.setlocale(locale.LC_ALL, given)
         res = locale.currency(float(value) or 0, symbol, True)
-        return res
+        return res.strip()
     except (TypeError, locale.Error):
         return ''
 

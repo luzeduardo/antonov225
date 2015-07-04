@@ -285,7 +285,7 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
     tmp_days_end = list()
 
     base_start = datetime(s_year, s_month, s_day)
-    date_list_prior = [base_start - timedelta(days=x) for x in range(1, days_for_interval)]
+    date_list_prior = [base_start - timedelta(days=x) for x in range(0, days_for_interval)]
     for date_prior in date_list_prior:
         tmp_days_start.append(date_prior.strftime("%Y-%m-%d"))
 
@@ -295,7 +295,7 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
 
 
     base_end = datetime(e_year, e_month, e_day)
-    date_list_prior = [base_end - timedelta(days=x) for x in range(1, days_for_interval)]
+    date_list_prior = [base_end - timedelta(days=x) for x in range(0, days_for_interval)]
     for date_prior in date_list_prior:
         tmp_days_end.append(date_prior.strftime("%Y-%m-%d"))
 
