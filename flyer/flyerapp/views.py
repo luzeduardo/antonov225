@@ -33,24 +33,6 @@ class JSONResponse(HttpResponse):
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
 
-def diffdays(date_a, date_b, date_format="%d/%m/%Y"):
-    a = datetime.strptime(date_a, date_format)
-    b = datetime.strptime(date_b, date_format)
-    delta = b - a
-    return int(delta.days)
-
-def get_interval_from_diffdays(days):
-    if days <= 2:
-        return 1
-    if days <= 5:
-        return 2
-    if days <= 15:
-        return 3
-    return 4
-
-
-
-
 def schedule_list(request):
     """
     List all code snippets, or create a new snippet.
@@ -263,40 +245,25 @@ def schedule_data_search(schedule, departure):
     # except Exception, e:
 
 
-def perdelta_start_to_end(start, end, delta):
-    curr = start
-    while curr < end:
-        yield curr
-        curr += delta
+def diffdays(date_a, date_b, date_format="%d/%m/%Y"):
+    a = datetime.strptime(date_a, date_format)
+    b = datetime.strptime(date_b, date_format)
+    delta = b - a
+    return int(delta.days)
 
-def perdelta_end_to_start(start, end, delta):
-    curr = start
-    while end > curr:
-        yield end
-        end -= delta
+def get_interval_from_diffdays(days):
+    if days <= 2:
+        return 1
+    if days <= 5:
+        return 2
+    if days <= 15:
+        return 3
+    return 4
 
 def days_between(s_year,s_month, s_day, e_year,e_month, e_day):
     d1 = datetime(s_year,s_month, s_day)
     d2 = datetime(e_year,e_month, e_day)
     return abs((d1 - d2).days)
-
-def is_valid_min_days_in_place(start, end, min_days_in_place, exact=True):
-    '''
-    o parametro exact determina se podemos ficar no minimo x dias ou mais
-    ou se podemos ficar exatamente x dias no local True equivale a um numero X dias apenas
-    '''
-    date_format = "%Y-%m-%d"
-    a = datetime.strptime(start, date_format)
-    b = datetime.strptime(end, date_format)
-    delta = b - a
-    num_days = int(delta.total_seconds()) / (3600 * 24) + 1
-    if exact==True:
-        if num_days == min_days_in_place:
-            return True
-    else:
-        if num_days >= min_days_in_place:
-            return True
-    return False
 
 def is_weekend_day(date):
     date_format = "%Y-%m-%d"
@@ -357,8 +324,7 @@ def enqueue_search(departure, config_origem, config_destinos, config_datas, ida_
                     continue
                 if is_weekend_day(str(datas[1])) and not volta_durante_semana: #volta apenas fds
                     continue
-                if exactly_days_check and not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
-                    continue
+
                 config_dia_inicio = str(datas[0])
                 config_dia_fim = str(datas[1])
 
