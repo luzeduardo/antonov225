@@ -11,7 +11,7 @@ class Place(models.Model):
         return self.name
 
 class Schedule(models.Model):
-    user = models.ForeignKey(User, null=False)
+    user = models.ForeignKey(User)
     active = models.BooleanField(default=True, null=False)
     # notify = models.BooleanField(default=True, null=False)
     logic_delete = models.BooleanField(default=False, null=False)
