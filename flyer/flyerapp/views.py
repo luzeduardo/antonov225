@@ -43,7 +43,7 @@ def index(request, *args, **kwargs):
         # @TODO trhow exception
         user_id = 0
 
-    if request.user and request.user.is_active:
+    #if request.user and request.user.is_active:
         schedules = Schedule.objects.filter(user=user_id, logic_delete=False, departure_date__gte=datetime.now() ).select_related("departure").all()
         scheduleserializer = ScheduleSerializer(schedules, many=True)
 
@@ -58,14 +58,14 @@ def index(request, *args, **kwargs):
             'data' : response,
             'user': request.user
         })
-    else:
-        response = {}
-        response['schedules'] = None
-        response['places'] = None
-        return render_to_response("schedule/index.html", {
-            'data' : response,
-            'user': request.user
-        })
+    #else:
+        # response = {}
+        # response['schedules'] = None
+        # response['places'] = None
+        # return render_to_response("schedule/index.html", {
+        #     'data' : response,
+        #     'user': request.user
+        # })
 
 @csrf_exempt
 def edit_schedule(request, *args, **kwargs):
