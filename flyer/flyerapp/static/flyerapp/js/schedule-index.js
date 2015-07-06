@@ -41,10 +41,10 @@ function datataTableStart(elementoId,paging,searching) {
             "sUrl": "",
             "sSearch": "Buscar:",
             "oPaginate": {
-                "sFirst": "Primeiro",
-                "sPrevious": "Anterior",
-                "sNext": "Pr&oacute;ximo",
-                "sLast": "&Uacute;ltimo"
+                "sFirst": "<<",
+                "sPrevious": "<",
+                "sNext": ">",
+                "sLast": ">>"
             }
         }
     });

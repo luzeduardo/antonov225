@@ -16,6 +16,8 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
+from django.contrib.auth import logout
+
 import json
 import re
 import tasks
@@ -33,58 +35,15 @@ class JSONResponse(HttpResponse):
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
 
-def schedule_list(request):
-    """
-    List all code snippets, or create a new snippet.
-    """
-    if request.method == 'GET':
-        schedules = Schedule.objects.select_related("departure").all()
-        scheduleserializer = ScheduleSerializer(schedules, many=True)
-
-        places = Place.objects.all()
-        placeserializer = PlaceListSerializer(places)
-
-        response = {}
-        response['schedules'] = scheduleserializer.data
-        response['places'] = placeserializer.data
-        return JSONResponse(response)
-
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = ScheduleSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JSONResponse(serializer.data, status=201)
-        return JSONResponse(serializer.errors, status=400)
-
-
-def schedule_detail(request, pk):
-    """
-    Retrieve, update or delete a code snippet.
-    """
-    try:
-        schedule = Schedule.objects.get(pk=pk)
-    except Schedule.DoesNotExist:
-        return HttpResponse(status=404)
-
-    if request.method == 'GET':
-        serializer = ScheduleSerializer(schedule)
-        return JSONResponse(serializer.data)
-
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = ScheduleSerializer(schedule, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JSONResponse(serializer.data)
-        return JSONResponse(serializer.errors, status=400)
-
-    elif request.method == 'DELETE':
-        schedule.delete()
-        return HttpResponse(status=204)
-
 def index(request, *args, **kwargs):
-    schedules = Schedule.objects.filter(logic_delete=False, departure_date__gte=datetime.now() ).select_related("departure").all()
+
+    if request.user and request.user.is_active:
+        user_id = request.user.id
+    else:
+        # @TODO trhow exception
+        user_id = 0
+
+    schedules = Schedule.objects.filter(user=user_id, logic_delete=False, departure_date__gte=datetime.now() ).select_related("departure").all()
     scheduleserializer = ScheduleSerializer(schedules, many=True)
 
     places = Place.objects.all().order_by('name')
@@ -95,12 +54,19 @@ def index(request, *args, **kwargs):
     response['places'] = placeserializer.data
 
     return render_to_response("schedule/index.html", {
-        'data' : response
+        'data' : response,
+        'user': request.user
     })
 
 @csrf_exempt
 def edit_schedule(request, *args, **kwargs):
     if request.method == 'POST':
+
+        if request.user and request.user.is_active:
+            user_id = request.user.id
+        else:
+            # @TODO trhow exception
+            user_id = 0
 
         schobj = Schedule()
         dt_start_temp = request.POST.get('dt-start', None)
@@ -115,6 +81,7 @@ def edit_schedule(request, *args, **kwargs):
         schobj.landing_date = dt_end
         schobj.days_in_place = get_interval_from_diffdays(diffdays(dt_start_temp, dt_end_temp))
 
+        schobj.user_id = user_id
 
         departure_in_weekend_only = request.POST.get('departure_in_weekend_only', False)
         if departure_in_weekend_only == 'on':
@@ -158,12 +125,11 @@ def delete_schedule(request, *args, **kwargs):
             msg = 'show errors'
     return HttpResponseRedirect( reverse( 'flyerapp:home' ) )
 
-
 @csrf_exempt
 def flights(request, *args, **kwargs):
     response = {}
     sch_id = request.POST.get('id',None)
-    flight = Flight.objects.filter(schedule_id=sch_id).select_related("departure").all()
+    flight = Flight.objects.filter(schedule_id=sch_id).select_related("departure").order_by('pub_date').reverse().all()
     if flight:
         flightserializer = FlightListSerializer(flight)
         response['flights'] = flightserializer.data
@@ -171,7 +137,6 @@ def flights(request, *args, **kwargs):
     return render_to_response("flight/flights.html", {
         'data' : response
     })
-
 
 """
 This code will create manual jobs in queue to do a flight search
@@ -229,6 +194,12 @@ def remove_automatic_scheduled_jobs(sch_id):
             result = True
 
     return result
+
+def logout_view(request):
+    logout(request)
+    request.session.flush()
+    return HttpResponseRedirect( reverse( 'flyerapp:home' ) )
+
 """
 """
 def schedule_data_search(schedule, departure):

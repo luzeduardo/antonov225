@@ -22,4 +22,6 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin/rq/', include('django_rq_dashboard.urls')),
     url(r'', include('flyerapp.urls', namespace="flyerapp")),
+    url('', include('social.apps.django_app.urls', namespace='social')),
+    url('', include('django.contrib.auth.urls', namespace='auth')),
 ]

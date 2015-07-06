@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 from rq import get_current_job
+from django.contrib.auth.models import User
 # Create your models here.
 class Place(models.Model):
     name = models.CharField(max_length=70, null=False)
@@ -10,6 +11,7 @@ class Place(models.Model):
         return self.name
 
 class Schedule(models.Model):
+    user = models.ForeignKey(User, null=False)
     active = models.BooleanField(default=True, null=False)
     # notify = models.BooleanField(default=True, null=False)
     logic_delete = models.BooleanField(default=False, null=False)

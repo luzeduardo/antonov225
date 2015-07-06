@@ -53,8 +53,9 @@ INSTALLED_APPS = (
     'django_rq',
     'django_rq_dashboard',
     'flyerapp',
-    'rest_framework',
-    'debug_toolbar'
+    # 'rest_framework',
+    'debug_toolbar',
+    'social.apps.django_app.default'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -78,11 +79,15 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.i18n'
+                'django.template.context_processors.i18n',
+                'django.contrib.messages.context_processors.messages',
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
             ],
         },
     },
@@ -102,6 +107,12 @@ DATABASES = {
         'PASSWORD': '1234',
     }
 }
+
+
+AUTHENTICATION_BACKENDS = (
+   'social.backends.facebook.FacebookOAuth2',
+   'django.contrib.auth.backends.ModelBackend',
+)
 
 # Use redis for caches
 # CACHES = {
@@ -144,6 +155,10 @@ RQ_QUEUES = {
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
 LANGUAGE_CODE = 'pt-br'
+
+LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_FACEBOOK_KEY = '934547119928906'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'aba08aa940ed41c57d571165df823967'
 
 #TIME_ZONE = 'UTC'
 TIME_ZONE = 'America/Sao_Paulo'
