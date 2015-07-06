@@ -6,7 +6,7 @@ from datetime import datetime
 import logging
 import json
 import locale
-locale.setlocale(locale.LC_ALL, 'en_US')
+locale.setlocale(locale.LC_ALL, '')
 
 register = template.Library()
 
