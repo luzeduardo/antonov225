@@ -92,12 +92,15 @@ def edit_schedule(request, *args, **kwargs):
 
         schobj.user_id = user_id
 
-        departure_in_weekend_only = request.POST.get('departure_in_weekend_only', False)
-        if departure_in_weekend_only == 'on':
-            departure_in_weekend_only = True
-        landing_in_weekend_only = request.POST.get('landing_in_weekend_only', False)
-        if landing_in_weekend_only == 'on':
-            landing_in_weekend_only = True
+        # departure_in_weekend_only = request.POST.get('departure_in_weekend_only', False)
+        # if departure_in_weekend_only == 'on':
+        #     departure_in_weekend_only = True
+        # landing_in_weekend_only = request.POST.get('landing_in_weekend_only', False)
+        # if landing_in_weekend_only == 'on':
+        #     landing_in_weekend_only = True
+
+        landing_in_weekend_only = True
+        departure_in_weekend_only = True
 
         schobj.departure_in_weekend_only = departure_in_weekend_only
         schobj.landing_in_weekend_only = landing_in_weekend_only
