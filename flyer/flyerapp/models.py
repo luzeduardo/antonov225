@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Place(models.Model):
     name = models.CharField(max_length=70, null=False)
-    iata_code = models.CharField(max_length=3, null=False, unique=True)
+    iata_code = models.CharField(max_length=3, null=False)
     
     def __unicode__(self):
         return self.name
