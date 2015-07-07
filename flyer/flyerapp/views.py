@@ -417,6 +417,7 @@ def fligth_value_search(departure, config_origem, destino, config_dia_inicio, co
         driver.implicitly_wait(2)
         resultado = driver.find_element_by_css_selector(final_class)
 
+        driver.quit()
         valor_exibicao = resultado.text
         valor_processado = valor_exibicao.split("R$")
         valor_processado = valor_processado[1]
