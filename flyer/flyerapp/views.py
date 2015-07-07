@@ -18,13 +18,17 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from django.contrib.auth import logout
 
-import json
+import json, os
 import re
 import tasks
 import time
 import django_rq
+import psutil
+import logging
 from rq import get_current_job
 from django_rq import job
+
+LOGGER = logging.getLogger('django.request')
 
 class JSONResponse(HttpResponse):
     """
@@ -331,12 +335,50 @@ def notify_price_range_to_user(price, schedule):
     else:
         return False
 
+def calc_memory_load():
+    res = psutil.virtual_memory()
+    if res[3] > 85:
+        return 100 - int(res[3])
+    else:
+        return 0
+
+def calc_proc_load():
+    processor_load =  os.getloadavg()
+    proc_len = len(processor_load)
+    max_load = 1.5 * float(proc_len)
+    pprc_max_loaded = 0
+    for prc in processor_load:
+        pprc_max_loaded += float(prc)
+    if pprc_max_loaded > max_load:
+        return pprc_max_loaded - max_load
+    else:
+        return 0
 
 """
 This method is executed by the queue
 """
 @job
 def fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim, scheduleid):
+
+    LOGGER.debug('fligth_value_search: ' + scheduleid)
+    sleep_time = calc_memory_load()
+    if sleep_time > 0:
+        counter = sleep_time
+        while counter > 0:
+            LOGGER.debug('proc sleep: ' + counter)
+            time.sleep(1)
+            counter -= 1
+
+    sleep_time = calc_proc_load()
+    counter = sleep_time
+    while counter > 0:
+            LOGGER.debug('memory sleep: ' + counter)
+            time.sleep(sleep_time)
+            counter -= 1
+
+    #queue = django_rq.get_queue('default')
+    #queue.enqueue(fligth_value_search, departure, config_origem, destino, config_dia_inicio, config_dia_fim, scheduleid)
+
     problemas = deque()
     nao_existe = deque()
     google_cheap_price_class = '-c-pb'

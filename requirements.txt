@@ -16,3 +16,4 @@ djangorestframework
 gunicorn
 django-debug-toolbar
 python-social-auth
+psutil
