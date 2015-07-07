@@ -360,19 +360,19 @@ This method is executed by the queue
 @job
 def fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim, scheduleid):
 
-    LOGGER.debug('fligth_value_search: ' + scheduleid)
+    LOGGER.debug('fligth_value_search: ' + str(scheduleid))
     sleep_time = calc_memory_load()
     if sleep_time > 0:
         counter = sleep_time
         while counter > 0:
-            LOGGER.debug('proc sleep: ' + counter)
+            LOGGER.debug('proc sleep: ' + str(counter))
             time.sleep(1)
             counter -= 1
 
     sleep_time = calc_proc_load()
     counter = sleep_time
     while counter > 0:
-            LOGGER.debug('memory sleep: ' + counter)
+            LOGGER.debug('memory sleep: ' + str(counter))
             time.sleep(sleep_time)
             counter -= 1
 
