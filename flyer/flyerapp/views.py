@@ -361,7 +361,11 @@ This method is executed by the queue
 def fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim, scheduleid):
 
     LOGGER.debug('fligth_value_search: ' + str(scheduleid))
+    counter = 0
     while not calc_memory_load():
+        counter += 1
+        if counter == 180:
+            return False
         LOGGER.debug('mem sleep: ')
         time.sleep(1)
 
