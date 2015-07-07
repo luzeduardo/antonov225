@@ -192,6 +192,7 @@ STATIC_URL = "/static/"
 # STATIC_URL = "/static/"
 
 # Add a logger for rq_scheduler in order to display when jobs are queueud
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -201,6 +202,11 @@ LOGGING = {
         },
     },
     'handlers': {
+        'django_handler': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': os.path.join( BASE_DIR, 'log', 'flyer.django.log' ),
+            },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
