@@ -202,6 +202,11 @@ LOGGING = {
         },
     },
     'handlers': {
+        'rq_handler': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': os.path.join( BASE_DIR, 'log', 'rq.django.log' ),
+            },
         'django_handler': {
                 'level': 'DEBUG',
                 'class': 'logging.FileHandler',
@@ -216,12 +221,12 @@ LOGGING = {
 
     'loggers': {
         'django.request': {
-            'handlers': ['console'],
+            'handlers': ['django_handler'],
             'level': 'DEBUG',
             'propagate': True,
         },
         'rq_scheduler': {
-            'handlers': ['console'],
+            'handlers': ['rq_handler'],
             'level': 'DEBUG',
             'propagate': True,
         },
