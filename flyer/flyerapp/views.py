@@ -337,10 +337,10 @@ def notify_price_range_to_user(price, schedule):
 
 def calc_memory_load():
     res = psutil.virtual_memory()
-    if res[3] > 85:
-        return 100 - int(res[3])
+    if res[5] < 100068864:
+        return False
     else:
-        return 0
+        return True
 
 def calc_proc_load():
     processor_load =  os.getloadavg()
@@ -361,18 +361,14 @@ This method is executed by the queue
 def fligth_value_search(departure, config_origem, destino, config_dia_inicio, config_dia_fim, scheduleid):
 
     LOGGER.debug('fligth_value_search: ' + str(scheduleid))
-    sleep_time = calc_memory_load()
-    if sleep_time > 0:
-        counter = sleep_time
-        while counter > 0:
-            LOGGER.debug('proc sleep: ' + str(counter))
-            time.sleep(1)
-            counter -= 1
+    while not calc_memory_load():
+        LOGGER.debug('mem sleep: ')
+        time.sleep(1)
 
     sleep_time = calc_proc_load()
     counter = sleep_time
     while counter > 0:
-            LOGGER.debug('memory sleep: ' + str(counter))
+            LOGGER.debug('proc sleep: ' + str(counter))
             time.sleep(sleep_time)
             counter -= 1
 
