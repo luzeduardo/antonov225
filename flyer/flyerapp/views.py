@@ -417,7 +417,7 @@ def fligth_value_search(departure, config_origem, destino, config_dia_inicio, co
         driver.implicitly_wait(2)
         resultado = driver.find_element_by_css_selector(final_class)
 
-        driver.quit(force=True)
+        driver.quit()
         valor_exibicao = resultado.text
         valor_processado = valor_exibicao.split("R$")
         valor_processado = valor_processado[1]
@@ -439,7 +439,7 @@ def fligth_value_search(departure, config_origem, destino, config_dia_inicio, co
         fly.link = url
         fly.save()
 
-        driver.quit(force=True)
+        driver.quit()
     except NoSuchElementException, e:
         notfound_class = '.' + class_splited[0] + '-Pb-e'
         resultado = driver.find_element_by_css_selector(notfound_class)
@@ -447,11 +447,11 @@ def fligth_value_search(departure, config_origem, destino, config_dia_inicio, co
             if str(ne) == str(destino[1]):
                 problemas.append('Ignorar destino: ' + str(destino[1]))
         nao_existe.append(str(destino[1]))
-        driver.quit(force=True)
+        driver.quit()
         return problemas
     except Exception, e:
         problemas.append('Problema ao retornar valor de: ' + str(destino[1]) +"\t" + url)
-        driver.quit(force=True)
+        driver.quit()
         return problemas
 
 @job
