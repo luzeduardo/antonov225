@@ -240,9 +240,9 @@ problemas = deque()
 nao_existe = deque()
 ida_durante_semana = True
 volta_durante_semana = True
-milha_buscada = 10000
-percentual_acima = 1.5
-percentual_abaixo = 1.5
+milha_buscada = 12000
+percentual_acima = 2
+percentual_abaixo = 2
 url = ''
 # print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
 for config_origem in config_origem:
@@ -266,13 +266,13 @@ for config_origem in config_origem:
                 driver.set_window_size( 2048, 2048)  # set browser size.
 
                 url = 'https://www.smiles.com.br/emissao-com-milhas?tripType=1&originAirport='+ config_origem +'&destinationAirport=' + str(destino[0]) + '&departureDate=' + config_dia_inicio + '000&returnDate=' + config_dia_fim + '000&adults=1&children=0&infants=0&searchType=g3&segments=1&isElegible=false'
-                print url
+                print datas[0] + ' - '+ datas[1] + ' - ' + config_origem + ' - ' + str(destino[0])
+                # print url
                 driver.get( url )
                 time.sleep(2)
                 driver.implicitly_wait(2)
 
-                reduzida_ida = 'td.tdSurpriseDestination'
-                milhas = 'div.legData[data-legid="0"] td.resulttable.rtB'
+                milhas = 'ul.fGothamRoundedMedium18Gray'
 
                 #Testa se elemento de processamento sumiu e processegue com o script
                 # element_existe = True
@@ -304,7 +304,7 @@ for config_origem in config_origem:
                         if int( valor_processado ) > 100000: #ignorando valores de smiles e money
                             continue
 
-                        if int(valor_processado) <= milha_buscada * 1.2 <= int(valor_processado) * 1.2:
+                        if int(valor_processado) <= milha_buscada * percentual_abaixo <= int(valor_processado) * percentual_acima:
                             encontrado_milha_range = True
                             print "Milha" + "\t" + valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
 
