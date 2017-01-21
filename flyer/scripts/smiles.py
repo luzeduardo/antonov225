@@ -2,7 +2,7 @@
 # coding: utf-8
 # To install the Python client library:
 # pip install -U selenium
- 
+
 # Import the Selenium 2 namespace (aka "webdriver")
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -14,10 +14,10 @@ import json
 import re
 import os, sys
 
-reload(sys)  
+reload(sys)
 sys.setdefaultencoding('utf8')
 
-config_destinos = { 
+config_destinos = {
     # 'ATM':'Altamira (PA)',
     # 'AJU':'Aracajú (SE)',
     # 'AQA':'Araraquara (SP)',
@@ -97,7 +97,7 @@ config_destinos = {
 #   'EZE':'Buenos Aires',
 #   'CUZ':'Chile',
 #   'CDG':'Paris',
-#   'BCN':'Barcelona',  
+#   'BCN':'Barcelona',
 #   'SXF':'Berlim',
 #   'BRU':'Bélgica',
 #   'AMS':'Amsterdã',
@@ -140,7 +140,7 @@ def calc_proc_load():
         return 0
 
 def perdelta_start_to_end(start, end, delta):
-    curr = start    
+    curr = start
     while curr < end:
         yield curr
         curr += delta
@@ -158,7 +158,7 @@ def days_between(s_year,s_month, s_day, e_year,e_month, e_day):
 
 def is_valid_min_days_in_place(start, end, min_days_in_place, exact=True):
     '''
-    o parametro exact determina se podemos ficar no minimo x dias ou mais 
+    o parametro exact determina se podemos ficar no minimo x dias ou mais
     ou se podemos ficar exatamente x dias no local True equivale a um numero X dias apenas
     '''
     date_format = "%Y-%m-%d"
@@ -169,30 +169,30 @@ def is_valid_min_days_in_place(start, end, min_days_in_place, exact=True):
     if exact==True:
         if num_days == min_days_in_place:
             return True
-    else:       
+    else:
         if num_days >= min_days_in_place:
             return True
     return False
 
 def is_weekend_day(date):
     date_format = "%Y-%m-%d"
-    day_number = datetime.strptime(date, date_format).weekday()    
+    day_number = datetime.strptime(date, date_format).weekday()
     if day_number == 5 or day_number == 6:
         return False
-    else:    
+    else:
         return True
 
 def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
-    ''' 
+    '''
     pega a diferenca entre as datas e gera o range baseado no numero de dias
-    '''    
+    '''
     days = days_between(s_year,s_month, s_day, e_year,e_month, int(e_day))
-    counter_days = days    
+    counter_days = days
     datas = list()
 
-    #menor maior    
+    #menor maior
     while counter_days > 0:
-        for result in perdelta_start_to_end(date(s_year,s_month, s_day), date(e_year,e_month, e_day), timedelta(days=1)):                    
+        for result in perdelta_start_to_end(date(s_year,s_month, s_day), date(e_year,e_month, e_day), timedelta(days=1)):
             if counter_days > 0:
                 datas.append( [( str(result) ), (str(date(e_year,e_month, e_day) ))] )
             counter_days = counter_days - 1
@@ -201,7 +201,7 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
     counter_days = days
     itr = 0
     while counter_days > 0:
-        for result in perdelta_end_to_start(date(s_year,s_month, s_day + itr), date(e_year,e_month, e_day), timedelta(days=1)):            
+        for result in perdelta_end_to_start(date(s_year,s_month, s_day + itr), date(e_year,e_month, e_day), timedelta(days=1)):
             if itr == 0:
                 continue
             if counter_days > 0:
@@ -214,25 +214,25 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
 def stringtotimestamp(dt, epoch=datetime(1970,1,1), dt_format="%Y-%m-%d"):
     dt = datetime.strptime(dt.replace('Z', 'GMT'), dt_format)
     td = dt - epoch
-    return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6 
+    return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
 
-s_year = 2015
-s_month = 11
-s_day = 10
+s_year = 2017
+s_month = 04
+s_day = 21
 
-e_year = 2015
-e_month = 11
-e_day = 15
+e_year = 2017
+e_month = 04
+e_day = 23
 
-c_year = 2015
-c_month = 5
-c_day = 15
-min_days_in_place = 5
+c_year = 2017
+c_month = 4
+c_day = 23
+min_days_in_place = 3
 exactly_days_check = False
 
 #datas = date_interval(s_year,s_month, s_day, e_year,e_month, e_day)
 #ou setando na mao
-datas = [['2015-11-09','2015-11-15'],['2015-11-10','2015-11-15']]
+datas = [['2017-04-21','2017-04-24'],['2017-04-14','2017-04-17']]
 
 
 config_datas = datas
@@ -253,9 +253,9 @@ for config_origem in config_origem:
                 if is_weekend_day(datas[0]) and not ida_durante_semana: #ida apenas fds
                     continue
                 if is_weekend_day(datas[1]) and not volta_durante_semana: #volta apenas fds
-                    continue    
+                    continue
                 if exactly_days_check and not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
-                    continue            
+                    continue
                 config_dia_inicio = str(stringtotimestamp(datas[0]))
                 config_dia_fim = str(stringtotimestamp(datas[1]))
                 #print config_dia_fim
@@ -264,16 +264,16 @@ for config_origem in config_origem:
                 #driver = webdriver.Firefox()
                 driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any'])
                 driver.set_window_size( 2048, 2048)  # set browser size.
-                
-                url = 'https://www.smiles.com.br/passagens-com-milhas?tripType=1&originAirport='+ config_origem +'&destinationAirport=' + str(destino[0]) + '&departureDay=' + config_dia_inicio + '&returnDay=' + config_dia_fim + '&adults=01&children=0&infants=0'
-                #print url
+
+                url = 'https://www.smiles.com.br/emissao-com-milhas?tripType=1&originAirport='+ config_origem +'&destinationAirport=' + str(destino[0]) + '&departureDate=' + config_dia_inicio + '000&returnDate=' + config_dia_fim + '000&adults=1&children=0&infants=0&searchType=g3&segments=1&isElegible=false'
+                print url
                 driver.get( url )
                 time.sleep(2)
                 driver.implicitly_wait(2)
 
                 reduzida_ida = 'td.tdSurpriseDestination'
                 milhas = 'div.legData[data-legid="0"] td.resulttable.rtB'
-                
+
                 #Testa se elemento de processamento sumiu e processegue com o script
                 # element_existe = True
                 # teste_processando = 0
@@ -288,21 +288,21 @@ for config_origem in config_origem:
                 #             element_existe = False
                 #     except NoSuchElementException, e:
                 #         element_existe = False
-                
+
                 try:
                     time.sleep(2)
                     driver.implicitly_wait(2)
                     milhas = driver.find_elements_by_css_selector(milhas)
                     menor_milha = 0
                     encontrado_milha_range = False
-                    for resultado in milhas:                        
+                    for resultado in milhas:
                         valor_processado = resultado.text
                         valor_processado = re.sub('[^0-9]+', '', valor_processado)
                         if menor_milha == 0 or menor_milha > valor_processado:
                             menor_milha = valor_processado
 
                         if int( valor_processado ) > 100000: #ignorando valores de smiles e money
-                            continue                        
+                            continue
 
                         if int(valor_processado) <= milha_buscada * 1.2 <= int(valor_processado) * 1.2:
                             encontrado_milha_range = True
