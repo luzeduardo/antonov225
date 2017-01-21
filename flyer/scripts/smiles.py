@@ -232,7 +232,7 @@ exactly_days_check = False
 
 #datas = date_interval(s_year,s_month, s_day, e_year,e_month, e_day)
 #ou setando na mao
-datas = [['2017-04-21','2017-04-24'],['2017-04-14','2017-04-17']]
+datas = [['2017-04-21','2017-04-23'],['2017-04-14','2017-04-16']]
 
 
 config_datas = datas
@@ -244,6 +244,7 @@ milha_buscada = 12000
 percentual_acima = 2
 percentual_abaixo = 2
 url = ''
+timer = 3
 # print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
 for config_origem in config_origem:
     for destino in config_destinos.items():
@@ -269,8 +270,8 @@ for config_origem in config_origem:
                 print datas[0] + ' - '+ datas[1] + ' - ' + config_origem + ' - ' + str(destino[0])
                 # print url
                 driver.get( url )
-                time.sleep(2)
-                driver.implicitly_wait(2)
+                time.sleep(timer)
+                driver.implicitly_wait(timer)
 
                 milhas = 'ul.fGothamRoundedMedium18Gray'
 
@@ -290,8 +291,8 @@ for config_origem in config_origem:
                 #         element_existe = False
 
                 try:
-                    time.sleep(2)
-                    driver.implicitly_wait(2)
+                    time.sleep(timer)
+                    driver.implicitly_wait(timer)
                     milhas = driver.find_elements_by_css_selector(milhas)
                     menor_milha = 0
                     encontrado_milha_range = False
