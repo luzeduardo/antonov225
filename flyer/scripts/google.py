@@ -175,11 +175,17 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
     counter_days = days
     itr = 0
     while counter_days > 0:
-        for result in perdelta_end_to_start(date(s_year,s_month, s_day + itr), date(e_year,e_month, e_day), timedelta(days=1)):
-            if itr == 0:
-                continue
-            if counter_days > 0:
-                datas.append( [str(date(s_year, s_month, s_day + itr)) , str(result) ] )
+        try:
+            datetime(s_year,s_month, s_day + itr)
+            for result in perdelta_end_to_start(date(s_year, s_month, s_day + itr), date(e_year, e_month, e_day), timedelta(days=1)):
+                if itr == 0:
+                    continue
+                if counter_days > 0:
+                    datas.append( [str(date(s_year, s_month, s_day + itr)) , str(result) ] )
+        except Exception, e:
+            counter_days = counter_days - 1
+            itr += 1
+            continue
         counter_days = counter_days - 1
         itr += 1
 
@@ -283,25 +289,22 @@ config_origem = {
     'CGH'
 }
 
-s_year = 2015
-s_month = 11
-s_day = 9
+s_year = 2017
+s_month = 4
+s_day = 1
 
-e_year = 2015
-e_month = 11
-e_day = 16
+e_year = 2017
+e_month = 5
+e_day = 15
 
-c_year = 2015
-c_month = 5
-c_day = 15
 min_days_in_place = 3
 exactly_days_check = False
 
 datas = date_interval(s_year,s_month, s_day, e_year,e_month, e_day)
 # ou setando na mao
-datas = [
-    ['2017-05-05','2017-05-09']
-]
+# datas = [
+#     ['2017-05-05','2017-05-09']
+# ]
 
 config_datas = datas
 problemas = deque()

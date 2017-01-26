@@ -124,7 +124,7 @@ config_destinos = {
 # }
 config_origem = {
     'GIG',
-    #'CGH'
+    'SDU'
 }
 def calc_proc_load():
     processor_load =  os.getloadavg()
@@ -201,11 +201,17 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
     counter_days = days
     itr = 0
     while counter_days > 0:
-        for result in perdelta_end_to_start(date(s_year,s_month, s_day + itr), date(e_year,e_month, e_day), timedelta(days=1)):
-            if itr == 0:
-                continue
-            if counter_days > 0:
-                datas.append( [str(date(s_year, s_month, s_day + itr)) , str(result) ] )
+        try:
+            datetime(s_year,s_month, s_day + itr)
+            for result in perdelta_end_to_start(date(s_year, s_month, s_day + itr), date(e_year, e_month, e_day), timedelta(days=1)):
+                if itr == 0:
+                    continue
+                if counter_days > 0:
+                    datas.append( [str(date(s_year, s_month, s_day + itr)) , str(result) ] )
+        except Exception, e:
+            counter_days = counter_days - 1
+            itr += 1
+            continue
         counter_days = counter_days - 1
         itr += 1
 
@@ -218,21 +224,18 @@ def stringtotimestamp(dt, epoch=datetime(1970,1,1), dt_format="%Y-%m-%d"):
 
 s_year = 2017
 s_month = 04
-s_day = 21
+s_day = 01
 
 e_year = 2017
-e_month = 04
-e_day = 23
+e_month = 05
+e_day = 15
 
-c_year = 2017
-c_month = 4
-c_day = 23
 min_days_in_place = 3
 exactly_days_check = False
 
-#datas = date_interval(s_year,s_month, s_day, e_year,e_month, e_day)
+datas = date_interval(s_year, s_month, s_day, e_year, e_month, e_day)
 #ou setando na mao
-datas = [['2017-04-14','2017-04-16'], ['2017-04-21','2017-04-23'], ['2017-04-29','2017-05-01']]
+# datas = [['2017-04-14','2017-04-16'], ['2017-04-21','2017-04-23'], ['2017-04-29','2017-05-01']]
 display_nao_encontrado = False
 
 config_datas = datas
