@@ -232,7 +232,8 @@ exactly_days_check = False
 
 #datas = date_interval(s_year,s_month, s_day, e_year,e_month, e_day)
 #ou setando na mao
-datas = [['2017-04-21','2017-04-23'],['2017-04-14','2017-04-16']]
+datas = [['2017-04-21','2017-04-23'],['2017-04-14','2017-04-16'],['2017-04-29','2017-05-01']]
+display_nao_encontrado = False
 
 
 config_datas = datas
@@ -309,8 +310,8 @@ for config_origem in config_origem:
                             encontrado_milha_range = True
                             print "Milha" + "\t" + valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
 
-                    if not encontrado_milha_range and not int( valor_processado ) > 100000:
-                        print "Milha" + "\t" + menor_milha + "\t" + menor_milha + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
+                    if not encontrado_milha_range and not int( valor_processado ) > 100000 and display_nao_encontrado:
+                        print "Nao encontrado" + "\t" + menor_milha + "\t" + menor_milha + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
                     driver.quit()
                 # except NoSuchElementException, e:
                 #     notfound_class = '.' + class_splited[0] + '-Pb-e'
