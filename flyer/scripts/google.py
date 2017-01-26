@@ -2,7 +2,7 @@
 # coding: utf-8
 # To install the Python client library:
 # pip install -U selenium
- 
+
 # Import the Selenium 2 namespace (aka "webdriver")
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -14,10 +14,10 @@ import json
 import re
 import os, sys
 
-reload(sys)  
+reload(sys)
 sys.setdefaultencoding('utf8')
 
-config_destinos = { 
+config_destinos = {
     # 'ATM':'Altamira (PA)',
     # 'AJU':'Aracajú (SE)',
     # 'AQA':'Araraquara (SP)',
@@ -97,7 +97,7 @@ config_destinos = {
 #   'EZE':'Buenos Aires',
 #   'CUZ':'Chile',
 #   'CDG':'Paris',
-#   'BCN':'Barcelona',  
+#   'BCN':'Barcelona',
 #   'SXF':'Berlim',
 #   'BRU':'Bélgica',
 #   'AMS':'Amsterdã',
@@ -114,7 +114,7 @@ config_destinos = {
 #config_origem = 'CGH'
 
 def perdelta_start_to_end(start, end, delta):
-    curr = start    
+    curr = start
     while curr < end:
         yield curr
         curr += delta
@@ -132,7 +132,7 @@ def days_between(s_year,s_month, s_day, e_year,e_month, e_day):
 
 def is_valid_min_days_in_place(start, end, min_days_in_place, exact=True):
     '''
-    o parametro exact determina se podemos ficar no minimo x dias ou mais 
+    o parametro exact determina se podemos ficar no minimo x dias ou mais
     ou se podemos ficar exatamente x dias no local True equivale a um numero X dias apenas
     '''
     date_format = "%Y-%m-%d"
@@ -143,30 +143,30 @@ def is_valid_min_days_in_place(start, end, min_days_in_place, exact=True):
     if exact==True:
         if num_days == min_days_in_place:
             return True
-    else:       
+    else:
         if num_days >= min_days_in_place:
             return True
     return False
 
 def is_weekend_day(date):
     date_format = "%Y-%m-%d"
-    day_number = datetime.strptime(date, date_format).weekday()    
+    day_number = datetime.strptime(date, date_format).weekday()
     if day_number == 5 or day_number == 6:
         return False
-    else:    
+    else:
         return True
 
 def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
-    ''' 
+    '''
     pega a diferenca entre as datas e gera o range baseado no numero de dias
-    '''    
+    '''
     days = days_between(s_year,s_month, s_day, e_year,e_month, e_day)
-    counter_days = days    
+    counter_days = days
     datas = list()
 
-    #menor maior    
+    #menor maior
     while counter_days > 0:
-        for result in perdelta_start_to_end(date(s_year,s_month, s_day), date(e_year,e_month, e_day), timedelta(days=1)):                    
+        for result in perdelta_start_to_end(date(s_year,s_month, s_day), date(e_year,e_month, e_day), timedelta(days=1)):
             if counter_days > 0:
                 datas.append( [( str(result) ), (str(date(e_year,e_month, e_day) ))] )
             counter_days = counter_days - 1
@@ -175,7 +175,7 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
     counter_days = days
     itr = 0
     while counter_days > 0:
-        for result in perdelta_end_to_start(date(s_year,s_month, s_day + itr), date(e_year,e_month, e_day), timedelta(days=1)):            
+        for result in perdelta_end_to_start(date(s_year,s_month, s_day + itr), date(e_year,e_month, e_day), timedelta(days=1)):
             if itr == 0:
                 continue
             if counter_days > 0:
@@ -188,8 +188,8 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
 # print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
 #start_time = time.time()
 def search(config_origem, config_destinos, config_datas, ida_durante_semana, volta_durante_semana, exactly_days_check, min_days_in_place):
-    google_cheap_price_class = '-c-pb'
-    google_processing_price_class = '-j-n'
+    google_cheap_price_class = '-d-yb'
+    google_processing_price_class = ''
     for config_origem in config_origem:
         for destino in config_destinos.items():
             for datas in config_datas:
@@ -204,11 +204,11 @@ def search(config_origem, config_destinos, config_datas, ida_durante_semana, vol
                     config_dia_inicio = datas[0]
                     config_dia_fim = datas[1]
                     #driver = webdriver.Firefox()
-                    driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any'])
+                    driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any', '--ignore-ssl-errors=true', '--ssl-protocol=TLSv1'])
                     driver.set_window_size( 2048, 2048)  # set browser size.
 
                     url = 'https://www.google.com.br/flights/#search;f=' + config_origem + ';t='+ str(destino[0]) +';d='+config_dia_inicio + ';r=' + config_dia_fim
-                    #print url
+                    # print url
                     driver.get( url )
                     time.sleep(2)
                     driver.implicitly_wait(2)
@@ -222,16 +222,16 @@ def search(config_origem, config_destinos, config_datas, ida_durante_semana, vol
                     #Testa se elemento de processamento sumiu e processegue com o script
                     element_existe = True
                     teste_processando = 0
-                    while element_existe:
-                        try:
-                            teste_processando += 1
-                            resultado = driver.find_element_by_css_selector(wait_class)
-                            time.sleep(1)
-                            driver.implicitly_wait(1)
-                            if teste_processando == 1:
-                                element_existe = False
-                        except NoSuchElementException, e:
-                            element_existe = False
+                    # while element_existe:
+                    #     try:
+                    #         teste_processando += 1
+                    #         resultado = driver.find_element_by_css_selector(wait_class)
+                    #         time.sleep(1)
+                    #         driver.implicitly_wait(1)
+                    #         if teste_processando == 1:
+                    #             element_existe = False
+                    #     except NoSuchElementException, e:
+                    #         element_existe = False
 
                     try:
                         time.sleep(2)
@@ -300,9 +300,7 @@ exactly_days_check = False
 datas = date_interval(s_year,s_month, s_day, e_year,e_month, e_day)
 # ou setando na mao
 datas = [
-    ['2015-11-05','2015-11-09'],
-    ['2015-11-09','2015-11-15'],
-    ['2015-11-10','2015-11-15']
+    ['2017-05-05','2017-05-09']
 ]
 
 config_datas = datas

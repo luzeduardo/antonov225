@@ -232,18 +232,17 @@ exactly_days_check = False
 
 #datas = date_interval(s_year,s_month, s_day, e_year,e_month, e_day)
 #ou setando na mao
-datas = [['2017-04-21','2017-04-23'],['2017-04-14','2017-04-16'],['2017-04-29','2017-05-01']]
+datas = [['2017-04-14','2017-04-16'], ['2017-04-21','2017-04-23'], ['2017-04-29','2017-05-01']]
 display_nao_encontrado = False
-
 
 config_datas = datas
 problemas = deque()
 nao_existe = deque()
 ida_durante_semana = True
 volta_durante_semana = True
-milha_buscada = 12000
-percentual_acima = 2
-percentual_abaixo = 2
+milha_buscada = 10000
+percentual_acima = 1.1
+percentual_abaixo = 1.1
 url = ''
 timer = 3
 # print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
@@ -264,7 +263,7 @@ for config_origem in config_origem:
                 #continue
 
                 #driver = webdriver.Firefox()
-                driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any'])
+                driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any', '--ignore-ssl-errors=true', '--ssl-protocol=TLSv1'])
                 driver.set_window_size( 2048, 2048)  # set browser size.
 
                 url = 'https://www.smiles.com.br/emissao-com-milhas?tripType=1&originAirport='+ config_origem +'&destinationAirport=' + str(destino[0]) + '&departureDate=' + config_dia_inicio + '000&returnDate=' + config_dia_fim + '000&adults=1&children=0&infants=0&searchType=g3&segments=1&isElegible=false'
