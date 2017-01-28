@@ -123,8 +123,8 @@ config_destinos = {
 #     'CUZ':'Chile',
 # }
 config_origem = {
-    'GIG',
-    'SDU'
+    'SDU',
+    'GIG'
 }
 def calc_proc_load():
     processor_load =  os.getloadavg()
@@ -230,12 +230,12 @@ e_year = 2017
 e_month = 05
 e_day = 15
 
-min_days_in_place = 3
+min_days_in_place = 2
 exactly_days_check = False
 
-datas = date_interval(s_year, s_month, s_day, e_year, e_month, e_day)
+# datas = date_interval(s_year, s_month, s_day, e_year, e_month, e_day)
 #ou setando na mao
-# datas = [['2017-04-14','2017-04-16'], ['2017-04-21','2017-04-23'], ['2017-04-29','2017-05-01']]
+datas = [['2017-04-14','2017-04-16'], ['2017-04-21','2017-04-23'], ['2017-04-29','2017-05-01']]
 display_nao_encontrado = False
 
 config_datas = datas
@@ -244,14 +244,14 @@ nao_existe = deque()
 ida_durante_semana = True
 volta_durante_semana = True
 milha_buscada = 10000
-percentual_acima = 1.1
-percentual_abaixo = 1.1
+percentual_acima = 1.2
+percentual_abaixo = 1.2
 url = ''
 timer = 3
 # print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
-for config_origem in config_origem:
-    for destino in config_destinos.items():
-        for datas in config_datas:
+for datas in config_datas:    
+    for config_origem in config_origem:
+        for destino in config_destinos.items():
             try:
                 #corrigir timezone para trabalhar co o timestamp
                 if is_weekend_day(datas[0]) and not ida_durante_semana: #ida apenas fds
