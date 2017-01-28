@@ -122,9 +122,9 @@ config_destinos = {
 #     # 'MCO':'Orlando',
 #     'CUZ':'Chile',
 # }
-config_origem = {
-    'SDU',
-    'GIG'
+origem = {
+    'GIG',
+    'SDU'
 }
 def calc_proc_load():
     processor_load =  os.getloadavg()
@@ -174,13 +174,21 @@ def is_valid_min_days_in_place(start, end, min_days_in_place, exact=True):
             return True
     return False
 
+def is_friday(date):
+    date_format = "%Y-%m-%d"
+    day_number = datetime.strptime(date, date_format).weekday()
+    if day_number == 4:
+        return True
+    else:
+        return False
+
 def is_weekend_day(date):
     date_format = "%Y-%m-%d"
     day_number = datetime.strptime(date, date_format).weekday()
     if day_number == 5 or day_number == 6:
-        return False
-    else:
         return True
+    else:
+        return False
 
 def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
     '''
@@ -223,51 +231,52 @@ def stringtotimestamp(dt, epoch=datetime(1970,1,1), dt_format="%Y-%m-%d"):
     return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
 
 s_year = 2017
-s_month = 04
-s_day = 01
+s_month = 4
+s_day = 15
 
 e_year = 2017
-e_month = 05
-e_day = 15
+e_month = 6
+e_day = 7
 
-min_days_in_place = 2
+min_days_in_place = 3
 exactly_days_check = False
 
-# datas = date_interval(s_year, s_month, s_day, e_year, e_month, e_day)
+datas = date_interval(s_year, s_month, s_day, e_year, e_month, e_day)
 #ou setando na mao
-datas = [['2017-04-14','2017-04-16'], ['2017-04-21','2017-04-23'], ['2017-04-29','2017-05-01']]
+# datas = [['2017-04-14','2017-04-16'], ['2017-04-21','2017-04-23'], ['2017-04-29','2017-05-01']]
 display_nao_encontrado = False
 
 config_datas = datas
 problemas = deque()
 nao_existe = deque()
-ida_durante_semana = True
-volta_durante_semana = True
+ida_sexta_feira = True
+ida_durante_semana = False
+volta_durante_semana = False
 milha_buscada = 10000
 percentual_acima = 1.2
 percentual_abaixo = 1.2
 url = ''
-timer = 3
-# print 'Hora Início: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
+timer = 1
+
+file = open('smiles_passagem_' + datetime.now().strftime("%d%m%Y") + '.csv', 'a')
 for datas in config_datas:    
-    for config_origem in config_origem:
+    for config_origem in origem:
         for destino in config_destinos.items():
             try:
-                #corrigir timezone para trabalhar co o timestamp
-                if is_weekend_day(datas[0]) and not ida_durante_semana: #ida apenas fds
+                if is_friday(datas[0]) and not ida_sexta_feira:
                     continue
-                if is_weekend_day(datas[1]) and not volta_durante_semana: #volta apenas fds
+                if not ida_sexta_feira and not is_weekend_day(datas[0]) and not ida_durante_semana:
                     continue
-                if exactly_days_check and not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
+                if not is_weekend_day(datas[1]) and not volta_durante_semana:
+                    continue
+                if not exactly_days_check and not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
                     continue
                 config_dia_inicio = str(stringtotimestamp(datas[0]))
                 config_dia_fim = str(stringtotimestamp(datas[1]))
-                #print config_dia_fim
-                #continue
 
                 #driver = webdriver.Firefox()
                 driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any', '--ignore-ssl-errors=true', '--ssl-protocol=TLSv1'])
-                driver.set_window_size( 2048, 2048)  # set browser size.
+                driver.set_window_size(2048, 2048)  # set browser size.
 
                 url = 'https://www.smiles.com.br/emissao-com-milhas?tripType=1&originAirport='+ config_origem +'&destinationAirport=' + str(destino[0]) + '&departureDate=' + config_dia_inicio + '000&returnDate=' + config_dia_fim + '000&adults=1&children=0&infants=0&searchType=g3&segments=1&isElegible=false'
                 print datas[0] + ' - '+ datas[1] + ' - ' + config_origem + ' - ' + str(destino[0])
@@ -278,27 +287,13 @@ for datas in config_datas:
 
                 milhas = 'ul.fGothamRoundedMedium18Gray'
 
-                #Testa se elemento de processamento sumiu e processegue com o script
-                # element_existe = True
-                # teste_processando = 0
-                # while element_existe:
-                #     try:
-                #         teste_processando += 1
-                #         resultado = driver.find_elements_by_css_selector('div.legData[data-legid="0"] td.resulttable.rtB .hide')
-                #         for sml in resultado:
-                #             print json.dumps(sml.text, sort_keys=True, ensure_ascii=False)
-                #         #print resultado.text
-                #         if teste_processando == 3:
-                #             element_existe = False
-                #     except NoSuchElementException, e:
-                #         element_existe = False
-
                 try:
                     time.sleep(timer)
                     driver.implicitly_wait(timer)
                     milhas = driver.find_elements_by_css_selector(milhas)
                     menor_milha = 0
                     encontrado_milha_range = False
+                    valor_processado = 0
                     for resultado in milhas:
                         valor_processado = resultado.text
                         valor_processado = re.sub('[^0-9]+', '', valor_processado)
@@ -310,38 +305,20 @@ for datas in config_datas:
 
                         if int(valor_processado) <= milha_buscada * percentual_abaixo <= int(valor_processado) * percentual_acima:
                             encontrado_milha_range = True
-                            print "Milha" + "\t" + valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
+                            data =  valor_processado + "\t" + url  + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
+                            datafile =  valor_processado + "\t" + config_dia_inicio + "\t" + config_dia_fim + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
+                            print data
+                            file.write(datafile)
+                            # print "Milha" + "\t" + valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
 
                     if not encontrado_milha_range and not int( valor_processado ) > 100000 and display_nao_encontrado:
                         print "Nao encontrado" + "\t" + menor_milha + "\t" + menor_milha + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
                     driver.quit()
-                # except NoSuchElementException, e:
-                #     notfound_class = '.' + class_splited[0] + '-Pb-e'
-                #     resultado = driver.find_element_by_css_selector(notfound_class)
-                #     for ne in nao_existe:
-                #         if str(ne) == str(destino[1]):
-                #             problemas.append('Ignorar destino: ' + str(destino[1])+ ' motivo: ' +"\t" + valor)
-                #     nao_existe.append(str(destino[1]))
-                #     driver.quit()
+
                 except Exception, e:
                     problemas.append('Problema ao retornar valor de: ' + str(destino[1]) +"\t" + url)
                     driver.quit()
             except Exception, e:
                 problemas.append('Problema ao retornar elemento principal: ' + str(destino[1]) +"\t" + url)
                 driver.quit()
-# print 'Hora Fim: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
-# @TODO verificar o que fazer com os erros
-# for erros in problemas:
-#     print erros
-#link smiles
-
-
-#def process_or_sleep_task():
-#processamento de task simples com time sleep
-# i = 0
-# while i < 9999999999999999999:
-#     i += 1
-#     sleep_time = calc_proc_load()
-#     if sleep_time > 0:
-#         print '------------------'
-#         time.sleep(sleep_time)
+print 'Hora Fim: ' + datetime.now().strftime("%d/%m/%Y %H:%M")
