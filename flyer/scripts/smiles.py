@@ -278,8 +278,11 @@ for datas in config_datas:
                 config_dia_fim = str(stringtotimestamp(datas[1]))
 
                 #driver = webdriver.Firefox()
-                driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any', '--ignore-ssl-errors=true', '--ssl-protocol=TLSv1'])
-                driver.set_window_size(2048, 2048)  # set browser size.
+                try:
+                    driver = webdriver.PhantomJS(service_args=['--ssl-protocol=any', '--ignore-ssl-errors=true', '--ssl-protocol=TLSv1'])
+                    driver.set_window_size(2048, 2048)  # set browser size.
+                except Exception, e:
+                    print "Erro com driver"
 
                 url = 'https://www.smiles.com.br/emissao-com-milhas?tripType=1&originAirport='+ config_origem +'&destinationAirport=' + str(destino[0]) + '&departureDate=' + config_dia_inicio + '000&returnDate=' + config_dia_fim + '000&adults=1&children=0&infants=0&searchType=g3&segments=1&isElegible=false'
                 print datas[0] + ' - '+ datas[1] + ' - ' + config_origem + ' - ' + str(destino[0])
