@@ -265,7 +265,7 @@ for datas in config_datas:
             try:
                 if is_friday(datas[0]) and not ida_sexta_feira:
                     continue
-                if not ida_sexta_feira and not is_weekend_day(datas[0]) and not ida_durante_semana:
+                if not is_friday(datas[0]) and not is_weekend_day(datas[0]) and not ida_durante_semana:
                     continue
                 if not is_weekend_day(datas[1]) and not volta_durante_semana:
                     continue
