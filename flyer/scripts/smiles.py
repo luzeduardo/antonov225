@@ -239,7 +239,7 @@ e_month = 6
 e_day = 7
 
 min_days_in_place = 3
-exactly_days_check = False
+exactly_days_check = True
 
 datas = date_interval(s_year, s_month, s_day, e_year, e_month, e_day)
 #ou setando na mao
@@ -271,6 +271,9 @@ for datas in config_datas:
                     continue
                 if exactly_days_check and not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
                     continue
+                if datetime.strptime(datas[1], "%Y-%m-%d") >= datetime.strptime(datas[1], "%Y-%m-%d"):
+                    continue
+
                 config_dia_inicio = str(stringtotimestamp(datas[0]))
                 config_dia_fim = str(stringtotimestamp(datas[1]))
 
