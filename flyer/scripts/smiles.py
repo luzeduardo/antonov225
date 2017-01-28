@@ -269,7 +269,7 @@ for datas in config_datas:
                     continue
                 if not is_weekend_day(datas[1]) and not volta_durante_semana:
                     continue
-                if not exactly_days_check and not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
+                if exactly_days_check and not is_valid_min_days_in_place(datas[0], datas[1], min_days_in_place):
                     continue
                 config_dia_inicio = str(stringtotimestamp(datas[0]))
                 config_dia_fim = str(stringtotimestamp(datas[1]))
