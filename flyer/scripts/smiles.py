@@ -8,6 +8,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from datetime import datetime, date, timedelta
 from collections import OrderedDict, deque
+from itertools import combinations
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import json
@@ -194,15 +195,15 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
     '''
     pega a diferenca entre as datas e gera o range baseado no numero de dias
     '''
-    days = days_between(s_year,s_month, s_day, e_year,e_month, int(e_day))
+    days = days_between(s_year,s_month, s_day, e_year,e_month, e_day)
     counter_days = days
-    datas = list()
+    datas_list = list()
 
     #menor maior
     while counter_days > 0:
         for result in perdelta_start_to_end(date(s_year,s_month, s_day), date(e_year,e_month, e_day), timedelta(days=1)):
             if counter_days > 0:
-                datas.append( [( str(result) ), (str(date(e_year,e_month, e_day) ))] )
+                datas_list.append(str(result))
             counter_days = counter_days - 1
 
     #maior menor
@@ -215,15 +216,19 @@ def date_interval(s_year,s_month, s_day, e_year,e_month, e_day):
                 if itr == 0:
                     continue
                 if counter_days > 0:
-                    datas.append( [str(date(s_year, s_month, s_day + itr)) , str(result) ] )
+                    datas_list.append(str(result))
         except Exception, e:
             counter_days = counter_days - 1
             itr += 1
             continue
         counter_days = counter_days - 1
         itr += 1
+        datas_list = setlist(datas_list)
+    return combinations(datas_list, 2)
 
-    return datas
+def setlist(lst=[]):
+   return list(set(lst))
+
 
 def stringtotimestamp(dt, epoch=datetime(1970,1,1), dt_format="%Y-%m-%d"):
     dt = datetime.strptime(dt.replace('Z', 'GMT'), dt_format)
@@ -232,7 +237,7 @@ def stringtotimestamp(dt, epoch=datetime(1970,1,1), dt_format="%Y-%m-%d"):
 
 s_year = 2017
 s_month = 4
-s_day = 15
+s_day = 14
 
 e_year = 2017
 e_month = 6
@@ -253,11 +258,11 @@ ida_sexta_feira = True
 ida_durante_semana = False
 volta_durante_semana = False
 milha_buscada = 10000
-percentual_acima = 1.2
-percentual_abaixo = 1.2
+percentual_acima = 1.3
+percentual_abaixo = 1.3
 url = ''
 timer = 1
-
+# iii = 0
 file = open('smiles_passagem_' + datetime.now().strftime("%d%m%Y") + '.csv', 'a')
 for datas in config_datas:    
     for config_origem in origem:
@@ -273,6 +278,10 @@ for datas in config_datas:
                     continue
                 if datetime.strptime(datas[0], "%Y-%m-%d") >= datetime.strptime(datas[1], "%Y-%m-%d"):
                     continue
+
+                # print config_origem + ' - ' + str(destino[0])  + ' - ' + datas[0] + ' - ' + datas[1] + ' - ' + str(iii)
+                # iii += 1
+                # continue
 
                 config_dia_inicio = str(stringtotimestamp(datas[0]))
                 config_dia_fim = str(stringtotimestamp(datas[1]))
