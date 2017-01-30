@@ -320,7 +320,7 @@ for datas in config_datas:
 
                         if int(valor_processado) <= milha_buscada * percentual_abaixo <= int(valor_processado) * percentual_acima:
                             encontrado_milha_range = True
-                            data =  valor_processado + "\t" + url  + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
+                            data =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + url  + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
                             datafile =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
                             print data
                             file.write(datafile)
