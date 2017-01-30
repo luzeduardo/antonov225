@@ -236,11 +236,11 @@ def stringtotimestamp(dt, epoch=datetime(1970,1,1), dt_format="%Y-%m-%d"):
     return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
 
 s_year = 2017
-s_month = 6
+s_month = 3
 s_day = 1
 
 e_year = 2017
-e_month = 9
+e_month = 10
 e_day = 1
 
 min_days_in_place = 3
