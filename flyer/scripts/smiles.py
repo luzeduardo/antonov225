@@ -236,12 +236,12 @@ def stringtotimestamp(dt, epoch=datetime(1970,1,1), dt_format="%Y-%m-%d"):
     return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
 
 s_year = 2017
-s_month = 4
-s_day = 14
+s_month = 6
+s_day = 1
 
 e_year = 2017
-e_month = 6
-e_day = 7
+e_month = 9
+e_day = 1
 
 min_days_in_place = 3
 exactly_days_check = True
@@ -264,7 +264,7 @@ url = ''
 timer = 1
 # iii = 0
 file = open('smiles_passagem_' + datetime.now().strftime("%d%m%Y") + '.csv', 'a')
-for datas in config_datas:    
+for datas in config_datas:
     for config_origem in origem:
         for destino in config_destinos.items():
             try:
@@ -294,7 +294,7 @@ for datas in config_datas:
                     print "Erro com driver"
 
                 url = 'https://www.smiles.com.br/emissao-com-milhas?tripType=1&originAirport='+ config_origem +'&destinationAirport=' + str(destino[0]) + '&departureDate=' + config_dia_inicio + '000&returnDate=' + config_dia_fim + '000&adults=1&children=0&infants=0&searchType=g3&segments=1&isElegible=false'
-                print datas[0] + ' - '+ datas[1] + ' - ' + config_origem + ' - ' + str(destino[0])
+                # print datas[0] + ' - '+ datas[1] + ' - ' + config_origem + ' - ' + str(destino[0])
                 # print url
                 driver.get( url )
                 time.sleep(timer)
@@ -321,7 +321,7 @@ for datas in config_datas:
                         if int(valor_processado) <= milha_buscada * percentual_abaixo <= int(valor_processado) * percentual_acima:
                             encontrado_milha_range = True
                             data =  valor_processado + "\t" + url  + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
-                            datafile =  valor_processado + "\t" + config_dia_inicio + "\t" + config_dia_fim + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
+                            datafile =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
                             print data
                             file.write(datafile)
                             # print "Milha" + "\t" + valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
