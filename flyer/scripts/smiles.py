@@ -263,7 +263,6 @@ percentual_abaixo = 1.3
 url = ''
 timer = 1
 # iii = 0
-file = open('smiles_passagem_' + datetime.now().strftime("%d%m%Y") + '.csv', 'a')
 for datas in config_datas:
     for config_origem in origem:
         for destino in config_destinos.items():
@@ -278,6 +277,8 @@ for datas in config_datas:
                     continue
                 if datetime.strptime(datas[0], "%Y-%m-%d") >= datetime.strptime(datas[1], "%Y-%m-%d"):
                     continue
+
+
 
                 # print config_origem + ' - ' + str(destino[0])  + ' - ' + datas[0] + ' - ' + datas[1] + ' - ' + str(iii)
                 # iii += 1
@@ -323,6 +324,7 @@ for datas in config_datas:
                             data =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + url  + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
                             datafile =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
                             print data
+                            file = open('smiles_passagem_' + datetime.now().strftime("%d%m%Y") + '.csv', 'a')
                             file.write(datafile)
                             # print "Milha" + "\t" + valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
 
