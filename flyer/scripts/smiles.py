@@ -16,40 +16,40 @@ import re
 import os, sys
 
 reload(sys)
-sys.setdefaultencoding('utf8')
+sys.#setdefaultencoding('utf8')
 
-config_destinos = {
-    'AJU':'Aracajú (SE)',
-    'BEL':'Belém (PA)',
+conf#ig_destinos = {
+    #'AJU':'Aracajú (SE)',
+    #'BEL':'Belém (PA)',
     'CNF':'Belo Horizonte – Confins (MG)',
-    'PLU':'Belo Horizonte – Pampulha (MG)',
-    'CXJ':'Caxias do Sul (RS)',
-    'CGB':'Cuiabá (MT)',
+    #'PLU':'Belo Horizonte – Pampulha (MG)',
+    #'CXJ':'Caxias do Sul (RS)',
+    #'CGB':'Cuiabá (MT)',
     'CWB':'Curitiba (PR)',
     'FLN':'Florianópolis (SC)',
-    'FOR':'Fortaleza (CE)',
-    'IGU':'Foz do Iguaçu (PR)',
-    'GYN':'Goiânia (GO)',
-    'IOS':'Ilhéus (BA)',
-    'JPA':'João Pessoa (PB)',
-    'MCZ':'Maceió (AL)',
-    'MAO':'Manaus (AM)',
-    'NAT':'Natal (RN)',
-    'NVT':'Navegantes (SC)',
-    # 'PMW':'Palmas (TO)',
-    'POA':'Porto Alegre (RS)',
-    'BPS':'Porto Seguro (BA)',
-    'PVH':'Porto Velho (RO)',
-    'REC':'Recife (PE)',
-    'RBR':'Rio Branco (AC)',
-    'SSA':'Salvador (BA)',
-    'SLZ':'São Luiz (MA)',
+    #'FOR':'Fortaleza (CE)',
+    #'IGU':'Foz do Iguaçu (PR)',
+    #'GYN':'Goiânia (GO)',
+    #'IOS':'Ilhéus (BA)',
+    #'JPA':'João Pessoa (PB)',
+    #'MCZ':'Maceió (AL)',
+    #'MAO':'Manaus (AM)',
+    #'NAT':'Natal (RN)',
+    #'NVT':'Navegantes (SC)',
+    ## 'PMW':'Palmas (TO)',
+    #'POA':'Porto Alegre (RS)',
+    #'BPS':'Porto Seguro (BA)',
+    #'PVH':'Porto Velho (RO)',
+    #'REC':'Recife (PE)',
+    #'RBR':'Rio Branco (AC)',
+    #'SSA':'Salvador (BA)',
+    #'SLZ':'São Luiz (MA)',
     'CGH':'São Paulo – Congonhas (SP)',
-    # 'GRU':'São Paulo – Guarulhos (SP)',
-    # 'THE':'Terezina (PI)',
-    'UDI':'Uberlândia (MG)',
+    ## 'GRU':'São Paulo – Guarulhos (SP)',
+    ## 'THE':'Terezina (PI)',
+    #'UDI':'Uberlândia (MG)',
     'VIX':'Vitória (ES)'
-}
+}#
 
 # config_destinos = {
 #   'JFK':'New York',
@@ -200,8 +200,8 @@ s_month = 3
 s_day = 1
 
 e_year = 2017
-e_month = 10
-e_day = 1
+e_month = 12
+e_day = 31
 
 min_days_in_place = 3
 exactly_days_check = True
@@ -217,7 +217,7 @@ nao_existe = deque()
 ida_sexta_feira = True
 ida_durante_semana = False
 volta_durante_semana = False
-milha_buscada = 5000
+milha_buscada = 2600
 percentual_acima = 2
 percentual_abaixo = 2
 preco_milha = 35
