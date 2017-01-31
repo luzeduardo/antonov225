@@ -314,11 +314,11 @@ for datas in config_datas:
                                 continue
 
                             if int(valor_processado) <= (milha_buscada/preco_milha) * percentual_abaixo <= int(valor_processado) * percentual_acima:
-                                encontrado_milha_range = True
-                                data =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + url  + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
-                                datafile =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
-                                print data
-                                file.write(datafile)
+                               encontrado_milha_range = True
+                               data =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + url  + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
+                               datafile =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
+                               print data
+                               file.write(datafile)
                                 # print "Milha" + "\t" + valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
 
                         if not encontrado_milha_range and not int( valor_processado ) > 100000 and display_nao_encontrado:
