@@ -221,6 +221,7 @@ milha_buscada = 5000
 percentual_acima = 2
 percentual_abaixo = 2
 preco_milha = 35
+valor_maximo_smiles_money = 120
 url = ''
 timer = 1
 # iii = 0
@@ -281,8 +282,8 @@ for datas in config_datas:
 
                         if int(valor_processado) <= milha_buscada * percentual_abaixo <= int(valor_processado) * percentual_acima:
                             encontrado_milha_range = True
-                            data =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + url  + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
-                            datafile =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
+                            data =  "S" + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + url  + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
+                            datafile =  "S" + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
                             print data
                             file = open('smiles_passagem_' + datetime.now().strftime("%d%m%Y") + '.csv', 'a')
                             file.write(datafile)
@@ -315,10 +316,10 @@ for datas in config_datas:
                             if int( valor_processado ) > 100000:
                                 continue
 
-                            if int(valor_processado) <= (milha_buscada/preco_milha) * percentual_abaixo <= int(valor_processado) * percentual_acima:
+                            if valor_maximo_smiles_money >= int(re.sub('[^0-9]+', '', valor[1])):
                                encontrado_milha_range = True
-                               data =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + url  + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
-                               datafile =  valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
+                               data = "M" + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + url  + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
+                               datafile =  "M" + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1])  + "-" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n"
                                print data
                                file.write(datafile)
                                 # print "Milha" + "\t" + valor_processado + "\t" + valor_processado + "\t" + datas[0] + "\t" + datas[1] + "\t" + str(config_origem) + "\t" + str(destino[1]) + "\t" + str(destino[0]) + "\t" + url  + "\t" + datetime.now().strftime("%d/%m/%Y") + "\t" + datetime.now().strftime("%H:%M")
