@@ -19,75 +19,35 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 config_destinos = {
-    'ATM':'Altamira (PA)',
     'AJU':'Aracajú (SE)',
-    'AQA':'Araraquara (SP)',
-    'BGX':'Bagé (RS)',
-    'JTC':'Bauru (SP)',
     'BEL':'Belém (PA)',
     'CNF':'Belo Horizonte – Confins (MG)',
     'PLU':'Belo Horizonte – Pampulha (MG)',
-    'BVB':'Boa Vista (RR)',
-    'BSB':'Brasília (DF)',
-    'CPV':'Campina Grande (PB)',
-    'VCP':'Campinas – Viracopos (SP)',
-    'CGR':'Campo Grande (MS)',
-    'CAW':'Campos dos Goytacazes (RJ)',
-    'CKS':'Carajás (PR)',
-    'CAU':'Caruaru (PE)',
     'CXJ':'Caxias do Sul (RS)',
-    'XAP':'Chapecó (SC)',
-    'CMG':'Corumbá (MS)',
-    'CCM':'Criciúma (SC)',
     'CGB':'Cuiabá (MT)',
     'CWB':'Curitiba (PR)',
-    'CZS':'Cruzeiro do Sul (AC)',
-    'FEN':'Fernando de Noronha (PE)',
     'FLN':'Florianópolis (SC)',
     'FOR':'Fortaleza (CE)',
     'IGU':'Foz do Iguaçu (PR)',
     'GYN':'Goiânia (GO)',
     'IOS':'Ilhéus (BA)',
-    'IMP':'Imperatriz (MA)',
     'JPA':'João Pessoa (PB)',
-    'JOI':'Joinville (SC)',
-    'JDO':'Juazeiro do Norte (CE)',
-    'LDB':'Londrina (PR)',
-    # 'MEA':'Macaé (RJ)',
-    'MCP':'Macapá (AP)',
     'MCZ':'Maceió (AL)',
     'MAO':'Manaus (AM)',
-    'MAB':'Marabá (PA)',
-    'MGF':'Maringá (PR)',
-    'MOC':'Montes Claros (MG)',
-    'MVF':'Mossoró (RN)',
     'NAT':'Natal (RN)',
     'NVT':'Navegantes (SC)',
     # 'PMW':'Palmas (TO)',
-    'PHB':'Parnaíba (PI)',
-    'PAV':'Paulo Afonso (BA)',
-    'PNZ':'Petrolina (PE)',
-    'POO':'Poços de Caldas (MG)',
-    'PMG':'Ponta Porã (MS)',
     'POA':'Porto Alegre (RS)',
     'BPS':'Porto Seguro (BA)',
     'PVH':'Porto Velho (RO)',
-    'PPB':'Presidente Prudente (SP)',
     'REC':'Recife (PE)',
-    'RAO':'Ribeirão Preto (SP)',
     'RBR':'Rio Branco (AC)',
     'SSA':'Salvador (BA)',
-    'STM':'Santarém (PA)',
-    'SJP':'São José do Rio Preto (SP)',
-    'SJK':'São José dos Campos (SP)',
     'SLZ':'São Luiz (MA)',
     'CGH':'São Paulo – Congonhas (SP)',
     # 'GRU':'São Paulo – Guarulhos (SP)',
-    'TBT':'Tabatinga (AM)',
     # 'THE':'Terezina (PI)',
     'UDI':'Uberlândia (MG)',
-    'URA':'Uberaba (MG)',
-    'UBT':'Ubatuba (SP)',
     'VIX':'Vitória (ES)'
 }
 
@@ -257,9 +217,9 @@ nao_existe = deque()
 ida_sexta_feira = True
 ida_durante_semana = False
 volta_durante_semana = False
-milha_buscada = 10000
-percentual_acima = 1.3
-percentual_abaixo = 1.3
+milha_buscada = 6000
+percentual_acima = 2
+percentual_abaixo = 2
 url = ''
 timer = 1
 # iii = 0
