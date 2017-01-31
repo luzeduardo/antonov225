@@ -16,9 +16,9 @@ import re
 import os, sys
 
 reload(sys)
-sys.#setdefaultencoding('utf8')
+sys.setdefaultencoding('utf8')
 
-conf#ig_destinos = {
+config_destinos = {
     #'AJU':'Aracajú (SE)',
     #'BEL':'Belém (PA)',
     'CNF':'Belo Horizonte – Confins (MG)',
